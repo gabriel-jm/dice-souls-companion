@@ -1,0 +1,44 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #301c05;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#app {
+  border: 1px solid black;
+  height: 100%;
+  position: relative;
+
+  .ui {
+    width: 100%;
+    position: absolute;
+
+    & h1 {
+      text-align: center;
+    }
+  }
+}
+
+.dice-box-canvas {
+  display: block;
+  border: 1px solid red;
+  height: 100%;
+  margin: auto;
+}
