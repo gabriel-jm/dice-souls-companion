@@ -8,13 +8,24 @@ const diceBox = new DiceBox({
   themeColor: '#3f3f3f'
 })
 
+moneyInput.addEventListener('input', () => {
+  const value = moneyInput.value.replace(/\D/g, '')
+
+  if (!value) {
+    moneyInput.value = ''
+    return
+  }
+
+  const moneyAmount = Number(value) / 100
+  moneyInput.value = moneyAmount.toFixed(2).replace('.', ',')
+})
+
 let totalAmount = 0
 let redDiceRolled = 0
 
-moneyForm.addEventListener('submit', (event: Event) => {
+moneyForm.addEventListener('submit', event => {
   event.preventDefault()
-  const moneyInput = moneyForm.elements.namedItem('money') as HTMLInputElement
-  const moneyInCents = Number(moneyInput.value)
+  const moneyInCents = Number(moneyInput.value.replace(',', ''))
   const moneyValue = moneyInCents / 100
 
   console.log({ moneyValue })
@@ -38,7 +49,9 @@ moneyForm.addEventListener('submit', (event: Event) => {
 
   redDiceRolled += (redDice - redDiceRolled)
 
-  totalAmountP.innerText = `Total Amount: R$ ${totalAmount / 100} | Red Dice Rolled: ${redDiceRolled}`
+  totalAmountP.innerText = 
+    `Total Amount: R$ ${(totalAmount / 100).toFixed(2).replace('.', ',')}
+    Red Dice Rolled: ${redDiceRolled}`
 })
 
 type DieTypes = 'black' | 'blue' | 'red'

@@ -1,6 +1,7 @@
 declare const app: HTMLDivElement
 declare const totalAmountP: HTMLParagraphElement
 declare const moneyForm: HTMLFormElement
+declare const moneyInput: HTMLInputElement
 
 declare module '@3d-dice/dice-box' {
   export type DiceBoxConfig = {
