@@ -39,12 +39,12 @@ moneyForm.addEventListener('submit', event => {
 
   diceBox.clear()
 
-  if (blueOrBlackDice > 0) {
+  if (blueOrBlackDice >= 1) {
     rollDice(blueOrBlackDice, 'black')
   }
 
-  if ((redDice - redDiceRolled) > 0) {
-    rollDice(redDice - redDiceRolled, 'red')
+  if ((redDice - parseInt(redDiceRolled.toString())) >= 1) {
+    rollDice((redDice - parseInt(redDiceRolled.toString())), 'red')
   }
 
   redDiceRolled += (redDice - redDiceRolled)

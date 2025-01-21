@@ -2,7 +2,7 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.95);
+  color: rgba(255, 255, 255);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -23,6 +23,7 @@ html, body {
 #app {
   height: 100%;
   position: relative;
+  box-shadow: inset 0 0 100px #0c0c0cdd;
 }
 
 .background {
@@ -33,7 +34,7 @@ html, body {
   background: url(/img/elden-ring-wallpaper.jpg);
   background-position: center;
   background-size: cover;
-  filter: brightness(0.55);
+  filter: brightness(0.9);
 }
 
 .ui {
@@ -44,16 +45,37 @@ html, body {
 
 .title {
   text-align: center;
-  text-shadow: 0 0 10px #111;
+  text-shadow: 0 0 10px #1118;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
+  position: relative;
+  
+  & span {
+    z-index: 2;
+    font-family: Righteous, serif;
+    -webkit-text-stroke: 2.2px #1118;
+    font-size: 2.1rem;
+  }
 
   & img {
-    filter: invert(100%);
     rotate: -15deg;
-    translate: 0 2px;
+    translate: 0 1px;
+    z-index: 2;
+    filter: drop-shadow(2px 3px 0px #1118);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0px;
+    width: 420px;
+    height: 22px;
+    background-color: #1118;
+    border-radius: 50px;
+    box-shadow: 0 0 2px #1118;
+    z-index: 0;
   }
 }
 
