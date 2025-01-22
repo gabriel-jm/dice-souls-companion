@@ -1,12 +1,57 @@
 import './style.css'
 
-import DiceBox from '@3d-dice/dice-box';
+import DiceBox, { DiceGroupRollResult } from '@3d-dice/dice-box';
 
 const diceBox = new DiceBox({
   assetPath: '/assets/',
   container: '#app',
-  themeColor: '#3f3f3f'
+  scale: 4.2,
 })
+
+const redDieEffects = [
+  'Armas Nv.1',
+  'Só Escudo',
+  'Proibido Curar',
+  'Sem Elixir Magnífico',
+  'Sem Summon',
+  'Sem Cinza da Guerra',
+  'Region Lock',
+  'Run Genocida',
+  'Sem Armadura',
+  'Não upar STR/DEX',
+  'Não upar INT/FTH/ARC',
+  'Não upar HP',
+  'Sem Mesa Redonda',
+  'Use O Que Ver',
+  'Sem Torrent',
+  'Sem Mapa',
+  '100% Drop Rate',
+  '5x Runas',
+  'Adiciona 50k de Souls',
+  'Inimigos Paralisados',
+]
+const blackDieEffects = [
+  'No Hit',
+  'Sem Esquiva',
+  'Tela Invertida',
+  'Sem Arma',
+  '1.5x Velocidade',
+  '1/2 DMG -> 2x DEF',
+  '2x DMG -> 1/2 DEF',
+  '1/2 HP -> 2X VIG',
+  '2x HP -> 1/2 VIG',
+  'Rerroll All Dice!',
+  'No Rush',
+  'Sem Talismã',
+  'Sem Travar Mira',
+  'Fat Roll',
+  'Teclado e Mouse',
+  'Só Ataque Carregado',
+  'Sem Graça Nova',
+  'Proibido Upar',
+  'Só Ataque com Pulo',
+  'One Hit Kill',
+]
 
 moneyInput.addEventListener('input', () => {
   const value = moneyInput.value.replace(/\D/g, '')
@@ -31,30 +76,32 @@ moneyForm.addEventListener('submit', event => {
 
   const moneyValue = moneyInCents / 100
 
-  console.log({ moneyValue })
-
   totalAmount = totalAmount + moneyInCents
 
   const blueOrBlackDice = moneyValue / 50
   const redDice = (totalAmount / 100) / 50
 
-  console.log({ blueOrBlackDice, redDice, totalAmount })
-
   diceBox.clear()
 
   if (blueOrBlackDice >= 1) {
     rollDice(blueOrBlackDice, 'black')
+      .then(result => parseRollResults('black', result))
   }
 
-  if ((redDice - parseInt(redDiceRolled.toString())) >= 1) {
-    rollDice((redDice - parseInt(redDiceRolled.toString())), 'red')
+  if ((redDice - Math.floor(redDiceRolled)) >= 1) {
+    rollDice((redDice - Math.floor(redDiceRolled)), 'red')
+      .then(result => parseRollResults('red', result))
   }
 
   redDiceRolled += (redDice - redDiceRolled)
 
   totalAmountP.innerHTML = `
-    <span class="total-amount-span">🎲 Red Dice Rolled: ${redDiceRolled}</span>
-    <span class="total-amount-span">💸 Total Amount: R$ ${(totalAmount / 100).toFixed(2).replace('.', ',')}</span>
+    <span class="total-amount-span">
+      💸 Valor Total: R$ ${(totalAmount / 100).toFixed(2).replace('.', ',')}
+    </span>
+    <span class="total-amount-span">
+      🎲 Dados Vermelhos Lançados: ${redDiceRolled}
+    </span>
   `
 
   moneyForm.reset()
@@ -69,8 +116,36 @@ const diceColors: Record<DieTypes, string> = {
 }
 
 function rollDice(count: number, type: DieTypes) {
-  const diceCount = parseInt(String(count))
-  diceBox.add(`${diceCount}d20`, { themeColor: diceColors[type] })
+  const diceCount = Math.floor(count)
+  const results = diceBox.add(
+    `${diceCount}d20`,
+    { themeColor: diceColors[type] }
+  )
+
+  return results
 }
+
+function parseRollResults(type: DieTypes, results: DiceGroupRollResult[]) {
+  let listElement = redEffects
+  let effectsList = redDieEffects
+
+  if (type !== 'red') {
+    listElement = blackEffects
+    effectsList = blackDieEffects
+  }
+
+  const newResults = results.map(result => {
+    const effect = effectsList[result.value - 1]
+    const li = document.createElement('li')
+    li.innerText = effect
+    return li
+  })
+
+  listElement.replaceChildren(...newResults)
+}
+
+rollResult.addEventListener('click', () => {
+  rollResult.classList.toggle('close')
+})
 
 await diceBox.init()

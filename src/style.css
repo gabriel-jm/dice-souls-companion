@@ -12,6 +12,7 @@
 
 * {
   box-sizing: border-box;
+  margin: 0;
 }
 
 html, body {
@@ -34,7 +35,6 @@ html, body {
   background: url(/img/elden-ring-wallpaper.jpg);
   background-position: center;
   background-size: cover;
-  /* filter: brightness(0.5); */
 }
 
 .ui {
@@ -45,6 +45,7 @@ html, body {
 }
 
 .title {
+  margin-top: 16px;
   text-align: center;
   text-shadow: 0 0 10px #1118;
   display: flex;
@@ -100,7 +101,6 @@ html, body {
 
 .dice-box-canvas {
   display: block;
-  /* border: 1px solid red; */
   height: 100%;
   margin: auto;
 }
@@ -118,7 +118,7 @@ html, body {
     font-family: Righteous, serif;
     -webkit-text-stroke: 1.5px #181818aa;
     text-shadow: -1px 1px 2px #181818;
-    rotate: -20deg;
+    /* rotate: -20deg; */
   }
 }
 
@@ -130,10 +130,10 @@ html, body {
   bottom: 50px;
   left: 50%;
   translate: -50%;
-  background-color: #1116;
+  background-color: #1118;
   box-shadow: 0 3px 5px #323232bb;
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
 }
 
 .money-input-container {
@@ -141,8 +141,7 @@ html, body {
   padding: 6px 8px;
   border: 1px solid #333;
   border-radius: 6px;
-  background-color: #1116;
-  /* transition: outline 150ms ease-in-out; */
+  background-color: #111c;
 
   &:focus-within {
     outline: 2px solid #3a66a9;
@@ -163,5 +162,29 @@ html, body {
 
   &:focus {
     outline: 0;
+  }
+}
+
+#rollResult {
+  margin-top: 20px;
+  margin-left: 20px;
+  width: fit-content;
+  padding: 14px 20px;
+  max-height: 50%;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  overflow: auto;
+  background-color: #111b;
+  border-radius: 4px;
+  box-shadow: 0 3px 5px #333a;
+
+  &.close {
+    height: 50px;
+    overflow: hidden;
+  }
+  
+  & h3 {
+    margin: 0;
+    margin-bottom: 12px;
   }
 }

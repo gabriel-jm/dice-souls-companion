@@ -2,6 +2,9 @@ declare const app: HTMLDivElement
 declare const totalAmountP: HTMLParagraphElement
 declare const moneyForm: HTMLFormElement
 declare const moneyInput: HTMLInputElement
+declare const redEffects: HTMLUListElement
+declare const blackEffects: HTMLUListElement
+declare const rollResult: HTMLDivElement
 
 declare module '@3d-dice/dice-box' {
   export type DiceBoxConfig = {
@@ -130,11 +133,31 @@ declare module '@3d-dice/dice-box' {
     newStartPoint?: boolean
   }
 
+  export type DieRollResult = {
+    groupId: number
+    rollId: number
+    sides: number
+    theme: string
+    themeColor: string
+    value: number
+  }
+
+  export type DiceGroupRollResult = {
+    id: number
+    mods: unknown[]
+    qty: number
+    rolls: DieRollResult[]
+    sides: number
+    theme: string
+    themeColor: string
+    value: number
+  }
+
   class DiceBox {
     constructor(config: DiceBoxConfig)
     init(): Promise<void>
     roll(diceString: string, options?: RollOptions): void
-    add(diceString: string, options?: RollOptions): void
+    add(diceString: string, options?: RollOptions): Promise<DiceGroupRollResult[]>
     clear(): void
   }
   

@@ -19,7 +19,7 @@
       </h1>
 
       <div>
-        <h2>Efeitos</h2>
+        <h3>Efeitos</h3>
         <details>
           <summary>D20 Vermelho</summary>
           <ol>
@@ -82,8 +82,8 @@
       
       <div class="stats">
         <p id="totalAmountP">
-          <span class="total-amount-span">🎲 Red Dice Rolled: 0</span>
-          <span class="total-amount-span">💸 Total Amount: R$ 0,00</span>
+          <span class="total-amount-span">💸 Valor Total: R$ 0,00</span>
+          <span class="total-amount-span">🎲 Dados Vermelhos Lançados: 0</span>
         </p>
       </div>
 
@@ -95,6 +95,16 @@
           </div>
           <button class="btn">Throw</button>
         </form>
+      </div>
+
+      <div id="rollResult">
+        <h3>Resultados</h3>
+        
+        <h4>Efeitos Ativos:</h4>
+        <ul id="redEffects"></ul>
+
+        <h4>Temporários:</h4>
+        <ul id="blackEffects"></ul>
       </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
