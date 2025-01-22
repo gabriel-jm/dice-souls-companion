@@ -26,6 +26,9 @@ let redDiceRolled = 0
 moneyForm.addEventListener('submit', event => {
   event.preventDefault()
   const moneyInCents = Number(moneyInput.value.replace(',', ''))
+
+  if (moneyInCents === 0) return
+
   const moneyValue = moneyInCents / 100
 
   console.log({ moneyValue })
@@ -49,9 +52,12 @@ moneyForm.addEventListener('submit', event => {
 
   redDiceRolled += (redDice - redDiceRolled)
 
-  totalAmountP.innerText = 
-    `Total Amount: R$ ${(totalAmount / 100).toFixed(2).replace('.', ',')}
-    Red Dice Rolled: ${redDiceRolled}`
+  totalAmountP.innerHTML = `
+    <span class="total-amount-span">🎲 Red Dice Rolled: ${redDiceRolled}</span>
+    <span class="total-amount-span">💸 Total Amount: R$ ${(totalAmount / 100).toFixed(2).replace('.', ',')}</span>
+  `
+
+  moneyForm.reset()
 })
 
 type DieTypes = 'black' | 'blue' | 'red'

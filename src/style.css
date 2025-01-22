@@ -1,5 +1,5 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: monospace, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255);
@@ -23,7 +23,7 @@ html, body {
 #app {
   height: 100%;
   position: relative;
-  box-shadow: inset 0 0 100px #0c0c0cdd;
+  box-shadow: inset 0 0 60px #121212;
 }
 
 .background {
@@ -34,10 +34,11 @@ html, body {
   background: url(/img/elden-ring-wallpaper.jpg);
   background-position: center;
   background-size: cover;
-  filter: brightness(0.9);
+  /* filter: brightness(0.5); */
 }
 
 .ui {
+  height: 100%;
   width: 100%;
   position: absolute;
   top: 0;
@@ -79,6 +80,24 @@ html, body {
   }
 }
 
+.btn {
+  padding: 8px 12px;
+  font-size: 1rem;
+  font-family: monospace;
+  background-color: #1766d6;
+  border: 0;
+  border-radius: 4px;
+  box-shadow: 0 3px 0 0 #043478;
+  cursor: pointer;
+  transition: all 100ms ease-in-out;
+
+  &:active {
+    background-color: #043478;
+    box-shadow: none;
+    translate: 0 3px;
+  }
+}
+
 .dice-box-canvas {
   display: block;
   /* border: 1px solid red; */
@@ -86,12 +105,55 @@ html, body {
   margin: auto;
 }
 
+.stats {
+  padding: 0px 20px;
+  position: absolute;
+  bottom: 50px;
+  /* background: linear-gradient(215deg, transparent, black); */
+
+  .total-amount-span {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-family: Righteous, serif;
+    -webkit-text-stroke: 1.5px #181818aa;
+    text-shadow: -1px 1px 2px #181818;
+    rotate: -20deg;
+  }
+}
+
+.money-container {
+  padding: 20px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  translate: -50%;
+  background-color: #1116;
+  box-shadow: 0 3px 5px #323232bb;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
 .money-input-container {
   width: fit-content;
   padding: 6px 8px;
-  border: 1px solid #444;
+  border: 1px solid #333;
   border-radius: 6px;
   background-color: #1116;
+  /* transition: outline 150ms ease-in-out; */
+
+  &:focus-within {
+    outline: 2px solid #3a66a9;
+  }
+}
+
+#moneyForm {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
 }
 
 #moneyInput {

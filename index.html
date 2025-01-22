@@ -17,18 +17,21 @@
         <img src="/img/d20.png" alt="d20" width="34" />
         <span>Dice Souls Companion</span>
       </h1>
-      <p id="totalAmountP">
-        Total Amount: R$ 0
-        <br />
-        Red Dice Rolled: 0
-      </p>
+      
+      <div class="stats">
+        <p id="totalAmountP">
+          <span class="total-amount-span">🎲 Red Dice Rolled: 0</span>
+          <span class="total-amount-span">💸 Total Amount: R$ 0,00</span>
+        </p>
+      </div>
+
       <div class="money-container">
         <form id="moneyForm">
           <div class="money-input-container">
             <span>R$</span>
-            <input id="moneyInput" type="text" />
+            <input id="moneyInput" type="text" value="0,00" />
           </div>
-          <button>Throw</button>
+          <button class="btn">Throw</button>
         </form>
       </div>
     </div>
