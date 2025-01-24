@@ -144,8 +144,4 @@ function parseRollResults(type: DieTypes, results: DiceGroupRollResult[]) {
   listElement.replaceChildren(...newResults)
 }
 
-rollResult.addEventListener('click', () => {
-  rollResult.classList.toggle('close')
-})
-
 await diceBox.init()

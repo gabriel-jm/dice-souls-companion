@@ -165,8 +165,7 @@ html, body {
   }
 }
 
-#rollResult {
-  margin-top: 20px;
+.glass-container {
   margin-left: 20px;
   width: fit-content;
   padding: 14px 20px;
@@ -174,9 +173,19 @@ html, body {
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
   overflow: auto;
-  background-color: #111b;
+  background-color: #4445;
   border-radius: 4px;
   box-shadow: 0 3px 5px #333a;
+
+  & summary {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+}
+
+#rollResult {
+  margin-top: 20px;
+  margin-left: 20px;
 
   &.close {
     height: 50px;

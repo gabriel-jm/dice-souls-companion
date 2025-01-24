@@ -18,7 +18,7 @@
         <span>Dice Souls Companion</span>
       </h1>
 
-      <div>
+      <div class="glass-container">
         <h3>Efeitos</h3>
         <details>
           <summary>D20 Vermelho</summary>
@@ -93,18 +93,22 @@
             <span>R$</span>
             <input id="moneyInput" type="text" value="0,00" />
           </div>
-          <button class="btn">Throw</button>
+          <button class="btn">Jogar</button>
         </form>
       </div>
 
-      <div id="rollResult">
-        <h3>Resultados</h3>
+      <div class="glass-container" id="rollResult">
+        <details>
+          <summary>
+            Resultados
+          </summary>
         
-        <h4>Efeitos Ativos:</h4>
-        <ul id="redEffects"></ul>
+          <h4>Efeitos Ativos:</h4>
+          <ul id="redEffects"></ul>
 
-        <h4>Temporários:</h4>
-        <ul id="blackEffects"></ul>
+          <h4>Temporários:</h4>
+          <ul id="blackEffects"></ul>
+        </details>
       </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
