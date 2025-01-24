@@ -2,12 +2,6 @@ import './style.css'
 
 import DiceBox, { DiceGroupRollResult } from '@3d-dice/dice-box';
 
-const diceBox = new DiceBox({
-  assetPath: '/assets/',
-  container: '#app',
-  scale: 4.2,
-})
-
 const redDieEffects = [
   'Armas Nv.1',
   'Só Escudo',
@@ -63,6 +57,12 @@ moneyInput.addEventListener('input', () => {
 
   const moneyAmount = Number(value) / 100
   moneyInput.value = moneyAmount.toFixed(2).replace('.', ',')
+})
+
+const diceBox = new DiceBox({
+  assetPath: '/assets/',
+  container: '#app',
+  scale: 4.2,
 })
 
 let totalAmount = 0
@@ -144,4 +144,4 @@ function parseRollResults(type: DieTypes, results: DiceGroupRollResult[]) {
   listElement.replaceChildren(...newResults)
 }
 
-await diceBox.init()
+diceBox.init().catch(console.log)
