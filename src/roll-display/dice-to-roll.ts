@@ -1,7 +1,8 @@
 import './dice-to-roll.css'
-import { html } from 'lithen-fns'
+import { html, signal } from 'lithen-fns'
 import { d20Icon } from '../common/icons'
-import { DieTypes } from '../main'
+import { DieTypes, parseRollResults } from '../main'
+import { DiceGroupRollResult } from '@3d-dice/dice-box'
 
 export type DiceToRollCardProps = {
   amount: string
@@ -10,7 +11,7 @@ export type DiceToRollCardProps = {
     red: number
     blackOrBlue: number
   }
-  rollDice(quantity: number, type: DieTypes): void
+  rollDice(quantity: number, type: DieTypes): Promise<DiceGroupRollResult[]>
 }
 
 export function diceToRollCard(props: DiceToRollCardProps) {
@@ -18,7 +19,9 @@ export function diceToRollCard(props: DiceToRollCardProps) {
   
   return html`
     <div class="glass-container dice-to-roll-container">
-      <span class="money-display">R$ ${props.amount}</span>
+      <span class="money-display">
+        R$ ${props.amount}
+      </span>
       
       ${props.donateOwner && html`
         <p title="${props.donateOwner}">
@@ -26,34 +29,66 @@ export function diceToRollCard(props: DiceToRollCardProps) {
         </p>  
       `}
 
-      <div class="dice-to-roll-dice-group">
-        ${dice.red >= 1 && html`
-          <button
-            class="dice-to-roll-btn red"
-            on-click=${() => props.rollDice(dice.red, 'red')}
-          >
-            ${d20Icon()}
-            <span>${Math.floor(dice.red)}</span>
-          </button>  
-        `}
+      <div class="dice-to-roll-dice-btns">
+        <div>
+          ${diceButton('red', dice.red, props.rollDice)}
+        </div>
 
-        ${dice.blackOrBlue >= 1 && html`
-          <button
-            class="dice-to-roll-btn"
-            on-click=${() => props.rollDice(dice.blackOrBlue, 'black')}
-          >
-            ${d20Icon()}
-            <span>${Math.floor(dice.blackOrBlue)}</span>
-          </button>
-          <button
-            class="dice-to-roll-btn blue"
-            on-click=${() => props.rollDice(dice.blackOrBlue, 'blue')}
-          >
-            ${d20Icon()}
-            <span>${Math.floor(dice.blackOrBlue)}</span>
-          </button>
-        `}
+        <div class="dice-btn-group">
+          ${diceButton('black/blue', dice.blackOrBlue, props.rollDice)}
+        </div>
       </div>
     </div>
+  `
+}
+
+function diceButton(
+  type: 'red' | 'black/blue',
+  quantity: number,
+  rollDice: DiceToRollCardProps['rollDice']
+) {
+  if (quantity <= 0) return
+
+  const diceQuantity = signal(quantity)
+  
+  if (type === 'red') {
+    return html`
+      <button
+        class="dice-to-roll-btn ${type}"
+        on-click=${() => {
+          diceQuantity.set(0)
+          rollDice(quantity, type)
+            .then(results => parseRollResults('red', results))
+        }}
+      >
+        ${d20Icon()}
+        <span>${diceQuantity}</span>
+      </button>
+    `
+  }
+  
+  return html`
+    <button
+      class="dice-to-roll-btn black"
+      on-click=${() => {
+        diceQuantity.set(0)
+        rollDice(quantity, 'black')
+          .then(results => parseRollResults('black', results))
+      }}
+    >
+      ${d20Icon()}
+      <span>${diceQuantity}</span>
+    </button>
+    <button
+      class="dice-to-roll-btn blue"
+      on-click=${() => {
+        diceQuantity.set(0)
+        rollDice(quantity, 'blue')
+          .then(results => parseRollResults('blue', results))
+      }}
+    >
+      ${d20Icon()}
+      <span>${diceQuantity}</span>
+    </button>
   `
 }

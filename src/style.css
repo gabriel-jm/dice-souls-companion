@@ -132,7 +132,10 @@ html, body {
 
 .static-info {
   height: 70%;
+  max-height: 70%;
   width: fit-content;
+  padding-right: 20px;
+  overflow: auto;
 
   .glass-container {
     max-height: 48%;
@@ -213,6 +216,7 @@ input {
 
 #rollResult {
   margin-top: 20px;
+  max-height: 100%;
   
   & h3 {
     margin: 0;
