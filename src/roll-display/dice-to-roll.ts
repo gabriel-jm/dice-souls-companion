@@ -1,7 +1,7 @@
 import './dice-to-roll.css'
 import { html, signal } from 'lithen-fns'
 import { d20Icon } from '../common/icons'
-import { DieTypes, parseRollResults } from '../main'
+import { DieTypes, parseRollResults, stats } from '../main'
 import { DiceGroupRollResult } from '@3d-dice/dice-box'
 
 export type DiceToRollCardProps = {
@@ -57,6 +57,7 @@ function diceButton(
         class="dice-to-roll-btn ${type}"
         on-click=${() => {
           diceQuantity.set(0)
+          stats.redDiceRolled += quantity
           rollDice(quantity, type)
             .then(results => parseRollResults('red', results))
         }}

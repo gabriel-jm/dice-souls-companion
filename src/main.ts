@@ -66,8 +66,10 @@ const diceBox = new DiceBox({
   scale: 4.2,
 })
 
-let totalAmount = 0
-let redDiceRolled = 0
+export const stats = {
+  totalAmount: 0,
+  redDiceRolled: 0
+}
 
 moneyForm.addEventListener('submit', event => {
   event.preventDefault()
@@ -83,14 +85,14 @@ moneyForm.addEventListener('submit', event => {
 
   const moneyValue = moneyInCents / 100
 
-  totalAmount = totalAmount + moneyInCents
+  stats.totalAmount = stats.totalAmount + moneyInCents
 
   const blueOrBlackDiceToRoll = Math.floor(moneyValue / 50)
-  const redDice = (totalAmount / 100) / 50
+  const redDice = (stats.totalAmount / 100) / 50
 
   diceBox.clear()
 
-  const redDiceToRoll = Math.floor(redDice - Math.floor(redDiceRolled))
+  const redDiceToRoll = Math.floor(redDice - Math.floor(stats.redDiceRolled))
 
   // if (blueOrBlackDice >= 1) {
   //   rollDice(blueOrBlackDice, 'black')
@@ -120,7 +122,7 @@ moneyForm.addEventListener('submit', event => {
 
   totalAmountP.innerHTML = `
     <span class="total-amount-span">
-      💸 Valor Total: R$ ${(totalAmount / 100).toFixed(2).replace('.', ',')}
+      💸 Valor Total: R$ ${(stats.totalAmount / 100).toFixed(2).replace('.', ',')}
     </span>
   `
 
@@ -146,7 +148,6 @@ function rollDice(quantity: number, type: DieTypes) {
 }
 
 export function parseRollResults(type: DieTypes, results: DiceGroupRollResult[]) {
-  console.log(type, results)
   let listElement = redEffects
   let effectsList = redDieEffects
 
