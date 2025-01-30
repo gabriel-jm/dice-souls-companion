@@ -29,7 +29,7 @@ const blackDieEffects = [
   'No Hit',
   'Sem Esquiva',
   'Tela Invertida',
-  'Sem Arma',
+  'No Melee',
   '1.5x Velocidade',
   '1/2 DMG -> 2x DEF',
   '2x DMG -> 1/2 DEF',
@@ -87,24 +87,12 @@ moneyForm.addEventListener('submit', event => {
 
   stats.totalAmount = stats.totalAmount + moneyInCents
 
-  const blueOrBlackDiceToRoll = Math.floor(moneyValue / 50)
+  const blueOrBlackDiceToRoll = Math.min(Math.floor(moneyValue / 50), 2)
   const redDice = (stats.totalAmount / 100) / 50
 
   diceBox.clear()
 
   const redDiceToRoll = Math.floor(redDice - Math.floor(stats.redDiceRolled))
-
-  // if (blueOrBlackDice >= 1) {
-  //   rollDice(blueOrBlackDice, 'black')
-  //     .then(result => parseRollResults('black', result))
-  // }
-
-  // if (redDiceToRoll >= 1) {
-  //   rollDice(redDiceToRoll, 'red')
-  //     .then(result => parseRollResults('red', result))
-  // }
-
-  // redDiceRolled += (redDice - redDiceRolled)
 
   if (blueOrBlackDiceToRoll > 0 || redDiceToRoll > 0) {
     diceToRollDiv.replaceChildren(
