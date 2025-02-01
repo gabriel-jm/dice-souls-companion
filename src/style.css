@@ -141,7 +141,7 @@ ul {
 
   .glass-container {
     max-height: 48%;
-    width: 300px;
+    width: 320px;
     margin-left: 12px;
   }
 }
@@ -178,6 +178,10 @@ input {
   border: 1px solid #444a;
   border-radius: 6px;
   background-color: #111a;
+
+  &:focus {
+    outline: 2px solid #3a66a9;
+  }
 }
 
 #moneyForm {
