@@ -1,0 +1,61 @@
+.roll-result {
+  --bg-color: #aaa6;
+
+  list-style: none;
+  position: relative;
+  padding-left: 8px;
+  padding-bottom: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    bottom: 2px;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background-color: var(--bg-color);
+    border-radius: 20px;
+    opacity: 0;
+    transition: opacity 200ms ease-in-out;
+  }
+
+  &.red {
+    --bg-color: #f0070761;
+  }
+
+  &.black {
+    --bg-color: #111a;
+  }
+
+  .texts .number {
+    color: #aaa;
+  }
+
+  .actions {
+    display: inline-flex;
+    opacity: 0;
+    align-items: end;
+    transition: opacity 200ms ease-in-out;
+
+    span .x-icon {
+      width: 20px;
+      height: 100%;
+      cursor: pointer;
+      display: flex;
+      align-items: end;
+    }
+  }
+
+  &:hover {
+    text-shadow: 1px 1px 1px var(--bg-color);
+
+    &::after,
+    .actions {
+      opacity: 1;
+    }
+  }
+}

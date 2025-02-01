@@ -1,8 +1,9 @@
 import './dice-to-roll.css'
 import { html, signal } from 'lithen-fns'
 import { d20Icon } from '../common/icons'
-import { DieTypes, parseRollResults, stats } from '../main'
+import { DieTypes, stats } from '../main'
 import { DiceGroupRollResult } from '@3d-dice/dice-box'
+import { parseRollResults } from '../roll-results/parse-roll-results'
 
 export type DiceToRollCardProps = {
   amount: string
@@ -50,17 +51,27 @@ function diceButton(
   if (quantity <= 0) return
 
   const diceQuantity = signal(quantity)
+
+  function playRollDice(type: DieTypes) {
+    return () => {
+      if (diceQuantity.data() === 0) return;
+
+      diceQuantity.set(0)
+      
+      if (type === 'red') {
+        stats.redDiceRolled += quantity
+      }
+      
+      rollDice(quantity, type)
+        .then(results => parseRollResults(type, results))
+    }
+  }
   
   if (type === 'red') {
     return html`
       <button
         class="dice-to-roll-btn ${type}"
-        on-click=${() => {
-          diceQuantity.set(0)
-          stats.redDiceRolled += quantity
-          rollDice(quantity, type)
-            .then(results => parseRollResults('red', results))
-        }}
+        on-click=${playRollDice('red')}
       >
         ${d20Icon()}
         <span>${diceQuantity}</span>
@@ -71,22 +82,14 @@ function diceButton(
   return html`
     <button
       class="dice-to-roll-btn black"
-      on-click=${() => {
-        diceQuantity.set(0)
-        rollDice(quantity, 'black')
-          .then(results => parseRollResults('black', results))
-      }}
+      on-click=${playRollDice('black')}
     >
       ${d20Icon()}
       <span>${diceQuantity}</span>
     </button>
     <button
       class="dice-to-roll-btn blue"
-      on-click=${() => {
-        diceQuantity.set(0)
-        rollDice(quantity, 'blue')
-          .then(results => parseRollResults('blue', results))
-      }}
+      on-click=${playRollDice('blue')}
     >
       ${d20Icon()}
       <span>${diceQuantity}</span>
