@@ -24,7 +24,7 @@ export function parseRollResults(type: DieTypes, results: DiceGroupRollResult[])
     .map(result => {
       const effect = effectsList[result.value - 1]
       const itemRef = ref<HTMLElement>()
-      const removeItem = () => itemRef.el?.remove()
+      const removeItem = () => itemRef.el.remove()
 
       return el/*html*/`
         <li
