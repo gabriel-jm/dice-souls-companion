@@ -8,7 +8,7 @@ import { signal } from 'lithen-fns'
 export const diceBox = new DiceBox({
   assetPath: '/assets/',
   container: '#app',
-  scale: 4.2,
+  scale: 4,
 })
 
 export const isLocked = signal(false)

@@ -1,6 +1,6 @@
 import './roll-results.css'
 import { el, ref } from 'lithen-fns'
-import { DieTypes } from '../main'
+import { diceBox, DieTypes, isLocked, rollDice } from '../main'
 import { refreshIcon, xIcon } from '../common/icons'
 
 export type RollResultItemProps = {
@@ -15,6 +15,39 @@ export function rollResultItem(props: RollResultItemProps) {
   const itemRef = ref()
   const removeItem = () => itemRef.el.remove()
 
+  function reRoll() {
+    if (isLocked.data()) return
+
+    isLocked.set(true)
+    diceBox.clear()
+
+    const promise = rollDice(1, type)
+
+    if (promise) {
+      promise.then(result => {
+        isLocked.set(false)
+
+        if (type === 'red') {
+          const duplicated = redEffects
+            .querySelector(`[value="${result[0].value}"]`)
+
+          if (duplicated) {
+            duplicated.remove()
+            return
+          }
+        }
+
+        itemRef.el.replaceWith(rollResultItem({
+          type,
+          effectsList,
+          value: result[0].value,
+        }))
+      })
+    } else {
+      isLocked.set(false)
+    }
+  }
+
   return el/*html*/`
     <li
       class="roll-result ${type}"
@@ -28,7 +61,7 @@ export function rollResultItem(props: RollResultItemProps) {
         <span>${effect}</span>
       </div>
       <div class="actions">
-        <span title="Jogar Novamente">
+        <span title="Jogar Novamente" on-click=${reRoll}>
           ${refreshIcon()}
         </span>
         <span title="Remover" on-click=${removeItem}>

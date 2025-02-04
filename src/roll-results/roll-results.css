@@ -39,7 +39,7 @@
   .actions {
     display: inline-flex;
     opacity: 0;
-    align-items: end;
+    align-items: center;
     transition: opacity 200ms ease-in-out;
     gap: 3px;
 
@@ -52,7 +52,7 @@
     }
 
     span .refresh-icon {
-      width: 17px;
+      width: 16px;
       align-items: center;
     }
   }
