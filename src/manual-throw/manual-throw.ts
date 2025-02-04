@@ -12,7 +12,7 @@ export function manualThrow() {
   })
 
   function onClickDiceButton(_: unknown, quantity: DataSignal<number>) {
-    quantity.set(value => Math.min(10, value + 1))
+    quantity.set(value => Math.min(20, value + 1))
   }
 
   function onRightClickDiceButton(_: unknown, quantity: DataSignal<number>) {
