@@ -2,7 +2,7 @@ import { html } from 'lithen-fns'
 
 export const d20Icon = () => html`
   <svg
-    class="d20-icon"
+    class="icon d20-icon"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 100 100"
   >

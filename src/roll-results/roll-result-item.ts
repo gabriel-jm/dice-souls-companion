@@ -1,6 +1,7 @@
+import './roll-results.css'
 import { el, ref } from 'lithen-fns'
 import { DieTypes } from '../main'
-import { xIcon } from '../common/icons'
+import { refreshIcon, xIcon } from '../common/icons'
 
 export type RollResultItemProps = {
   type: DieTypes
@@ -27,6 +28,9 @@ export function rollResultItem(props: RollResultItemProps) {
         <span>${effect}</span>
       </div>
       <div class="actions">
+        <span title="Jogar Novamente">
+          ${refreshIcon()}
+        </span>
         <span title="Remover" on-click=${removeItem}>
           ${xIcon()}
         </span>

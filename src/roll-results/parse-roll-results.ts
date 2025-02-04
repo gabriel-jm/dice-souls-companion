@@ -1,4 +1,3 @@
-import './roll-results.css'
 import { DiceGroupRollResult } from '@3d-dice/dice-box'
 import { DieTypes } from '../main'
 import { blackDieEffects, redDieEffects } from '../dice-effects/dice-effects'
@@ -17,10 +16,11 @@ export function parseRollResults(type: DieTypes, results: DiceGroupRollResult[])
 }
 
 function parseRedDice(results: DiceGroupRollResult[]) {
+  const resultValues = new Set(results.map(result => result.value))
   const newResults = []
 
-  for (const result of results) {
-    const redEffectItem = redEffects.querySelector(`[value="${result.value}"]`)
+  for (const value of resultValues) {
+    const redEffectItem = redEffects.querySelector(`[value="${value}"]`)
 
     if (redEffectItem) {
       redEffectItem.remove()
@@ -29,7 +29,7 @@ function parseRedDice(results: DiceGroupRollResult[]) {
 
     newResults.push(rollResultItem({
       type: 'red',
-      value: result.value,
+      value,
       effectsList: redDieEffects,
     }))    
   }

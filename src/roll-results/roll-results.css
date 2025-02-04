@@ -8,6 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 6px;
   
   &::after {
     content: '';
@@ -40,13 +41,19 @@
     opacity: 0;
     align-items: end;
     transition: opacity 200ms ease-in-out;
+    gap: 3px;
 
-    span .x-icon {
+    span .icon {
       width: 20px;
       height: 100%;
       cursor: pointer;
       display: flex;
       align-items: end;
+    }
+
+    span .refresh-icon {
+      width: 17px;
+      align-items: center;
     }
   }
 
