@@ -1,7 +1,7 @@
 import './manual-throw.css'
 import { diceButton } from '../dice-button/dice-button'
 import { DataSignal, html, signalRecord } from 'lithen-fns'
-import { DieTypes, rollDice } from '../main'
+import { diceBox, DieTypes, lock, rollDice } from '../main'
 import { parseRollResults } from '../roll-results/parse-roll-results'
 
 export function manualThrow() {
@@ -20,13 +20,26 @@ export function manualThrow() {
   }
 
   function throwDice() {
-    for (const [key, value] of Object.entries(diceQuantities)) {
-      rollDice(value.data(), key as DieTypes)
-        .then(results => {
-          value.set(0)
-          parseRollResults(key as DieTypes, results)
+    if (lock.data()) return
+
+    lock.set(true)
+
+    diceBox.clear()
+
+    Promise.all(
+      Object
+        .entries(diceQuantities)
+        .map(([key, value]) => {
+          const type = key as DieTypes
+
+          return rollDice(value.data(), type)
+            ?.then(results => {
+              value.set(0)
+              parseRollResults(type, results)
+            })
         })
-    }
+    )
+    .then(() => lock.set(false))
   }
 
   return html`
@@ -60,6 +73,7 @@ export function manualThrow() {
 
       <button
         class="btn wide"
+        .disabled=${lock}
         on-click=${throwDice}
       >
         Jogar

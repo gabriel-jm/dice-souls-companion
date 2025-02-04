@@ -3,6 +3,15 @@ import './style.css'
 import DiceBox from '@3d-dice/dice-box';
 import { diceToRollCard } from './roll-display/dice-to-roll'
 import { manualThrow } from './manual-throw/manual-throw'
+import { signal } from 'lithen-fns'
+
+export const diceBox = new DiceBox({
+  assetPath: '/assets/',
+  container: '#app',
+  scale: 4.2,
+})
+
+export const lock = signal(false)
 
 ui.append(manualThrow())
 
@@ -16,12 +25,6 @@ moneyInput.addEventListener('input', () => {
 
   const moneyAmount = Number(value) / 100
   moneyInput.value = moneyAmount.toFixed(2).replace('.', ',')
-})
-
-const diceBox = new DiceBox({
-  assetPath: '/assets/',
-  container: '#app',
-  scale: 4.2,
 })
 
 export const stats = {
@@ -85,6 +88,9 @@ const diceColors: Record<DieTypes, string> = {
 
 export function rollDice(quantity: number, type: DieTypes) {
   const diceCount = Math.floor(quantity)
+
+  if (diceCount <= 0) return
+
   const results = diceBox.add(
     `${diceCount}d20`,
     { themeColor: diceColors[type] }

@@ -12,7 +12,7 @@ export type DiceToRollCardProps = {
     red: number
     blackOrBlue: number
   }
-  rollDice(quantity: number, type: DieTypes): Promise<DiceGroupRollResult[]>
+  rollDice(quantity: number, type: DieTypes): Promise<DiceGroupRollResult[]> | void
 }
 
 export function diceToRollCard(props: DiceToRollCardProps) {
@@ -63,7 +63,7 @@ function diceButton(
       }
       
       rollDice(quantity, type)
-        .then(results => parseRollResults(type, results))
+        ?.then(results => parseRollResults(type, results))
     }
   }
   

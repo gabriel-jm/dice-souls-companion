@@ -104,7 +104,7 @@ ul {
   cursor: pointer;
   transition: all 120ms ease-in-out;
 
-  &:active {
+  &:not(:disabled):active {
     background-color: #043478;
     box-shadow: none;
     translate: 0 4px;
