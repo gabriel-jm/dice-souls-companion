@@ -11,7 +11,7 @@ export const diceBox = new DiceBox({
   scale: 4.2,
 })
 
-export const lock = signal(false)
+export const isLocked = signal(false)
 
 ui.append(manualThrow())
 
@@ -34,6 +34,9 @@ export const stats = {
 
 moneyForm.addEventListener('submit', event => {
   event.preventDefault()
+
+  if (isLocked.data()) return
+
   const donateOwner = moneyForm.donateOwner
   const moneyInCents = Number(moneyInput.value.replace(',', ''))
 

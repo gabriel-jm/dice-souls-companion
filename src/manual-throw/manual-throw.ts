@@ -1,7 +1,7 @@
 import './manual-throw.css'
 import { diceButton } from '../dice-button/dice-button'
 import { DataSignal, html, signalRecord } from 'lithen-fns'
-import { diceBox, DieTypes, lock, rollDice } from '../main'
+import { diceBox, DieTypes, isLocked, rollDice } from '../main'
 import { parseRollResults } from '../roll-results/parse-roll-results'
 
 export function manualThrow() {
@@ -20,9 +20,9 @@ export function manualThrow() {
   }
 
   function throwDice() {
-    if (lock.data()) return
+    if (isLocked.data()) return
 
-    lock.set(true)
+    isLocked.set(true)
 
     diceBox.clear()
 
@@ -39,7 +39,7 @@ export function manualThrow() {
             })
         })
     )
-    .then(() => lock.set(false))
+    .then(() => isLocked.set(false))
   }
 
   return html`
@@ -73,7 +73,7 @@ export function manualThrow() {
 
       <button
         class="btn wide"
-        .disabled=${lock}
+        .disabled=${isLocked}
         on-click=${throwDice}
       >
         Jogar

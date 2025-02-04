@@ -1,6 +1,6 @@
 import './dice-button.css'
 import { DataSignal, html, signal } from 'lithen-fns'
-import { DieTypes, lock } from '../main'
+import { DieTypes, isLocked } from '../main'
 import { d20Icon } from '../common/icons'
 
 type DiceButtonProps = {
@@ -40,16 +40,16 @@ function singleDieButton(props: SingleDieButtonProps) {
 
   const diceQuantity = customQuantitySignal ?? signal(initialQuantity ?? 0)
 
-  const clickEvent = () => !lock.data() && onClick?.(type as DieTypes, diceQuantity)
+  const clickEvent = () => !isLocked.data() && onClick?.(type as DieTypes, diceQuantity)
   const rightClickEvent = (event: Event) => {
     event.preventDefault()
-    !lock.data() && onContextMenu?.(type as DieTypes, diceQuantity)
+    !isLocked.data() && onContextMenu?.(type as DieTypes, diceQuantity)
   }
 
   return html`
     <button
       class="dice-btn ${side} ${type}"
-      .disabled=${lock}
+      .disabled=${isLocked}
       on-click=${onClick && clickEvent}
       on-contextmenu=${onContextMenu && rightClickEvent}
     >
