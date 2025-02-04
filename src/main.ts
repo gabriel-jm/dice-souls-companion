@@ -2,6 +2,9 @@ import './style.css'
 
 import DiceBox from '@3d-dice/dice-box';
 import { diceToRollCard } from './roll-display/dice-to-roll'
+import { manualThrow } from './manual-throw/manual-throw'
+
+ui.append(manualThrow())
 
 moneyInput.addEventListener('input', () => {
   const value = moneyInput.value.replace(/\D/g, '')
@@ -80,7 +83,7 @@ const diceColors: Record<DieTypes, string> = {
   blue: '#1a30a9'
 }
 
-function rollDice(quantity: number, type: DieTypes) {
+export function rollDice(quantity: number, type: DieTypes) {
   const diceCount = Math.floor(quantity)
   const results = diceBox.add(
     `${diceCount}d20`,

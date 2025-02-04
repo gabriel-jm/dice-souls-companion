@@ -1,4 +1,5 @@
 declare const app: HTMLDivElement
+declare const ui: HTMLDivElement
 declare const totalAmountP: HTMLParagraphElement
 declare const moneyForm: HTMLFormElement
 declare const moneyInput: HTMLInputElement

@@ -12,10 +12,10 @@
   <body>
     <div class="background"></div>
     <div id="app"></div>
-    <div class="ui">
+    <div id="ui" class="ui">
       <p class="version-tag">v0.1.0</p>
       
-      <h1 class="title">
+      <h1 class="main-title">
         <img src="/img/d20.png" alt="d20" width="34" />
         <span>Dice Souls Companion</span>
       </h1>
@@ -110,10 +110,12 @@
       <div id="diceToRollDiv"></div>
 
       <div class="money-container glass-container">
+        <h4 class="title">Dados por Donate</h4>
+
         <form id="moneyForm">
           <input
             name="donateOwner"
-            placeholder="Nome"
+            placeholder="Nome (opcional)"
           />
 
           <div class="money-input-container">

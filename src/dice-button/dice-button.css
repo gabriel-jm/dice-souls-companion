@@ -1,0 +1,54 @@
+.dice-btn {
+  --bg-color: #1f1f1f;
+  --border-color: #0f0f0f;
+  --die-border-color: #fffa;
+
+  display: block;
+  position: relative;
+  background-color: var(--bg-color);
+  border: 0;
+  border-radius: 6px;
+  box-shadow: 0 4px 0 var(--border-color);
+  cursor: pointer;
+  padding: 4px 12px;
+  transition: all 100ms ease-out;
+
+  &:active {
+    translate: 0 4px;
+    box-shadow: none;
+    background-color: var(--border-color);
+  }
+
+  &.red {
+    --bg-color: #e93535;
+    --border-color: #ca0d0d;
+  }
+
+  &.blue {
+    --bg-color: #1766d6;
+    --border-color: #043478;
+  }
+
+  &.left {
+    border-radius: 6px 0 0 6px;
+  }
+
+  &.right {
+    border-radius: 0 6px 6px 0;
+  }
+
+  & span {
+    font-size: 1.3rem;
+    font-weight: bold;
+    position: absolute;
+    bottom: 0;
+    right: 5px;
+    text-shadow: 0 0 10px var(--border-color);
+  }
+
+  .d20-icon {
+    width: 24px;
+    fill: var(--die-border-color);
+    stroke: var(--die-border-color);
+  }
+}

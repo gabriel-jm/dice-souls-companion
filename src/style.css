@@ -56,7 +56,7 @@ ul {
   font-size: 0.8rem;
 }
 
-.title {
+.main-title {
   margin-top: 16px;
   text-align: center;
   text-shadow: 0 0 10px #1118;
@@ -95,7 +95,7 @@ ul {
 
 .btn {
   padding: 8px 12px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-family: monospace;
   background-color: #1766d6;
   border: 0;
@@ -109,6 +109,10 @@ ul {
     box-shadow: none;
     translate: 0 4px;
   }
+
+  &.wide {
+    width: 100%;
+  }
 }
 
 .dice-box-canvas {
@@ -120,7 +124,7 @@ ul {
 .stats {
   padding: 0px 20px;
   position: absolute;
-  bottom: 50px;
+  bottom: 30px;
 
   .total-amount-span {
     display: block;
@@ -148,16 +152,15 @@ ul {
 
 .money-container {
   padding: 20px;
-  border: 1px solid #555a;
   border-radius: 4px;
   position: absolute;
-  bottom: 50px;
+  bottom: 30px;
   left: 50%;
   translate: -50%;
-  background-color: #4444;
-  box-shadow: 0 3px 5px #323232bb;
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+
+  > .title {
+    margin-bottom: 12px;
+  }
 }
 
 .money-input-container {

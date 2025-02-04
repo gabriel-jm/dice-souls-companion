@@ -16,14 +16,17 @@ let win: BrowserWindow | null
 
 function createWindow() {
   win = new BrowserWindow({
-    icon: path.join(process.env.VITE_PUBLIC, 'img', 'd20.svg'),
+    icon: path.join(process.env.VITE_PUBLIC, 'img', 'd20.png'),
     width: 1300,
     height: 700,
     autoHideMenuBar: true,
+    show: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
     },
   })
+
+  win.on('ready-to-show', win.show)
 
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL)

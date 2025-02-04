@@ -1,0 +1,19 @@
+.manual-throw {
+  position: absolute;
+  bottom: 30px;
+  right: 20px;
+}
+
+.dice-count {
+  margin-top: 12px;
+  margin-bottom: 12px;
+  display: flex;
+  gap: 12px;
+
+  & button {
+    padding: 10px;
+    border: 0;
+    border-radius: 6px;
+    font-weight: bold;
+  }
+}

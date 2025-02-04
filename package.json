@@ -21,6 +21,6 @@
   },
   "dependencies": {
     "@3d-dice/dice-box": "^1.1.4",
-    "lithen-fns": "^4.4.0"
+    "lithen-fns": "^4.4.1"
   }
 }
