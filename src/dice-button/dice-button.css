@@ -10,7 +10,7 @@
   border-radius: 6px;
   box-shadow: 0 4px 0 var(--border-color);
   cursor: pointer;
-  padding: 4px 12px;
+  padding: 0 10px;
   transition: all 100ms ease-out;
 
   &:active {

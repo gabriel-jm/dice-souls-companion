@@ -48,63 +48,12 @@
 
 .dice-to-roll-dice-btns {
   display: flex;
+  height: 40px;
   gap: 12px;
   margin-top: 12px;
 
   .dice-btn-group {
     display: flex;
-  }
-}
-
-.dice-to-roll-btn {
-  --bg-color: #1f1f1f;
-  --border-color: #0f0f0f;
-  --die-border-color: #fffa;
-
-  display: block;
-  position: relative;
-  background-color: var(--bg-color);
-  border: 0;
-  border-radius: 6px;
-  box-shadow: 0 4px 0 var(--border-color);
-  cursor: pointer;
-  padding: 6px 10px;
-  transition: all 100ms ease-out;
-
-  &:active {
-    translate: 0 4px;
-    box-shadow: none;
-    background-color: var(--border-color);
-  }
-
-  &.red {
-    --bg-color: #e93535;
-    --border-color: #ca0d0d;
-  }
-
-  &.black {
-    border-radius: 6px 0 0 6px;
-  }
-
-  &.blue {
-    --bg-color: #1766d6;
-    --border-color: #043478;
-    border-radius: 0 6px 6px 0;
-  }
-
-  & span {
-    font-size: 1.4rem;
-    font-weight: bold;
-    position: absolute;
-    bottom: 0;
-    right: 5px;
-    text-shadow: 0 0 10px var(--border-color);
-  }
-
-  .d20-icon {
-    width: 28px;
-    fill: var(--die-border-color);
-    stroke: var(--die-border-color);
   }
 }
 
