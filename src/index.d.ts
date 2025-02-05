@@ -165,3 +165,13 @@ declare module '@3d-dice/dice-box' {
   
   export default DiceBox
 }
+
+declare type CreateRollResultProps = {
+  activeEffects: DieEffect[]
+  temporary: DieEffect[]
+}
+
+declare type DieEffect = {
+  number: number
+  text: string
+}

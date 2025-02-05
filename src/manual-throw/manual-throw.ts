@@ -3,6 +3,7 @@ import { diceButton } from '../dice-button/dice-button'
 import { DataSignal, html, signalRecord } from 'lithen-fns'
 import { diceBox, DieTypes, isLocked, rollDice } from '../main'
 import { parseRollResults } from '../roll-results/parse-roll-results'
+import { blackDieEffects, redDieEffects } from '../dice-effects/dice-effects'
 
 export function manualThrow() {
   const diceQuantities = signalRecord({
@@ -36,10 +37,42 @@ export function manualThrow() {
             ?.then(results => {
               value.set(0)
               parseRollResults(type, results)
+              return [type, results] as const
             })
         })
     )
-    .then(() => isLocked.set(false))
+    .then((values) => {
+      const data: CreateRollResultProps = {
+        activeEffects: [],
+        temporary: []
+      }
+
+      for (const value of values) {
+        if (!value) continue
+        
+        const [key, results] = value
+
+        if (key === 'red') {
+          data.activeEffects = results.map(result => {
+            return {
+              number: result.value,
+              text: redDieEffects[result.value - 1]
+            }
+          })
+        }
+
+        if (key === 'black') {
+          data.temporary = results.map(result => {
+            return {
+              number: result.value,
+              text: blackDieEffects[result.value - 1]
+            }
+          })
+        }
+      }
+
+      isLocked.set(false)
+    })
   }
 
   return html`

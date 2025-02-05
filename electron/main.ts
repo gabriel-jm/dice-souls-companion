@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
+import { startServer } from './local-server/start-server'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -22,17 +23,24 @@ function createWindow() {
     autoHideMenuBar: true,
     show: false,
     webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: true,
       preload: path.join(__dirname, 'preload.mjs'),
     },
   })
 
-  win.on('ready-to-show', win.show)
+  win.on('ready-to-show', () => {
+    win?.webContents.openDevTools()
+    win?.show()
+  })
 
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL)
   } else {
     win.loadFile(path.join(RENDERER_DIST, 'index.html'))
   }
+
+  startServer()
 }
 
 app.on('window-all-closed', () => {
