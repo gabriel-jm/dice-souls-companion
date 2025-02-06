@@ -1,9 +1,10 @@
 import './manual-throw.css'
-import { diceButton } from '../dice-button/dice-button'
+import { diceButton } from '../common/dice-button/dice-button'
 import { DataSignal, html, signalRecord } from 'lithen-fns'
-import { diceBox, DieTypes, isLocal, isLocked, rollDice } from '../main'
+import { isLocal, isLocked } from '../main'
 import { parseRollResults } from '../roll-results/parse-roll-results'
-import { blackDieEffects, redDieEffects } from '../dice-effects/dice-effects'
+import { blackDieEffects, redDieEffects } from '../dice-master/dice-effects'
+import { diceMaster, DieTypes } from '../dice-master/dice-master'
 
 export function manualThrow() {
   const diceQuantities = signalRecord({
@@ -31,7 +32,7 @@ export function manualThrow() {
 
     isLocked.set(true)
 
-    diceBox.clear()
+    diceMaster.clear()
 
     Promise.all(
       Object
@@ -39,7 +40,7 @@ export function manualThrow() {
         .map(([key, value]) => {
           const type = key as DieTypes
 
-          return rollDice(value.data(), type)
+          return diceMaster.rollByType(value.data(), type)
             ?.then(results => {
               value.set(0)
               parseRollResults(type, results)

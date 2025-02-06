@@ -1,5 +1,6 @@
-import { diceBox, isLocked, rollDice } from '../main'
-import { diceToRollCard } from '../roll-display/dice-to-roll'
+import { isLocked } from '../main'
+import { diceToRollCard } from '../dice-to-roll-display/dice-to-roll'
+import { diceMaster } from '../dice-master/dice-master'
 
 export const stats = {
   totalAmount: 0,
@@ -41,7 +42,7 @@ export function moneyFormEvents() {
     const blueOrBlackDiceToRoll = Math.min(Math.floor(moneyValue / 50), 2)
     const redDice = (stats.totalAmount / 100) / 50
   
-    diceBox.clear()
+    diceMaster.clear()
   
     const redDiceToRoll = Math.floor(redDice - Math.floor(stats.redDiceRolled))
   
@@ -54,7 +55,7 @@ export function moneyFormEvents() {
             red: redDiceToRoll,
             blackOrBlue: blueOrBlackDiceToRoll
           },
-          rollDice: rollDice,
+          rollDice: (...args) => diceMaster.rollByType(...args),
         })
       )
     }

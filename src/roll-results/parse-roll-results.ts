@@ -1,7 +1,7 @@
 import { DiceGroupRollResult } from '@3d-dice/dice-box'
-import { DieTypes } from '../main'
-import { blackDieEffects, redDieEffects } from '../dice-effects/dice-effects'
+import { blackDieEffects, redDieEffects } from '../dice-master/dice-effects'
 import { rollResultItem } from './roll-result-item'
+import { DieTypes } from '../dice-master/dice-master'
 
 export function parseRollResults(type: DieTypes, results: DiceGroupRollResult[]) {
   if (type === 'red') {

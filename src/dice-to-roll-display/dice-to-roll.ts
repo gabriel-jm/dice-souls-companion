@@ -1,9 +1,10 @@
 import './dice-to-roll.css'
 import { DataSignal, html, signal } from 'lithen-fns'
-import { DieTypes, isLocked } from '../main'
+import { isLocked } from '../main'
 import { DiceGroupRollResult } from '@3d-dice/dice-box'
 import { parseRollResults } from '../roll-results/parse-roll-results'
-import { diceButton } from '../dice-button/dice-button'
+import { diceButton } from '../common/dice-button/dice-button'
+import { DieTypes } from '../dice-master/dice-master'
 
 export type DiceToRollCardProps = {
   amount: string

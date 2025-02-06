@@ -1,7 +1,8 @@
 import './roll-results.css'
 import { el, ref } from 'lithen-fns'
-import { diceBox, DieTypes, isLocked, rollDice } from '../main'
+import { isLocked } from '../main'
 import { refreshIcon, xIcon } from '../common/icons'
+import { diceMaster, DieTypes } from '../dice-master/dice-master'
 
 export type RollResultItemProps = {
   type: DieTypes
@@ -19,9 +20,9 @@ export function rollResultItem(props: RollResultItemProps) {
     if (isLocked.data()) return
 
     isLocked.set(true)
-    diceBox.clear()
+    diceMaster.clear()
 
-    const promise = rollDice(1, type)
+    const promise = diceMaster.rollByType(1, type)
 
     if (promise) {
       promise.then(result => {

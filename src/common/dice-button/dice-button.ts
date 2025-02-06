@@ -1,7 +1,8 @@
 import './dice-button.css'
 import { DataSignal, html, signal } from 'lithen-fns'
-import { DieTypes, isLocked } from '../main'
-import { d20Icon } from '../common/icons'
+import { isLocked } from '../../main'
+import { d20Icon } from '../icons'
+import { DieTypes } from '../../dice-master/dice-master'
 
 type DiceButtonProps = {
   type: DieTypes | `${DieTypes}/${DieTypes}`
