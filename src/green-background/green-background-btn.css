@@ -1,0 +1,21 @@
+.green-background-toggle {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  
+  #greenBackgroundBtn {
+    cursor: pointer;
+    border: 3px solid #9998;
+    border-radius: 50px;
+    background-color: #aaa2;
+    font-weight: bold;
+    padding: 10px 20px;
+    font-size: 1em;
+    transition: all 150ms ease-in-out;
+
+    &.active {
+      border-color: #2ae00588;
+      background-color: #51f2303d;
+    }
+  }
+}

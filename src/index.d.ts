@@ -7,6 +7,7 @@ declare const redEffects: HTMLUListElement
 declare const blackEffects: HTMLUListElement
 declare const rollResult: HTMLDivElement
 declare const diceToRollDiv: HTMLDivElement
+declare const greenBackgroundBtn: HTMLButtonElement
 
 declare module '@3d-dice/dice-box' {
   export type DiceBoxConfig = {

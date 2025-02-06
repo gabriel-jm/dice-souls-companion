@@ -4,6 +4,7 @@ import DiceBox from '@3d-dice/dice-box';
 import { diceToRollCard } from './roll-display/dice-to-roll'
 import { manualThrow } from './manual-throw/manual-throw'
 import { signal } from 'lithen-fns'
+import { addGreenBackgroundEvent } from './green-background/green-background-btn'
 
 export const diceBox = new DiceBox({
   assetPath: '/assets/',
@@ -14,6 +15,7 @@ export const diceBox = new DiceBox({
 export const isLocked = signal(false)
 
 ui.append(manualThrow())
+addGreenBackgroundEvent()
 
 moneyInput.addEventListener('input', () => {
   const value = moneyInput.value.replace(/\D/g, '')
@@ -115,3 +117,5 @@ Temporários:\
 
   console.log(text)
 })
+
+// Hex: #00FF00
