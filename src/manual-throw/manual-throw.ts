@@ -1,7 +1,7 @@
 import './manual-throw.css'
 import { diceButton } from '../dice-button/dice-button'
 import { DataSignal, html, signalRecord } from 'lithen-fns'
-import { diceBox, DieTypes, isLocked, rollDice } from '../main'
+import { diceBox, DieTypes, isLocal, isLocked, rollDice } from '../main'
 import { parseRollResults } from '../roll-results/parse-roll-results'
 import { blackDieEffects, redDieEffects } from '../dice-effects/dice-effects'
 
@@ -77,10 +77,12 @@ export function manualThrow() {
         }
       }
 
-      await fetch('http://localhost:3500/results', {
-        method: 'POST',
-        body: JSON.stringify(data)
-      })
+      if (isLocal) {
+        await fetch('http://localhost:3500/results', {
+          method: 'POST',
+          body: JSON.stringify(data)
+        })
+      }
 
       isLocked.set(false)
     })

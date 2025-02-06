@@ -30,8 +30,8 @@ export async function setCurrent(req: IncomingMessage, res: ServerResponse) {
   res.end()
 }
 
-export async function getCurrent(req: IncomingMessage, res: ServerResponse) {
-  const queryParams = req
+export async function getCurrent(_req: IncomingMessage, res: ServerResponse) {
+  // const queryParams = req
   const rollStorage = new RollResultStorage()
 
   res.statusCode = 200

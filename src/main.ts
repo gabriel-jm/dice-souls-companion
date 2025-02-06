@@ -17,6 +17,8 @@ export const isLocked = signal(false)
 ui.append(manualThrow())
 addGreenBackgroundEvent()
 
+export const isLocal = location.hostname === 'localhost'
+
 moneyInput.addEventListener('input', () => {
   const value = moneyInput.value.replace(/\D/g, '')
 
@@ -117,5 +119,3 @@ Temporários:\
 
   console.log(text)
 })
-
-// Hex: #00FF00
