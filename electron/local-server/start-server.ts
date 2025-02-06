@@ -1,6 +1,13 @@
-import { createServer } from 'node:http'
+import { createServer, IncomingHttpHeaders } from 'node:http'
 import { cors } from './cors'
-import { getLatestResults, insertResults, setCurrent } from './results-controller'
+import { getCurrent, getLatestResults, insertResults, setCurrent } from './results-controller'
+import { parseJSONBody } from './parse-json-body'
+
+export type Req<T = null> = {
+  url: URL
+  headers: IncomingHttpHeaders
+  body: T
+}
 
 const server = createServer(async (req, res) => {
   const url = new URL(`http://localhost${req.url}`)
@@ -15,19 +22,29 @@ const server = createServer(async (req, res) => {
     return
   }
 
+  const customReq: Req<any> = {
+    url,
+    headers: req.headers,
+    body: await parseJSONBody(req)
+  }
+
   if (url.pathname === '/results') {
     if (method === 'GET') {
-      return await getLatestResults(req, res)
+      return await getLatestResults(customReq, res)
     }
     
     if (method === 'POST') {
-      return await insertResults(req, res)
+      return await insertResults(customReq, res)
     }
   }
 
   if (url.pathname === '/current') {
+    if (method === 'GET') {
+      return await getCurrent(customReq, res)
+    }
+
     if (method === 'POST') {
-      return await setCurrent(req, res)
+      return await setCurrent(customReq, res)
     }
   }
 
