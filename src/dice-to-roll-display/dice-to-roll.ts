@@ -1,8 +1,5 @@
 import './dice-to-roll.css'
 import { DataSignal, html, signal } from 'lithen-fns'
-import { isLocked } from '../main'
-import { DiceGroupRollResult } from '@3d-dice/dice-box'
-import { parseRollResults } from '../roll-results/parse-roll-results'
 import { diceButton } from '../common/dice-button/dice-button'
 import { DieTypes } from '../dice-master/dice-master'
 
@@ -13,7 +10,7 @@ export type DiceToRollCardProps = {
     red: number
     blackOrBlue: number
   }
-  rollDice(quantity: number, type: DieTypes): Promise<DiceGroupRollResult[]> | void
+  rollDice(quantity: number, type: DieTypes): Promise<void>
 }
 
 export function diceToRollCard(props: DiceToRollCardProps) {
@@ -21,13 +18,8 @@ export function diceToRollCard(props: DiceToRollCardProps) {
   const blackAndBlueQuantity = signal(dice.blackOrBlue)
 
   function onClick(type: DieTypes, quantity: DataSignal<number>) {
-    isLocked.set(true)
-
-    props.rollDice(quantity.data(), type)?.then((results) => {
-      quantity.set(0)
-      parseRollResults(type, results)
-      isLocked.set(false)
-    })
+    props.rollDice(quantity.data(), type)
+      .then(() => quantity.set(0))
   }
   
   return html`

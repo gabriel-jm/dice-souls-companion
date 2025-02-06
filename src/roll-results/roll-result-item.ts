@@ -1,6 +1,5 @@
 import './roll-results.css'
 import { el, ref } from 'lithen-fns'
-import { isLocked } from '../main'
 import { refreshIcon, xIcon } from '../common/icons'
 import { diceMaster, DieTypes } from '../dice-master/dice-master'
 
@@ -17,36 +16,7 @@ export function rollResultItem(props: RollResultItemProps) {
   const removeItem = () => itemRef.el.remove()
 
   function reRoll() {
-    if (isLocked.data()) return
-
-    isLocked.set(true)
-    diceMaster.clear()
-
-    const promise = diceMaster.rollByType(1, type)
-
-    if (promise) {
-      promise.then(result => {
-        isLocked.set(false)
-
-        if (type === 'red') {
-          const duplicated = redEffects
-            .querySelector(`[value="${result[0].value}"]`)
-
-          if (duplicated) {
-            duplicated.remove()
-            return
-          }
-        }
-
-        itemRef.el.replaceWith(rollResultItem({
-          type,
-          effectsList,
-          value: result[0].value,
-        }))
-      })
-    } else {
-      isLocked.set(false)
-    }
+    diceMaster.reroll(type, value)
   }
 
   return el/*html*/`

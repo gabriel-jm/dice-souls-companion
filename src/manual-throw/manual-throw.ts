@@ -1,9 +1,7 @@
 import './manual-throw.css'
 import { diceButton } from '../common/dice-button/dice-button'
 import { DataSignal, html, signalRecord } from 'lithen-fns'
-import { isLocal, isLocked } from '../main'
-import { parseRollResults } from '../roll-results/parse-roll-results'
-import { blackDieEffects, redDieEffects } from '../dice-master/dice-effects'
+import { isLocked } from '../main'
 import { diceMaster, DieTypes } from '../dice-master/dice-master'
 
 export function manualThrow() {
@@ -28,65 +26,55 @@ export function manualThrow() {
   }
 
   function throwDice() {
-    if (isLocked.data()) return
-
-    isLocked.set(true)
-
-    diceMaster.clear()
-
-    Promise.all(
-      Object
-        .entries(diceQuantities)
-        .map(([key, value]) => {
-          const type = key as DieTypes
-
-          return diceMaster.rollByType(value.data(), type)
-            ?.then(results => {
-              value.set(0)
-              parseRollResults(type, results)
-              return [type, results] as const
-            })
-        })
-    )
-    .then(async (values) => {
-      const data: CreateRollResultProps = {
-        activeEffects: [],
-        temporary: []
-      }
-
-      for (const value of values) {
-        if (!value) continue
-        
-        const [key, results] = value
-
-        if (key === 'red') {
-          data.activeEffects = results.map(result => {
-            return {
-              number: result.value,
-              text: redDieEffects[result.value - 1]
-            }
-          })
-        }
-
-        if (key === 'black') {
-          data.temporary = results.map(result => {
-            return {
-              number: result.value,
-              text: blackDieEffects[result.value - 1]
-            }
-          })
-        }
-      }
-
-      if (isLocal) {
-        await fetch('http://localhost:3500/results', {
-          method: 'POST',
-          body: JSON.stringify(data)
-        })
-      }
-
-      isLocked.set(false)
+    diceMaster.rollMany({
+      red: diceQuantities.red.data(),
+      black: diceQuantities.black.data(),
+      blue: diceQuantities.blue.data()
     })
+      .then(() => {
+        diceQuantities.red.set(0)
+        diceQuantities.black.set(0)
+        diceQuantities.blue.set(0)
+      })
+    // .then(async (values) => {
+    //   const data: CreateRollResultProps = {
+    //     activeEffects: [],
+    //     temporary: []
+    //   }
+
+    //   for (const value of values) {
+    //     if (!value) continue
+        
+    //     const [key, results] = value
+
+    //     if (key === 'red') {
+    //       data.activeEffects = results.map(result => {
+    //         return {
+    //           number: result.value,
+    //           text: redDieEffects[result.value - 1]
+    //         }
+    //       })
+    //     }
+
+    //     if (key === 'black') {
+    //       data.temporary = results.map(result => {
+    //         return {
+    //           number: result.value,
+    //           text: blackDieEffects[result.value - 1]
+    //         }
+    //       })
+    //     }
+    //   }
+
+    //   if (isLocal) {
+    //     await fetch('http://localhost:3500/results', {
+    //       method: 'POST',
+    //       body: JSON.stringify(data)
+    //     })
+    //   }
+
+    //   isLocked.set(false)
+    // })
   }
 
   return html`
