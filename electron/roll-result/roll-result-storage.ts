@@ -1,10 +1,15 @@
 import { randomUUID } from 'node:crypto'
 
-export type RollResult = {
+export type RollResultEntry = {
   id: string
   activeEffects: DieEffect[]
   temporary: DieEffect[]
   createdAt: Date
+}
+
+export type RollResult = {
+  activeEffects: DieEffect[]
+  temporary: DieEffect[]
 }
 
 export type DieEffect = {
@@ -12,14 +17,15 @@ export type DieEffect = {
   text: string
 }
 
-export type CreateRollResultProps = {
+export type CreateRollResultData = {
   activeEffects: DieEffect[]
   temporary: DieEffect[]
 }
 
 export class RollResultStorage {
   static instance: RollResultStorage
-  storage: RollResult[] = []
+  storage: RollResultEntry[] = []
+  current: RollResult | null = null
 
   constructor() {
     if (!RollResultStorage.instance) {
@@ -27,17 +33,6 @@ export class RollResultStorage {
     }
 
     return RollResultStorage.instance
-  }
-
-  insert(data: CreateRollResultProps) {
-    console.log({ data })
-    this.storage.push({
-      ...data,
-      id: randomUUID(),
-      createdAt: new Date()
-    })
-
-    return Promise.resolve()
   }
 
   latest() {
@@ -50,5 +45,15 @@ export class RollResultStorage {
     }
 
     return Promise.resolve(result)
+  }
+
+  insert(data: CreateRollResultData) {
+    this.storage.push({
+      ...data,
+      id: randomUUID(),
+      createdAt: new Date()
+    })
+
+    return Promise.resolve()
   }
 }

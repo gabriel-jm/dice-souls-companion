@@ -12,8 +12,14 @@ export function manualThrow() {
     blue: 0
   })
 
-  function onClickDiceButton(_: unknown, quantity: DataSignal<number>) {
-    quantity.set(value => Math.min(20, value + 1))
+  function onClickDiceButton(type: DieTypes, quantity: DataSignal<number>) {
+    let minValue = 20
+
+    if (type === 'black') {
+      minValue = 2
+    }
+
+    quantity.set(value => Math.min(minValue, value + 1))
   }
 
   function onRightClickDiceButton(_: unknown, quantity: DataSignal<number>) {
@@ -41,7 +47,7 @@ export function manualThrow() {
             })
         })
     )
-    .then((values) => {
+    .then(async (values) => {
       const data: CreateRollResultProps = {
         activeEffects: [],
         temporary: []
@@ -70,6 +76,11 @@ export function manualThrow() {
           })
         }
       }
+
+      await fetch('http://localhost:3500/results', {
+        method: 'POST',
+        body: JSON.stringify(data)
+      })
 
       isLocked.set(false)
     })

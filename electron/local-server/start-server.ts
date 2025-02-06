@@ -1,21 +1,38 @@
 import { createServer } from 'node:http'
-import { RollResultStorage } from '../roll-result/roll-result-storage'
+import { cors } from './cors'
+import { getLatestResults, insertResults, setCurrent } from './results-controller'
 
 const server = createServer(async (req, res) => {
   const url = new URL(`http://localhost${req.url}`)
+  const { method } = req
 
-  if (url.pathname === '/results') {
-    const rollStorage = new RollResultStorage()
+  cors(res)
 
-    res.writeHead(200, { 'content-type': 'application/json' })
-    res.end(JSON.stringify(await rollStorage.latest()))
+  if (method === 'OPTIONS') {
+    res.statusCode = 200
+    res.end()
+
     return
   }
 
-  res.writeHead(404, {
-    'access-control-allow-origin': '*'
-  })
-  res.end('Not Found.')
+  if (url.pathname === '/results') {
+    if (method === 'GET') {
+      return await getLatestResults(req, res)
+    }
+    
+    if (method === 'POST') {
+      return await insertResults(req, res)
+    }
+  }
+
+  if (url.pathname === '/current') {
+    if (method === 'POST') {
+      return await setCurrent(req, res)
+    }
+  }
+
+  res.statusCode = 404
+  res.end('Not Found')
 })
 
 export function startServer() {
