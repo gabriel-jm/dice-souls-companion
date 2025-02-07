@@ -14,7 +14,7 @@ export type CurrentRollResult = {
 }
 
 const originPath = import.meta.env.PROD
-  ? 'https://github.com/gabriel-jm/dice-souls-companion-web/raw/refs/heads/main/public'
+  ? 'https://unpkg.com/@3d-dice/dice-box@1.1.3/dist'
   : location.origin
 
 class DiceMaster {
@@ -35,6 +35,8 @@ class DiceMaster {
     red: '#ad2510',
     blue: '#1a30a9'
   }
+
+  clearTimerId?: number
 
   constructor() {
     this.diceBox = new DiceBox({
@@ -65,12 +67,14 @@ class DiceMaster {
         this.rollParser.parseResults(type, results)
         await this.#updateServiceCurrent()
       }
+
+      this.#addClearTimer()
     })
   }
 
   rollMany(quantity: Record<DieTypes, number>) {
     return this.#lockUntil(() => {
-      Promise.all(
+      const promise = Promise.all(
         Object.entries(quantity)
           .map(([key, value]) => {
             const type = key as DieTypes
@@ -83,7 +87,9 @@ class DiceMaster {
                 return this.#updateServiceCurrent()
               })
           })
-      )
+      ).then(() => this.#addClearTimer())
+
+      return promise
     })
   }
 
@@ -96,6 +102,8 @@ class DiceMaster {
         this.rollParser.parseReroll(type, currentValue, newValue)
         await this.#updateServiceCurrent()
       }
+
+      this.#addClearTimer()
     })
   }
 
@@ -186,6 +194,12 @@ class DiceMaster {
     }
 
     return this.rollResultService.setCurrent(rollResultData)
+  }
+
+  #addClearTimer() {
+    window.clearTimeout(this.clearTimerId)
+    this.clearTimerId = window
+      .setTimeout(() => this.clear(), 8_000);
   }
 }
 
