@@ -1,5 +1,6 @@
 import { DiceGroupRollResult } from '@3d-dice/dice-box'
 import { CurrentRollResult, DieTypes } from '../dice-master'
+import { diceLogger } from '../logger/dice-logger'
 
 export class RollResultParser {
   constructor(public current: CurrentRollResult) {}
@@ -18,12 +19,28 @@ export class RollResultParser {
 
   parseReroll(type: DieTypes, currentValue: number, resultValue: number) {
     let listSignal = this.current.temporary
+
+    diceLogger.log({
+      die: { type, value: currentValue },
+      action: 'Rejogado'
+    })
     
     if (type === 'red') {
       listSignal = this.current.activeEffects
       
       this.current.activeEffects.set(value => {
-        return value.filter(n => n !== resultValue)
+        return value.filter(n => {
+          const bool = n !== resultValue
+
+          if (!bool) {
+            diceLogger.log({
+              die: { type, value: resultValue },
+              action: 'Duplicado e removido'
+            })
+          }
+
+          return bool
+        })
       })
     }
 
