@@ -52,12 +52,12 @@ export class RollResultStorage {
       path.join(getAppDataPath(), 'current.json'),
       JSON.stringify(value)
     )
-    .catch(() => null)
+    .catch(console.log)
   }
 
   async init() {
     const current = await readFile(path.join(getAppDataPath(), 'current.json'))
-      .catch(() => null)
+      .catch(console.log)
 
     if (!current) return
 

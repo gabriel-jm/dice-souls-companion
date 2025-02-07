@@ -5,5 +5,5 @@ import { IS_DEV } from '../main'
 export function getAppDataPath() {
   return IS_DEV
     ? path.resolve('tmp')
-    : app.getPath('appData')
+    : path.join(app.getPath('userData'), 'Local Storage')
 }

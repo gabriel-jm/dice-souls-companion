@@ -1,7 +1,10 @@
 import './style.css'
 import { signal } from 'lithen-fns'
 
-export const isLocal = location.hostname === 'localhost'
+export const isLocal = (
+  location.hostname === 'localhost'
+  || location.hostname === ''
+)
 export const isLocked = signal(false)
 
 import { addManualThrow } from './manual-throw/manual-throw'

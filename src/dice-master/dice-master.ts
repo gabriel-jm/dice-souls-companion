@@ -82,11 +82,11 @@ class DiceMaster {
             const type = key as DieTypes
   
             return this.#rollDice(type, value)
-              .then(result => {
+              .then(async result => {
                 if (!result) return
 
                 this.rollParser.parseResults(type, result)
-                return this.#updateServiceCurrent()
+                await this.#updateServiceCurrent()
               })
           })
       ).then(() => this.#addClearTimer())
@@ -165,7 +165,7 @@ class DiceMaster {
     if (isLocked.data()) return
     
     isLocked.set(true)
-    this.clear()
+    this.diceBox.clear()
 
     const results = await callback()
 
