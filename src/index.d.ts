@@ -3,8 +3,8 @@ declare const ui: HTMLDivElement
 declare const totalAmountP: HTMLParagraphElement
 declare const moneyForm: HTMLFormElement
 declare const moneyInput: HTMLInputElement
-declare const redEffects: HTMLUListElement
-declare const blackEffects: HTMLUListElement
+declare const redEffectsListEl: HTMLUListElement
+declare const blackEffectsListEl: HTMLUListElement
 declare const rollResult: HTMLDivElement
 declare const diceToRollDiv: HTMLDivElement
 declare const greenBackgroundBtn: HTMLButtonElement

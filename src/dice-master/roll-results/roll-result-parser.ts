@@ -1,8 +1,9 @@
 import { DiceGroupRollResult } from '@3d-dice/dice-box'
-import { diceMaster, DieTypes } from '../dice-master'
-import { rollResultItem } from '../../roll-results/roll-result-item'
+import { CurrentRollResult, DieTypes } from '../dice-master'
 
 export class RollResultParser {
+  constructor(public current: CurrentRollResult) {}
+
   parseResults(type: DieTypes, results: DiceGroupRollResult[]) {
     if (type === 'red') {
       return this.#parseRedDice(results)
@@ -16,70 +17,79 @@ export class RollResultParser {
   }
 
   parseReroll(type: DieTypes, currentValue: number, result: DiceGroupRollResult) {
-    let listElement = blackEffects
+    let listSignal = this.current.temporary
     
     if (type === 'red') {
-      listElement = redEffects
-      const duplicated = listElement
-        .querySelector(`[value="${result.value}"]`)
-
-      if (duplicated) {
-        duplicated.remove()
-        return
-      }
+      listSignal = this.current.activeEffects
+      
+      this.current.activeEffects.set(value => {
+        return value.filter(n => n !== result.value)
+      })
     }
 
-    const currentEl = listElement.querySelector(`[value="${currentValue}"]`)
-    currentEl?.replaceWith(rollResultItem({
-      type,
-      effectsList: diceMaster.redDieEffects,
-      value: result.value,
-    }))
+    const index = listSignal.data().findIndex(n => n === currentValue)
+
+    if (index !== -1) {
+      listSignal.set(value => {
+        const newList = [...value]
+        newList[index] = result.value
+        return newList
+      })
+    }
   }
 
   #parseRedDice(results: DiceGroupRollResult[]) {
-    const resultValues = new Set(results.map(result => result.value))
-    const newResults = []
+    const resultValues = new Set<number>()
+
+    for (const result of results) {
+      if (resultValues.has(result.value)) {
+        resultValues.delete(result.value)
+        continue
+      } 
+
+      resultValues.add(result.value)
+    }
+
+    const listSignal = this.current.activeEffects
+    const newResults: number[] = []
   
     for (const value of resultValues) {
-      const redEffectItem = redEffects.querySelector(`[value="${value}"]`)
-  
-      if (redEffectItem) {
-        redEffectItem.remove()
+      const hasItem = listSignal.data().find(n => n === value)
+
+      if (hasItem) {
+        this.current.activeEffects.set(list => {
+          return list.filter(n => n !== value)
+        })
         continue
       }
-  
-      newResults.push(rollResultItem({
-        type: 'red',
-        value,
-        effectsList: diceMaster.redDieEffects,
-      }))    
+
+      newResults.push(value)
     }
   
-    redEffects.append(...newResults)
+    listSignal.set(list => [...list, ...newResults])
   }
   
   #parseBlackDice(results: DiceGroupRollResult[]) {
-    if (blackEffects.children.length == 2) {
+    const listSignal = this.current.temporary
+    let newList = listSignal.data()
+
+    if (blackEffectsListEl.children.length == 2) {
       for (let i = 0; i<results.length; i++) {
-        blackEffects.firstChild?.remove()
+        newList = newList.filter((_, index) => index !== i)
       }
     }
   
-    const newResults = results.map(result => rollResultItem({
-      type: 'black',
-      value: result.value,
-      effectsList: diceMaster.blackDieEffects
-    }))
-  
-    blackEffects.append(...newResults)
+    newList = [...newList, ...results.map(result => result.value)]
+    listSignal.set(newList)
   }
   
   #parseBlueDice(results: DiceGroupRollResult[]) {
+    let newList = this.current.activeEffects.data()
+
     for (const result of results) {
-      const redEffectItem = redEffects.querySelector(`[value="${result.value}"]`)
-  
-      if (redEffectItem) redEffectItem.remove()
+      newList = newList.filter(value => value !== result.value)
     }
+
+    this.current.activeEffects.set(newList)
   }
 }

@@ -13,7 +13,7 @@ export function rollResultItem(props: RollResultItemProps) {
   const { type, value, effectsList } = props
   const effect = effectsList[value - 1]
   const itemRef = ref()
-  const removeItem = () => itemRef.el.remove()
+  const removeItem = () => diceMaster.remove(type, value)
 
   function reRoll() {
     diceMaster.reroll(type, value)
@@ -22,7 +22,7 @@ export function rollResultItem(props: RollResultItemProps) {
   return el/*html*/`
     <li
       class="roll-result ${type}"
-      value="${value}"
+      key="${value}"
       ref=${itemRef}
     >
       <div class="texts">
