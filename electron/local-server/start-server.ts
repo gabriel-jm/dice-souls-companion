@@ -2,6 +2,11 @@ import { createServer, IncomingHttpHeaders } from 'node:http'
 import { cors } from './cors'
 import { getCurrent, getLatestResults, insertResults, setCurrent } from './results-controller'
 import { parseJSONBody } from './parse-json-body'
+import path from 'node:path'
+import { existsSync } from 'node:fs'
+import { mkdir } from 'node:fs/promises'
+import { RollResultStorage } from '../roll-result/roll-result-storage'
+import { IS_DEV } from '../main'
 
 export type Req<T = null> = {
   url: URL
@@ -52,6 +57,12 @@ const server = createServer(async (req, res) => {
   res.end('Not Found')
 })
 
-export function startServer() {
+export async function startServer() {
+  if (IS_DEV && !existsSync(path.resolve('tmp'))) {
+    await mkdir(path.resolve('tmp'))
+  }
+
+  await new RollResultStorage().init()
+
   server.listen(3500, () => console.log('Server on!'))
 }

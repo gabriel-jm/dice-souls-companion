@@ -1,4 +1,7 @@
 import { randomUUID } from 'node:crypto'
+import { readFile, writeFile } from 'node:fs/promises'
+import path from 'node:path'
+import { getAppDataPath } from '../app-path/app-path'
 
 export type RollResultEntry = {
   id: string
@@ -25,7 +28,10 @@ export type CreateRollResultData = {
 export class RollResultStorage {
   static instance: RollResultStorage
   storage: RollResultEntry[] = []
-  current: RollResult | null = null
+  #current: RollResult = {
+    activeEffects: [],
+    temporary: []
+  }
 
   constructor() {
     if (!RollResultStorage.instance) {
@@ -33,6 +39,29 @@ export class RollResultStorage {
     }
 
     return RollResultStorage.instance
+  }
+
+  get current() {
+    return this.#current
+  }
+
+  set current(value: RollResult) {
+    this.#current = value
+
+    writeFile(
+      path.join(getAppDataPath(), 'current.json'),
+      JSON.stringify(value)
+    )
+    .catch(() => null)
+  }
+
+  async init() {
+    const current = await readFile(path.join(getAppDataPath(), 'current.json'))
+      .catch(() => null)
+
+    if (!current) return
+
+    this.#current = JSON.parse(current.toString('utf-8'))
   }
 
   latest() {
