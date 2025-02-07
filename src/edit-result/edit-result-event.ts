@@ -20,20 +20,33 @@ export function openEditResultDialog(type: DieTypes, currentValue: number) {
   }
   
   editDialog.show()
-  editDialog.append(html`
+  editDialog.focus()
+  editDialog.replaceChildren(html`
     <div class="effects-list">
       ${
         effectsList
           .filter((_, index) => index + 1 !== currentValue)
           .map((effect, index) => {
-            const effectNumber = index + 1
+            let effectNumber = index + 1
+
+            if (effectNumber >= currentValue) {
+              effectNumber++
+            }
+
             return el/*html*/`
               <p on-click=${editEffect(effectNumber)}>
-                ${String(effectNumber).padStart(2, '0')} ${effect}
+                <span class="number">
+                  ${String(effectNumber).padStart(2, '0')}
+                </span>
+                <span>${effect}</span>
               </p>
             `
           })
       }
     </div>
   `)
+}
+
+export function addCloseEditDialogEvent() {
+  editDialog.addEventListener('blur', () => editDialog.close())
 }

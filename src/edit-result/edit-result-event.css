@@ -4,6 +4,11 @@
   left: 360px;
   height: 200px;
 
+  &:focus {
+    outline: 2px solid #aaa;
+    outline-offset: 4px;
+  }
+
   .effects-list {
     & p {
       cursor: pointer;
@@ -15,5 +20,9 @@
         background-color: #ddd4;
       }
     }
+  }
+
+  .number {
+    color: #aaa;
   }
 }
