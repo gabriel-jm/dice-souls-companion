@@ -73,9 +73,9 @@ export class RollResultParser {
     const listSignal = this.current.temporary
     let newList = listSignal.data()
 
-    if (blackEffectsListEl.children.length == 2) {
+    if (newList.length === 2) {
       for (let i = 0; i<results.length; i++) {
-        newList = newList.filter((_, index) => index !== i)
+        newList = newList.filter((_, index) => index !== 0)
       }
     }
   

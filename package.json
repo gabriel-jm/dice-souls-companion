@@ -4,9 +4,16 @@
   "version": "0.0.0",
   "type": "module",
   "main": "dist-electron/main.js",
+  "description": "Dice Souls Companion",
+  "author": {
+    "name": "Gabriel José",
+    "email": "gabriel.josemelo@hotmail.com",
+    "url": "https://github.com/gabriel-jm/"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
+    "dev:build": "tsc && vite build",
     "preview": "vite preview",
     "check": "ncu"
   },

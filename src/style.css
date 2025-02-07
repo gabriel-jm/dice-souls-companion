@@ -42,8 +42,8 @@ ul {
   transition: all 200ms ease-in-out;
 
   &.green-bg {
-    height: 82vh;
-    width: 72vw;
+    height: 450px;
+    width: 600px;
     background-color: #00ff00;
     padding: 4px;
   }

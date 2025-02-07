@@ -30,7 +30,6 @@ function createWindow() {
   })
 
   win.on('ready-to-show', () => {
-    win?.webContents.openDevTools()
     win?.show()
   })
 

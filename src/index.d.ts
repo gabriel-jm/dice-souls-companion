@@ -26,6 +26,13 @@ declare module '@3d-dice/dice-box' {
     id?: string
 
     /**
+     * Sets the site origin used for constructing paths to assets.
+     * 
+     * @default location.origin
+     */
+    origin?: string
+
+    /**
      * Too much gravity will cause the dice to jitter.
      * Too little and they take much longer to settle.
      * 
@@ -176,4 +183,8 @@ declare type CreateRollResultProps = {
 declare type DieEffect = {
   number: number
   text: string
+}
+
+declare var ipcRenderer: {
+  localPath(): string
 }

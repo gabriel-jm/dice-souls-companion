@@ -13,6 +13,10 @@ export type CurrentRollResult = {
   temporary: DataSignal<number[]>
 }
 
+const originPath = import.meta.env.PROD
+  ? 'https://github.com/gabriel-jm/dice-souls-companion-web/raw/refs/heads/main/public'
+  : location.origin
+
 class DiceMaster {
   diceBox: DiceBox
   rollParser: RollResultParser
@@ -35,6 +39,7 @@ class DiceMaster {
   constructor() {
     this.diceBox = new DiceBox({
       assetPath: '/assets/',
+      origin: originPath,
       container: '#app',
       scale: 4,
     })
