@@ -43,6 +43,7 @@ export async function getCurrent(req: Req, res: ServerResponse) {
   res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' })
   res.end(/*html*/`
     <p>Efeitos Ativos:</p>
+    <br/>
     <ul>
       ${
         current?.activeEffects
@@ -51,8 +52,12 @@ export async function getCurrent(req: Req, res: ServerResponse) {
         ?? ''
       }
     </ul>
-      
+    
+    <br/>
+    <br/>
+
     <p>Temporários:</p>
+    <br/>
     <ul>
       ${
         current?.temporary
