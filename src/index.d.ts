@@ -8,6 +8,7 @@ declare const blackEffectsListEl: HTMLUListElement
 declare const rollResult: HTMLDivElement
 declare const diceToRollDiv: HTMLDivElement
 declare const greenBackgroundBtn: HTMLButtonElement
+declare const editDialog: HTMLDialogElement
 
 declare module '@3d-dice/dice-box' {
   export type DiceBoxConfig = {

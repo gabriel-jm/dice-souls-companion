@@ -1,7 +1,8 @@
 import './roll-results.css'
 import { el, ref } from 'lithen-fns'
-import { refreshIcon, xIcon } from '../common/icons'
+import { editIcon, refreshIcon, xIcon } from '../common/icons'
 import { diceMaster, DieTypes } from '../dice-master/dice-master'
+import { openEditResultDialog } from '../edit-result/edit-result-event'
 
 export type RollResultItemProps = {
   type: DieTypes
@@ -13,10 +14,15 @@ export function rollResultItem(props: RollResultItemProps) {
   const { type, value, effectsList } = props
   const effect = effectsList[value - 1]
   const itemRef = ref()
+
   const removeItem = () => diceMaster.remove(type, value)
 
   function reRoll() {
     diceMaster.reroll(type, value)
+  }
+
+  function editValue() {
+    openEditResultDialog(type, value)
   }
 
   return el/*html*/`
@@ -32,6 +38,9 @@ export function rollResultItem(props: RollResultItemProps) {
         <span>${effect}</span>
       </div>
       <div class="actions">
+        <span title="Edição Manual" on-click=${editValue}>
+          ${editIcon()}
+        </span>
         <span title="Jogar Novamente" on-click=${reRoll}>
           ${refreshIcon()}
         </span>

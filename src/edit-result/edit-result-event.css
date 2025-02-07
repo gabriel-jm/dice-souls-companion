@@ -1,0 +1,19 @@
+#editDialog {
+  position: absolute;
+  top: 200px;
+  left: 360px;
+  height: 200px;
+
+  .effects-list {
+    & p {
+      cursor: pointer;
+      padding: 6px 8px;
+      font-size: 0.95rem;
+      border-radius: 4px;
+
+      &:hover {
+        background-color: #ddd4;
+      }
+    }
+  }
+}

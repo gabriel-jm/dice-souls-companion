@@ -36,45 +36,6 @@ export function manualThrow() {
         diceQuantities.black.set(0)
         diceQuantities.blue.set(0)
       })
-    // .then(async (values) => {
-    //   const data: CreateRollResultProps = {
-    //     activeEffects: [],
-    //     temporary: []
-    //   }
-
-    //   for (const value of values) {
-    //     if (!value) continue
-        
-    //     const [key, results] = value
-
-    //     if (key === 'red') {
-    //       data.activeEffects = results.map(result => {
-    //         return {
-    //           number: result.value,
-    //           text: redDieEffects[result.value - 1]
-    //         }
-    //       })
-    //     }
-
-    //     if (key === 'black') {
-    //       data.temporary = results.map(result => {
-    //         return {
-    //           number: result.value,
-    //           text: blackDieEffects[result.value - 1]
-    //         }
-    //       })
-    //     }
-    //   }
-
-    //   if (isLocal) {
-    //     await fetch('http://localhost:3500/results', {
-    //       method: 'POST',
-    //       body: JSON.stringify(data)
-    //     })
-    //   }
-
-    //   isLocked.set(false)
-    // })
   }
 
   return html`

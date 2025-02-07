@@ -87,9 +87,18 @@ class DiceMaster {
       const results = await this.#rollDice(type, 1)
 
       if (results) {
-        this.rollParser.parseReroll(type, currentValue, results[0])
+        const newValue = results[0].value
+        this.rollParser.parseReroll(type, currentValue, newValue)
         await this.#updateServiceCurrent()
       }
+    })
+  }
+
+  changeResult(type: DieTypes, currentValue: number, newValue: number) {
+    return this.#lockUntil(() => {
+      this.rollParser.parseReroll(type, currentValue, newValue)
+
+      return this.#updateServiceCurrent()
     })
   }
 

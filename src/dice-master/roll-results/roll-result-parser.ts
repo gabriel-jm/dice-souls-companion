@@ -16,14 +16,14 @@ export class RollResultParser {
     this.#parseBlueDice(results)
   }
 
-  parseReroll(type: DieTypes, currentValue: number, result: DiceGroupRollResult) {
+  parseReroll(type: DieTypes, currentValue: number, resultValue: number) {
     let listSignal = this.current.temporary
     
     if (type === 'red') {
       listSignal = this.current.activeEffects
       
       this.current.activeEffects.set(value => {
-        return value.filter(n => n !== result.value)
+        return value.filter(n => n !== resultValue)
       })
     }
 
@@ -32,7 +32,7 @@ export class RollResultParser {
     if (index !== -1) {
       listSignal.set(value => {
         const newList = [...value]
-        newList[index] = result.value
+        newList[index] = resultValue
         return newList
       })
     }
