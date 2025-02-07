@@ -12,8 +12,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "rm -rf dist release && tsc && vite build && electron-builder",
+    "build": "npm run rm && tsc && vite build && electron-builder",
     "dev:build": "tsc && vite build",
+    "rm": "rm -rf dist dist-electron release",
     "preview": "vite preview",
     "check": "ncu"
   },
