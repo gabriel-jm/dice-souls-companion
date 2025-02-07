@@ -1,6 +1,6 @@
 import DiceBox from '@3d-dice/dice-box'
 import { blackDieEffects, redDieEffects } from './dice-effects'
-import { isLocked } from '../main'
+import { isLocal, isLocked } from '../main'
 import { RollResultParser } from './roll-results/roll-result-parser'
 import { RollResultService } from './roll-results/roll-results-service'
 import { DataSignal, shell, signal } from 'lithen-fns'
@@ -157,7 +157,7 @@ class DiceMaster {
     return results
   }
 
-  #addEffectsList() {
+  async #addEffectsList() {
     redEffectsListEl.append(...shell(() => {
       const effectsArray = [...this.currentResult.activeEffects.get()]
       return effectsArray.map(effectNumber => rollResultItem({
@@ -175,9 +175,24 @@ class DiceMaster {
         value: effectNumber
       }))
     }))
+
+    if (!isLocal) return
+
+    const serverCurrentData = await this.rollResultService.getCurrent()
+
+    if (serverCurrentData) {
+      this.currentResult.activeEffects.set(() => {
+        return serverCurrentData.activeEffects.map(effect => effect.number)
+      })
+      this.currentResult.temporary.set(() => {
+        return serverCurrentData.temporary.map(effect => effect.number)
+      })
+    }
   }
 
   #updateServiceCurrent() {
+    if (!isLocal) return
+
     const mapEffect = (key: 'activeEffects'|'temporary') => {
       return this.currentResult[key].data().map(value => {
         const effectList = key === 'activeEffects'

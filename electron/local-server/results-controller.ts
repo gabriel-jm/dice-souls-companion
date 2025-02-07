@@ -36,7 +36,7 @@ export async function getCurrent(req: Req, res: ServerResponse) {
 
   if (searchParams.get('type') === 'json') {
     res.statusCode = 200
-    return res.end(JSON.stringify(rollStorage))
+    return res.end(JSON.stringify(rollStorage.current))
   }
 
   const current = rollStorage.current
