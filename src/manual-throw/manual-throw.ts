@@ -77,3 +77,7 @@ export function manualThrow() {
     </div>
   `
 }
+
+export function addManualThrow() {
+  ui.append(manualThrow())
+}

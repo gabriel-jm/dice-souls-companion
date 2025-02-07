@@ -55,6 +55,8 @@ class DiceMaster {
   }
 
   clear() {
+    if (isLocked.data()) return this
+
     this.diceBox.clear()
     return this
   }
@@ -103,6 +105,36 @@ class DiceMaster {
         await this.#updateServiceCurrent()
       }
 
+      this.#addClearTimer()
+    })
+  }
+
+  rerollAll() {
+    const quantity = {
+      red: this.currentResult.activeEffects.data().length,
+      black: this.currentResult.temporary.data().length
+    }
+
+    return this.#lockUntil(async () => {
+      const results = await Promise.all(
+        Object.entries(quantity)
+          .map(async ([key, value]) => {
+            const type = key as DieTypes
+  
+            return [type, await this.#rollDice(type, value)] as const
+          })
+      )
+
+      this.currentResult.activeEffects.set([])
+      this.currentResult.temporary.set([])
+
+      for (const [type, result] of results) {
+        if (!result) continue
+
+        this.rollParser.parseResults(type, result)
+      }
+
+      await this.#updateServiceCurrent()
       this.#addClearTimer()
     })
   }
@@ -157,7 +189,7 @@ class DiceMaster {
     return results
   }
 
-  async #addEffectsList() {
+  #addEffectsList() {
     redEffectsListEl.append(...shell(() => {
       const effectsArray = [...this.currentResult.activeEffects.get()]
       return effectsArray.map(effectNumber => rollResultItem({
@@ -176,18 +208,20 @@ class DiceMaster {
       }))
     }))
 
-    if (!isLocal) return
+    queueMicrotask(async () => {
+      if (!isLocal) return
+      
+      const serverCurrentData = await this.rollResultService.getCurrent()
 
-    const serverCurrentData = await this.rollResultService.getCurrent()
-
-    if (serverCurrentData) {
-      this.currentResult.activeEffects.set(() => {
-        return serverCurrentData.activeEffects.map(effect => effect.number)
-      })
-      this.currentResult.temporary.set(() => {
-        return serverCurrentData.temporary.map(effect => effect.number)
-      })
-    }
+      if (serverCurrentData) {
+        this.currentResult.activeEffects.set(() => {
+          return serverCurrentData.activeEffects.map(effect => effect.number)
+        })
+        this.currentResult.temporary.set(() => {
+          return serverCurrentData.temporary.map(effect => effect.number)
+        })
+      }
+    })
   }
 
   #updateServiceCurrent() {

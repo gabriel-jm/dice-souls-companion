@@ -58,8 +58,10 @@ ul {
   transition: all 200ms ease-in-out;
 
   &.green-bg {
-    height: 450px;
-    width: 600px;
+    height: 460px;
+    width: 640px;
+    margin-right: 280px;
+    margin-top: 72px;
     background-color: #00ff00;
     padding: 4px;
 
@@ -266,9 +268,39 @@ input {
   margin-top: 20px;
   max-height: 100%;
   
-  & h3 {
+  & .roll-result-title-container {
     margin: 0;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    & .reroll-all {
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: -13px;
+        left: -8px;
+        width: 32px;
+        height: 32px;
+        border-radius: 32px;
+        background-color: #aaa4;
+        z-index: -1;
+        transition: opacity 250ms ease-in-out;
+        opacity: 0;
+      }
+
+      &:hover::after {
+        opacity: 1;
+      }
+      
+      & .refresh-icon {
+        width: 16px;
+        cursor: pointer;
+      }
+    }
   }
 
   & h4 {
