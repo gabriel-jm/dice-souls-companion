@@ -1,7 +1,7 @@
 {
   "name": "dice-souls-companion",
   "private": true,
-  "version": "0.5.2",
+  "version": "0.6.0",
   "type": "module",
   "main": "dist-electron/main.js",
   "description": "Dice Souls Companion",
