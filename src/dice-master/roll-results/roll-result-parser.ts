@@ -1,5 +1,6 @@
 import { DiceGroupRollResult } from '@3d-dice/dice-box'
 import { CurrentRollResult, DieTypes } from '../dice-master'
+import { diceLogger } from '../logger/dice-logger'
 
 export class RollResultParser {
   constructor(public current: CurrentRollResult) {}
@@ -23,7 +24,18 @@ export class RollResultParser {
       listSignal = this.current.activeEffects
       
       this.current.activeEffects.set(value => {
-        return value.filter(n => n !== resultValue)
+        return value.filter(n => {
+          const bool = n !== resultValue
+
+          if (!bool) {
+            diceLogger.duplicatedDie(
+              type,
+              currentValue
+            )
+          }
+
+          return bool
+        })
       })
     }
 
@@ -35,6 +47,7 @@ export class RollResultParser {
         newList[index] = resultValue
         return newList
       })
+      diceLogger.dieRerolled(type, currentValue, resultValue)
     }
   }
 
@@ -43,6 +56,7 @@ export class RollResultParser {
 
     for (const result of results) {
       if (resultValues.has(result.value)) {
+        diceLogger.duplicatedDie('red', result.value)
         resultValues.delete(result.value)
         continue
       } 
@@ -58,11 +72,20 @@ export class RollResultParser {
 
       if (hasItem) {
         this.current.activeEffects.set(list => {
-          return list.filter(n => n !== value)
+          return list.filter(n => {
+            const isNotEqual = n !== value
+
+            if (!isNotEqual) {
+              diceLogger.duplicatedDie('red', value)
+            }
+
+            return isNotEqual
+          })
         })
         continue
       }
 
+      diceLogger.dieAdded('red', value)
       newResults.push(value)
     }
   
@@ -75,11 +98,25 @@ export class RollResultParser {
 
     if (newList.length === 2) {
       for (let i = 0; i<results.length; i++) {
-        newList = newList.filter((_, index) => index !== 0)
+        newList = newList.filter((value, index) => {
+          const isNotFirst = index !== 0
+
+          if (!isNotFirst) {
+            diceLogger.dieRemoved('black', value)
+          }
+
+          return isNotFirst
+        })
       }
     }
   
-    newList = [...newList, ...results.map(result => result.value)]
+    newList = [
+      ...newList,
+      ...results.map(result => {
+        diceLogger.dieAdded('black', result.value)
+        return result.value
+      })
+    ]
     listSignal.set(newList)
   }
   
@@ -87,7 +124,23 @@ export class RollResultParser {
     let newList = this.current.activeEffects.data()
 
     for (const result of results) {
-      newList = newList.filter(value => value !== result.value)
+      let voidBlue = false
+
+      newList = newList.filter(value => {
+        const isNotEqual = value !== result.value
+
+        if (!isNotEqual) {
+          diceLogger.blueRemovedDie(result.value)
+        } else {
+          voidBlue = true
+        }
+
+        return isNotEqual
+      })
+
+      if (voidBlue) {
+        diceLogger.voidBlueDie(result.value)
+      }
     }
 
     this.current.activeEffects.set(newList)

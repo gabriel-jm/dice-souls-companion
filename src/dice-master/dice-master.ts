@@ -5,6 +5,7 @@ import { RollResultParser } from './roll-results/roll-result-parser'
 import { RollResultService } from './roll-results/roll-results-service'
 import { DataSignal, shell, signal } from 'lithen-fns'
 import { rollResultItem } from '../roll-results/roll-result-item'
+import { diceLogger } from './logger/dice-logger'
 
 export type DieTypes = 'black' | 'blue' | 'red'
 
@@ -43,7 +44,7 @@ class DiceMaster {
       assetPath: '/assets/',
       origin: originPath,
       container: '#app',
-      scale: 4,
+      scale: 5,
     })
     this.rollParser = new RollResultParser(this.currentResult)
 
@@ -154,7 +155,15 @@ class DiceMaster {
         : this.currentResult.temporary
 
       listSignal.set(
-        listSignal.data().filter(n => n !== value)
+        listSignal.data().filter(n => {
+          const isNotEqual = n !== value
+          
+          if (!isNotEqual) {
+            diceLogger.dieRemoved(type, value)
+          }
+
+          return isNotEqual
+        })
       )
 
       return this.#updateServiceCurrent()

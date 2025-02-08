@@ -10,6 +10,7 @@ declare const rollResultActions: HTMLDivElement
 declare const diceToRollDiv: HTMLDivElement
 declare const greenBackgroundBtn: HTMLButtonElement
 declare const editDialog: HTMLDialogElement
+declare const logsDiv: HTMLDivElement
 
 declare type CreateRollResultProps = {
   activeEffects: DieEffect[]

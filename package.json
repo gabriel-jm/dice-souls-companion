@@ -14,7 +14,7 @@
     "dev": "vite",
     "build": "npm run rm && tsc && vite build && electron-builder",
     "dev:build": "tsc && vite build",
-    "rm": "rm -rf dist dist-electron release",
+    "rm": "rm -rf dist release",
     "preview": "vite preview",
     "check": "ncu"
   },
