@@ -13,14 +13,12 @@ import { moneyFormEvents } from './donate-form/money-form-events'
 import { diceMaster } from './dice-master/dice-master'
 import { addCloseEditDialogEvent } from './edit-result/edit-result-event'
 import { addRerollAllResultsEvent } from './roll-results/reroll-all-results-event'
-import { diceLogger } from './dice-master/logger/dice-logger'
 
 addGreenBackgroundEvent()
 moneyFormEvents()
 addManualThrow()
 addCloseEditDialogEvent()
 addRerollAllResultsEvent()
-diceLogger.init()
 
 document.querySelector('.btn.clear-dice')?.addEventListener('click', () => {
   diceMaster.clear()

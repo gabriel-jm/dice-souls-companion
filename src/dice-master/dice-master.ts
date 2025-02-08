@@ -155,7 +155,15 @@ class DiceMaster {
         : this.currentResult.temporary
 
       listSignal.set(
-        listSignal.data().filter(n => n !== value)
+        listSignal.data().filter(n => {
+          const isNotEqual = n !== value
+          
+          if (!isNotEqual) {
+            diceLogger.dieRemoved(type, value)
+          }
+
+          return isNotEqual
+        })
       )
 
       return this.#updateServiceCurrent()
