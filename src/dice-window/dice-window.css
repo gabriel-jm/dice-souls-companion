@@ -1,0 +1,35 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.app-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#dice-roller {
+  height: 98vh;
+  width: 98vw;
+
+  & canvas {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/* Remover depois */
+#t {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}

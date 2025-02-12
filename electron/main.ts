@@ -1,7 +1,11 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { startServer } from './local-server/start-server'
+import { autoUpdater } from 'electron-updater'
+
+autoUpdater.autoDownload = false
+autoUpdater.autoInstallOnAppQuit = true
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -34,6 +38,10 @@ function createWindow() {
     win?.show()
   })
 
+  win.webContents.on('did-finish-load', () => {
+    win?.webContents.send('app-version', app.getVersion())
+  })
+
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL)
   } else {
@@ -56,4 +64,51 @@ app.on('activate', () => {
   }
 })
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+  createWindow()
+
+  autoUpdater.checkForUpdates()
+})
+
+autoUpdater.on('update-available', () => {
+  autoUpdater.downloadUpdate()
+})
+
+let diceWindow: BrowserWindow | null = null
+
+ipcMain.handle('separate-dice-window', () => {
+  if (diceWindow) {
+    diceWindow.focus()
+    return
+  }
+  
+  diceWindow = new BrowserWindow({
+    icon: path.join(process.env.VITE_PUBLIC, 'img', 'd20.png'),
+    width: 1000,
+    height: 600,
+    autoHideMenuBar: true,
+    show: true,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.mjs'),
+    },
+  })
+
+  diceWindow.on('close', () => {
+    ipcMain.removeHandler('roll-dice')
+    diceWindow = null
+  })
+
+  ipcMain.handle('roll-dice', (_, type, quantity) => {
+    diceWindow?.webContents.send('roll-dice', type, quantity)
+  })
+
+  if (VITE_DEV_SERVER_URL) {
+    diceWindow.loadURL(VITE_DEV_SERVER_URL + '/dice-window/index.html')
+  } else {
+    diceWindow.loadFile(
+      path.join(RENDERER_DIST, 'dice-window', 'index.html')
+    )
+  }
+})

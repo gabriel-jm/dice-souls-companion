@@ -21,7 +21,3 @@ declare type DieEffect = {
   number: number
   text: string
 }
-
-declare var ipcRenderer: {
-  localPath(): string
-}
