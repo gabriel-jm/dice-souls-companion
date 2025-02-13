@@ -1,6 +1,7 @@
 import './dice-window.css'
-import { diceRoller } from '../dice-master/roller/dice-roller'
+import { DiceRoller } from '../dice-master/roller/dice-roller'
 
+const diceRoller = new DiceRoller()
 diceRoller.init()
 
 window.ipcRenderer.on('roll-dice', (_, type, quantity) => {

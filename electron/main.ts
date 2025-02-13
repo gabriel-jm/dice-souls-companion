@@ -86,7 +86,7 @@ ipcMain.on('roll-dice', (_, type, quantity) => {
   diceWindow?.webContents.send('roll-dice', type, quantity)
 })
 
-ipcMain.on('separate-dice-window', () => {
+ipcMain.on('open-dice-window', () => {
   if (diceWindow) {
     diceWindow.focus()
     return
@@ -107,6 +107,7 @@ ipcMain.on('separate-dice-window', () => {
 
   diceWindow.on('close', () => {
     diceWindow = null
+    win?.webContents.send('dice-window-closed')
   })
 
   if (VITE_DEV_SERVER_URL) {

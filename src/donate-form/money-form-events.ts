@@ -1,71 +1,71 @@
-import { isLocked } from '../main'
-import { diceToRollCard } from '../dice-to-roll-display/dice-to-roll'
-import { diceMaster } from '../dice-master/dice-master'
+// import { isLocked } from '../main'
+// import { diceToRollCard } from '../dice-to-roll-display/dice-to-roll'
+// import { diceMaster } from '../dice-master/dice-master'
 
-export const stats = {
-  totalAmount: 0,
-  redDiceRolled: 0
-}
+// export const stats = {
+//   totalAmount: 0,
+//   redDiceRolled: 0
+// }
 
-export function moneyFormEvents() {
-  moneyInput.addEventListener('input', () => {
-    const value = moneyInput.value.replace(/\D/g, '')
+// export function moneyFormEvents() {
+//   moneyInput.addEventListener('input', () => {
+//     const value = moneyInput.value.replace(/\D/g, '')
   
-    if (!value) {
-      moneyInput.value = ''
-      return
-    }
+//     if (!value) {
+//       moneyInput.value = ''
+//       return
+//     }
   
-    const moneyAmount = Number(value) / 100
-    moneyInput.value = moneyAmount.toFixed(2).replace('.', ',')
-  })
+//     const moneyAmount = Number(value) / 100
+//     moneyInput.value = moneyAmount.toFixed(2).replace('.', ',')
+//   })
   
-  moneyForm.addEventListener('submit', event => {
-    event.preventDefault()
+//   moneyForm.addEventListener('submit', event => {
+//     event.preventDefault()
   
-    if (isLocked.data()) return
+//     if (isLocked.data()) return
   
-    const donateOwner = moneyForm.donateOwner
-    const moneyInCents = Number(moneyInput.value.replace(',', ''))
+//     const donateOwner = moneyForm.donateOwner
+//     const moneyInCents = Number(moneyInput.value.replace(',', ''))
   
-    if (moneyInCents === 0) return
+//     if (moneyInCents === 0) return
   
-    if (moneyInCents >= 200000) {
-      moneyForm.reset()
-      return
-    }
+//     if (moneyInCents >= 200000) {
+//       moneyForm.reset()
+//       return
+//     }
   
-    const moneyValue = moneyInCents / 100
+//     const moneyValue = moneyInCents / 100
   
-    stats.totalAmount = stats.totalAmount + moneyInCents
+//     stats.totalAmount = stats.totalAmount + moneyInCents
   
-    const blueOrBlackDiceToRoll = Math.min(Math.floor(moneyValue / 50), 2)
-    const redDice = (stats.totalAmount / 100) / 50
+//     const blueOrBlackDiceToRoll = Math.min(Math.floor(moneyValue / 50), 2)
+//     const redDice = (stats.totalAmount / 100) / 50
   
-    diceMaster.clear()
+//     diceMaster.clear()
   
-    const redDiceToRoll = Math.floor(redDice - Math.floor(stats.redDiceRolled))
+//     const redDiceToRoll = Math.floor(redDice - Math.floor(stats.redDiceRolled))
   
-    if (blueOrBlackDiceToRoll > 0 || redDiceToRoll > 0) {
-      diceToRollDiv.replaceChildren(
-        diceToRollCard({
-          amount: moneyInput.value,
-          donateOwner: donateOwner.value,
-          dice: {
-            red: redDiceToRoll,
-            blackOrBlue: blueOrBlackDiceToRoll
-          },
-          rollDice: (...args) => diceMaster.rollByType(...args),
-        })
-      )
-    }
+//     if (blueOrBlackDiceToRoll > 0 || redDiceToRoll > 0) {
+//       diceToRollDiv.replaceChildren(
+//         diceToRollCard({
+//           amount: moneyInput.value,
+//           donateOwner: donateOwner.value,
+//           dice: {
+//             red: redDiceToRoll,
+//             blackOrBlue: blueOrBlackDiceToRoll
+//           },
+//           rollDice: (...args) => diceMaster.rollByType(...args),
+//         })
+//       )
+//     }
   
-    totalAmountP.innerHTML = `
-      <span class="total-amount-span">
-        💸 Valor Total: R$ ${(stats.totalAmount / 100).toFixed(2).replace('.', ',')}
-      </span>
-    `
+//     totalAmountP.innerHTML = `
+//       <span class="total-amount-span">
+//         💸 Valor Total: R$ ${(stats.totalAmount / 100).toFixed(2).replace('.', ',')}
+//       </span>
+//     `
   
-    moneyForm.reset()
-  })
-}
+//     moneyForm.reset()
+//   })
+// }

@@ -2,6 +2,10 @@
   position: absolute;
   top: 18px;
   right: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
   
   #greenBackgroundBtn {
     cursor: pointer;

@@ -1,4 +1,5 @@
 import './style.css'
+import './styles/logs.css'
 import { signal } from 'lithen-fns'
 
 export const isLocal = (
@@ -6,20 +7,20 @@ export const isLocal = (
   || location.hostname === ''
 )
 export const isLocked = signal(false)
+export const isDiceWindowOpen = signal(false)
 
 import { addManualThrow } from './manual-throw/manual-throw'
 import { addGreenBackgroundEvent } from './green-background/green-background-btn'
 import { diceMaster } from './dice-master/dice-master'
 import { addCloseEditDialogEvent } from './edit-result/edit-result-event'
 import { addRerollAllResultsEvent } from './roll-results/reroll-all-results-event'
-import { separateDiceRollerEvent } from './separated-dice-roller/separate-dice-roller-event'
+import { openDiceWindowEvent } from './dice-window/open-dice-window-event'
 
 addGreenBackgroundEvent()
-// moneyFormEvents()
 addManualThrow()
 addCloseEditDialogEvent()
 addRerollAllResultsEvent()
-separateDiceRollerEvent()
+openDiceWindowEvent()
 
 document.querySelector('.btn.clear-dice')?.addEventListener('click', () => {
   diceMaster.clear()
@@ -28,10 +29,11 @@ document.querySelector('.btn.clear-dice')?.addEventListener('click', () => {
 
 if (window.ipcRenderer) {
   window.ipcRenderer.on('app-version', (_, version) => {
-    document.querySelector('.version-tag')?.append(
-      `v${version}`
-    )
+    document.querySelector('.version-tag')
+      ?.append(`v${version}`)
   })
+    
+  window.ipcRenderer.on('dice-window-closed', () => isDiceWindowOpen.set(false))
 }
 
 diceMaster.init().catch(console.log)

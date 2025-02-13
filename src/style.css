@@ -50,8 +50,8 @@ ul {
 }
 
 #app {
-  height: 90vh;
-  width: 90vw;
+  height: 90%;
+  width: 90%;
   margin: auto;
   position: relative;
   border-radius: 2px;
@@ -171,13 +171,33 @@ ul {
   }
 }
 
+.void-btn {
+  width: 50px;
+  height: 50px;
+  border: 1px solid transparent;
+  background-color: transparent;
+  background: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 200ms ease-in-out;
+
+  .icon {
+    width: 22px;
+  }
+
+  &:hover {
+    border-color: #555;
+    background-color: #5556;
+  }
+}
+
 .dice-box-canvas {
   display: block;
   height: 100%;
   margin: auto;
 }
 
-.stats {
+/* .stats {
   padding: 0px 20px;
   position: absolute;
   bottom: 18px;
@@ -190,7 +210,7 @@ ul {
     -webkit-text-stroke: 1.5px #181818aa;
     text-shadow: -1px 1px 2px #181818;
   }
-}
+} */
 
 .static-info {
   height: 70%;
@@ -206,7 +226,7 @@ ul {
   }
 }
 
-.money-container {
+/* .money-container {
   padding: 20px;
   border-radius: 4px;
   position: absolute;
@@ -229,7 +249,7 @@ ul {
   &:focus-within {
     outline: 2px solid #3a66a9;
   }
-}
+} */
 
 input {
   font-size: 1rem;
@@ -243,7 +263,7 @@ input {
   }
 }
 
-#moneyForm {
+/* #moneyForm {
   display: flex;
   gap: 20px;
   justify-content: center;
@@ -259,7 +279,7 @@ input {
   &:focus {
     outline: 0;
   }
-}
+} */
 
 .glass-container {
   width: fit-content;
@@ -324,64 +344,14 @@ input {
   }
 }
 
-#diceToRollDiv {
+/* #diceToRollDiv {
   position: absolute;
   top: 350px;
   right: 26px;
-}
+} */
 
 .clear-dice {
   position: absolute;
   right: 18px;
-  bottom: 180px;
-}
-
-.logs-container {
-  position: absolute;
-  right: 18px;
-  top: 80px;
-  width: 260px;
-  height: 240px;
-  padding: 8px 12px;
-  background-color: #111a;
-  border-color: #333;
-  overflow: hidden;
-
-  & h3 {
-    font-size: 0.85rem;
-    padding: 8px;
-    padding-top: 4px;
-    border-bottom: 1px solid #333;
-    margin-bottom: 8px;
-  }
-
-  #logsDiv {
-    height: 80%;
-    overflow-y: scroll;
-    font-size: 0.75rem;
-    padding: 8px 0;
-    padding-top: 0;
-
-    & p {
-      padding: 6px 6px;
-      color: #ddd;
-      border-radius: 4px;
-
-      .red {
-        color: #f95a5a;
-      }
-
-      .blue {
-        color: rgb(77, 149, 231);
-      }
-
-      .black {
-        color: #6f6f6f;
-      }
-
-      &:hover {
-        background-color: #3338;
-      }
-    }
-  }
+  bottom: 190px;
 }

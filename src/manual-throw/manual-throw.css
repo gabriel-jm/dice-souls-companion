@@ -1,11 +1,12 @@
 .manual-throw {
   position: absolute;
   bottom: 18px;
-  right: 18px;
+  left: 50%;
+  translate: -50%;
 }
 
 .dice-count {
-  margin-top: 12px;
+  /* margin-top: 12px; */
   margin-bottom: 12px;
   height: 40px;
   display: flex;

@@ -40,7 +40,7 @@ export function manualThrow() {
 
   return html`
     <div class="glass-container manual-throw">
-      <h4>Dados Manuais</h4>
+      <!-- <h4>Dados Manuais</h4> -->
       
       <div class="btn-group">
         <div class="dice-count">

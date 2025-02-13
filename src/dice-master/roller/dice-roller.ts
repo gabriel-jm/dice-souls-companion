@@ -5,7 +5,7 @@ const originPath = import.meta.env.PROD
   ? 'https://unpkg.com/@3d-dice/dice-box@1.1.3/dist'
   : location.origin
 
-class DiceRoller {
+export class DiceRoller {
   diceBox: DiceBox
   diceColors: Record<DieTypes, string> = {
     black: '#242424',
@@ -19,7 +19,7 @@ class DiceRoller {
       container: '#dice-roller',
       assetPath: '/assets/',
       origin: originPath,
-      scale: 4,
+      scale: 5,
       spinForce: 7,
       startingHeight: 10
     })
@@ -69,5 +69,3 @@ class DiceRoller {
       .setTimeout(() => this.clear(), 8_000);
   }
 }
-
-export const diceRoller = new DiceRoller()
