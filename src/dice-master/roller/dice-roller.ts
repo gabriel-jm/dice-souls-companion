@@ -12,6 +12,7 @@ class DiceRoller {
     red: '#ad2510',
     blue: '#1a30a9'
   }
+  timeoutId?: number
 
   constructor() {
     this.diceBox = new DiceBox({
@@ -43,6 +44,8 @@ class DiceRoller {
       `${diceCount}d20`,
       { themeColor: this.diceColors[type] }
     )
+
+    this.#addClearTimer()
   
     return results
   }
@@ -58,6 +61,12 @@ class DiceRoller {
     )
 
     return results
+  }
+
+  #addClearTimer() {
+    window.clearTimeout(this.timeoutId)
+    this.timeoutId = window
+      .setTimeout(() => this.clear(), 8_000);
   }
 }
 

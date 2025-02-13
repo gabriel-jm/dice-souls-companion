@@ -19,6 +19,7 @@ export const IS_DEV = process.env.NODE_ENV === 'development'
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 'public') : RENDERER_DIST
 
 let win: BrowserWindow | null
+let diceWindow: BrowserWindow | null = null
 
 function createWindow() {
   win = new BrowserWindow({
@@ -36,6 +37,13 @@ function createWindow() {
 
   win.on('ready-to-show', () => {
     win?.show()
+  })
+
+  win.on('close', () => {
+    if (!diceWindow) return
+
+    diceWindow.close()
+    diceWindow = null
   })
 
   win.webContents.on('did-finish-load', () => {
@@ -74,9 +82,11 @@ autoUpdater.on('update-available', () => {
   autoUpdater.downloadUpdate()
 })
 
-let diceWindow: BrowserWindow | null = null
+ipcMain.on('roll-dice', (_, type, quantity) => {
+  diceWindow?.webContents.send('roll-dice', type, quantity)
+})
 
-ipcMain.handle('separate-dice-window', () => {
+ipcMain.on('separate-dice-window', () => {
   if (diceWindow) {
     diceWindow.focus()
     return
@@ -96,12 +106,7 @@ ipcMain.handle('separate-dice-window', () => {
   })
 
   diceWindow.on('close', () => {
-    ipcMain.removeHandler('roll-dice')
     diceWindow = null
-  })
-
-  ipcMain.handle('roll-dice', (_, type, quantity) => {
-    diceWindow?.webContents.send('roll-dice', type, quantity)
   })
 
   if (VITE_DEV_SERVER_URL) {
