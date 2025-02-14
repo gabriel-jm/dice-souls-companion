@@ -86,6 +86,10 @@ ipcMain.on('roll-dice', (_, type, quantity) => {
   diceWindow?.webContents.send('roll-dice', type, quantity)
 })
 
+ipcMain.on('roll-many', (_, quantityRecord) => {
+  diceWindow?.webContents.send('roll-many', quantityRecord)
+})
+
 ipcMain.on('open-dice-window', () => {
   if (diceWindow) {
     diceWindow.focus()

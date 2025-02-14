@@ -11,7 +11,7 @@ export class DiceEvents {
     return new Promise<DiceGroupRollResult[]>((resolve) => {
       this.#send('roll-dice', type, quantity)
 
-      this.#on('roll-dice-result', (_, results: DiceGroupRollResult[]) => {
+      this.#once('roll-dice-result', (_, results: DiceGroupRollResult[]) => {
         resolve(results)
       })
     })
@@ -21,14 +21,14 @@ export class DiceEvents {
     return new Promise<DiceGroupRollResult[][]>((resolve) => {
       this.#send('roll-many', diceQuantity)
 
-      this.#on('roll-many-result', (_, results: DiceGroupRollResult[][]) => {
+      this.#once('roll-many-result', (_, results: DiceGroupRollResult[][]) => {
         resolve(results)
       })
     })
   }
 
-  #on(name: string, listener: ElectronEventListener) {
-    window.ipcRenderer.on(name, listener)
+  #once(name: string, listener: ElectronEventListener) {
+    window.ipcRenderer.once(name, listener)
   }
 
   #send(name: string, ...data: unknown[]) {

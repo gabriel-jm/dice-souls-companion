@@ -14,13 +14,12 @@ import { addGreenBackgroundEvent } from './green-background/green-background-btn
 import { diceMaster } from './dice-master/dice-master'
 import { addCloseEditDialogEvent } from './edit-result/edit-result-event'
 import { addRerollAllResultsEvent } from './roll-results/reroll-all-results-event'
-import { openDiceWindowEvent } from './dice-window/open-dice-window-event'
 
 addGreenBackgroundEvent()
 addManualThrow()
 addCloseEditDialogEvent()
 addRerollAllResultsEvent()
-openDiceWindowEvent()
+//openDiceWindowEvent()
 
 document.querySelector('.btn.clear-dice')?.addEventListener('click', () => {
   diceMaster.clear()
