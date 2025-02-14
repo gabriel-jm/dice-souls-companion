@@ -1,8 +1,10 @@
 import './green-background-btn.css'
 
 export function addGreenBackgroundEvent() {
+  const diceBoxContainer = document.querySelector('#dice-roller')!
+
   greenBackgroundBtn.addEventListener('click', () => {
-    app.classList.toggle('green-bg')
+    diceBoxContainer.classList.toggle('green-bg')
     const isActive = greenBackgroundBtn.classList.toggle('active')
 
     if (isActive) {

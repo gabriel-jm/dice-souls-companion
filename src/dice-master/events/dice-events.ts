@@ -17,11 +17,11 @@ export class DiceEvents {
     })
   }
 
-  emitRollMany(diceQuantity: Record<DieTypes, number>) {
-    return new Promise<DiceGroupRollResult[][]>((resolve) => {
+  emitRollMany(diceQuantity: Partial<Record<DieTypes, number>>) {
+    return new Promise<[DieTypes, DiceGroupRollResult[]]>((resolve) => {
       this.#send('roll-many', diceQuantity)
 
-      this.#once('roll-many-result', (_, results: DiceGroupRollResult[][]) => {
+      this.#once('roll-many-result', (_, results: [DieTypes, DiceGroupRollResult[]]) => {
         resolve(results)
       })
     })

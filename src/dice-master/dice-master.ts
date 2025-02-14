@@ -1,11 +1,13 @@
-import DiceBox from '@3d-dice/dice-box'
+import { DiceGroupRollResult } from '@3d-dice/dice-box'
 import { blackDieEffects, redDieEffects } from './dice-effects'
-import { isLocal, isLocked } from '../main'
+import { isDiceWindowOpen, isLocal, isLocked } from '../main'
 import { RollResultParser } from './roll-results/roll-result-parser'
 import { RollResultService } from './roll-results/roll-results-service'
 import { DataSignal, shell, signal } from 'lithen-fns'
 import { rollResultItem } from '../roll-results/roll-result-item'
 import { diceLogger } from './logger/dice-logger'
+import { DiceRoller } from './roller/dice-roller'
+import { DiceEvents } from './events/dice-events'
 
 export type DieTypes = 'black' | 'blue' | 'red'
 
@@ -14,13 +16,10 @@ export type CurrentRollResult = {
   temporary: DataSignal<number[]>
 }
 
-const originPath = import.meta.env.PROD
-  ? 'https://unpkg.com/@3d-dice/dice-box@1.1.3/dist'
-  : location.origin
-
 class DiceMaster {
-  diceBox: DiceBox
+  diceRoller: DiceRoller
   rollParser: RollResultParser
+  diceEvents = new DiceEvents()
   rollResultService = new RollResultService()
 
   currentResult: CurrentRollResult = {
@@ -31,34 +30,21 @@ class DiceMaster {
   redDieEffects = redDieEffects
   blackDieEffects = blackDieEffects
 
-  diceColors: Record<DieTypes, string> = {
-    black: '#242424',
-    red: '#ad2510',
-    blue: '#1a30a9'
-  }
-
-  clearTimerId?: number
-
   constructor() {
-    this.diceBox = new DiceBox({
-      assetPath: '/assets/',
-      origin: originPath,
-      container: '#app',
-      scale: 5,
-    })
+    this.diceRoller = new DiceRoller()
     this.rollParser = new RollResultParser(this.currentResult)
 
     this.#addEffectsList()
   }
 
   init() {
-    return this.diceBox.init()
+    return this.diceRoller.init()
   }
 
   clear() {
     if (isLocked.data()) return this
 
-    this.diceBox.clear()
+    this.diceRoller.clear()
     return this
   }
 
@@ -70,29 +56,24 @@ class DiceMaster {
         this.rollParser.parseResults(type, results)
         await this.#updateServiceCurrent()
       }
-
-      this.#addClearTimer()
     })
   }
 
-  rollMany(quantity: Record<DieTypes, number>) {
-    return this.#lockUntil(() => {
-      const promise = Promise.all(
-        Object.entries(quantity)
-          .map(([key, value]) => {
-            const type = key as DieTypes
-  
-            return this.#rollDice(type, value)
-              .then(async result => {
-                if (!result) return
+  rollMany(quantity: Partial<Record<DieTypes, number>>) {
+    return this.#lockUntil(async () => {
+      const results = await this.#rollMany(quantity)
 
-                this.rollParser.parseResults(type, result)
-                await this.#updateServiceCurrent()
-              })
-          })
-      ).then(() => this.#addClearTimer())
+      for (const [t, result] of results) {
+        if (!result) continue
 
-      return promise
+        const type = t as DieTypes
+        this.rollParser.parseResults(
+          type,
+          result as DiceGroupRollResult[]
+        )
+      }
+
+      await this.#updateServiceCurrent()
     })
   }
 
@@ -105,8 +86,6 @@ class DiceMaster {
         this.rollParser.parseReroll(type, currentValue, newValue)
         await this.#updateServiceCurrent()
       }
-
-      this.#addClearTimer()
     })
   }
 
@@ -116,28 +95,30 @@ class DiceMaster {
       black: this.currentResult.temporary.data().length
     }
 
-    return this.#lockUntil(async () => {
-      const results = await Promise.all(
-        Object.entries(quantity)
-          .map(async ([key, value]) => {
-            const type = key as DieTypes
-  
-            return [type, await this.#rollDice(type, value)] as const
-          })
-      )
+    const promise = this.rollMany(quantity)
+      .then(() => {
+        this.currentResult.activeEffects.set([])
+        this.currentResult.temporary.set([])
+      })
 
-      this.currentResult.activeEffects.set([])
-      this.currentResult.temporary.set([])
+    return promise
 
-      for (const [type, result] of results) {
-        if (!result) continue
+    // return this.#lockUntil(async () => {
+    //   const results = await this.#rollMany(quantity)
 
-        this.rollParser.parseResults(type, result)
-      }
+    //   this.currentResult.activeEffects.set([])
+    //   this.currentResult.temporary.set([])
 
-      await this.#updateServiceCurrent()
-      this.#addClearTimer()
-    })
+    //   for (const [t, result] of results) {
+    //     if (!result) continue
+
+    //     const type = t as DieTypes
+    //     this.rollParser.parseResults(type, result as DiceGroupRollResult[])
+    //   }
+
+    //   await this.#updateServiceCurrent()
+    //   this.#addClearTimer()
+    // })
   }
 
   changeResult(type: DieTypes, currentValue: number, newValue: number) {
@@ -174,7 +155,7 @@ class DiceMaster {
     if (isLocked.data()) return
     
     isLocked.set(true)
-    this.diceBox.clear()
+    this.diceRoller.clear()
 
     const results = await callback()
 
@@ -184,18 +165,19 @@ class DiceMaster {
   }
 
   #rollDice(type: DieTypes, quantity: number) {
-    const diceCount = Math.floor(quantity)
-    
-    if (diceCount <= 0) {
-      return Promise.resolve()
+    if (isDiceWindowOpen.data()) {
+      return this.diceEvents.emitRollDice(type, quantity)
     }
-      
-    const results = this.diceBox.add(
-      `${diceCount}d20`,
-      { themeColor: this.diceColors[type] }
-    )
-  
-    return results
+
+    return this.diceRoller.rollDice(type, quantity)
+  }
+
+  #rollMany(diceRecord: Partial<Record<DieTypes, number>>) {
+    if (isDiceWindowOpen.data()) {
+      return this.diceEvents.emitRollMany(diceRecord)
+    }
+
+    return this.diceRoller.rollMany(diceRecord)
   }
 
   #addEffectsList() {
@@ -252,12 +234,6 @@ class DiceMaster {
     }
 
     return this.rollResultService.setCurrent(rollResultData)
-  }
-
-  #addClearTimer() {
-    window.clearTimeout(this.clearTimerId)
-    this.clearTimerId = window
-      .setTimeout(() => this.clear(), 8_000);
   }
 }
 

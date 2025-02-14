@@ -13,5 +13,5 @@ window.ipcRenderer.on('roll-dice', async (_, type, quantity) => {
 window.ipcRenderer.on('roll-many', async (_, quantityRecord) => {
   diceRoller.clear()
   const results = await diceRoller.rollMany(quantityRecord)
-  window.ipcRenderer.send('roll-many-results', results)
+  window.ipcRenderer.send('roll-many-result', results)
 })

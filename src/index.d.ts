@@ -1,4 +1,3 @@
-declare const app: HTMLDivElement
 declare const ui: HTMLDivElement
 declare const redEffectsListEl: HTMLUListElement
 declare const blackEffectsListEl: HTMLUListElement

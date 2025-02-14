@@ -50,7 +50,7 @@ export class DiceRoller {
     return results
   }
 
-  async rollMany(quantity: Record<DieTypes, number>) {
+  async rollMany(quantity: Partial<Record<DieTypes, number>>) {
     const results = await Promise.all(
       Object.entries(quantity)
         .map(async ([key, value]) => {

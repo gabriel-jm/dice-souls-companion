@@ -15,13 +15,14 @@ import { diceMaster } from './dice-master/dice-master'
 import { addCloseEditDialogEvent } from './edit-result/edit-result-event'
 import { addRerollAllResultsEvent } from './roll-results/reroll-all-results-event'
 import { setRandomWallpaper } from './random-wallpaper/set-random-wallpaper'
+import { openDiceWindowEvent } from './dice-window/open-dice-window-event'
 
 setRandomWallpaper()
 addGreenBackgroundEvent()
 addManualThrow()
 addCloseEditDialogEvent()
 addRerollAllResultsEvent()
-//openDiceWindowEvent()
+openDiceWindowEvent()
 
 document.querySelector('.btn.clear-dice')?.addEventListener('click', () => {
   diceMaster.clear()
