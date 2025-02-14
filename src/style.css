@@ -92,9 +92,22 @@ ul {
   top: 0;
   width: 100%;
   height: 100%;
-  background: url(/img/elden-ring-wallpaper.jpg);
+  background: url(/img/elden-ring.jpg);
   background-position: center;
   background-size: cover;
+  filter: brightness(85%);
+
+  &.erdtree {
+    background-image: url(/img/erdtree.jpg);
+  }
+
+  &.radanh-malenia {
+    background-image: url(/img/radanh-malenia.jpg);
+  }
+
+  &.warrior-slash {
+    background-image: url(/img/warrior-slash.jpg);
+  }
 }
 
 .ui {

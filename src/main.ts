@@ -14,7 +14,9 @@ import { addGreenBackgroundEvent } from './green-background/green-background-btn
 import { diceMaster } from './dice-master/dice-master'
 import { addCloseEditDialogEvent } from './edit-result/edit-result-event'
 import { addRerollAllResultsEvent } from './roll-results/reroll-all-results-event'
+import { setRandomWallpaper } from './random-wallpaper/set-random-wallpaper'
 
+setRandomWallpaper()
 addGreenBackgroundEvent()
 addManualThrow()
 addCloseEditDialogEvent()

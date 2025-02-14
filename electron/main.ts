@@ -86,8 +86,16 @@ ipcMain.on('roll-dice', (_, type, quantity) => {
   diceWindow?.webContents.send('roll-dice', type, quantity)
 })
 
+ipcMain.on('roll-dice-result', (_, results) => {
+  win?.webContents.send('roll-dice-result', results)
+})
+
 ipcMain.on('roll-many', (_, quantityRecord) => {
   diceWindow?.webContents.send('roll-many', quantityRecord)
+})
+
+ipcMain.on('roll-many-result', (_, results) => {
+  win?.webContents.send('roll-many-result', results)
 })
 
 ipcMain.on('open-dice-window', () => {
