@@ -1,18 +1,26 @@
 import { defineConfig } from 'vite'
 import path from 'node:path'
 import electron from 'vite-plugin-electron/simple'
+import commonjs from '@rollup/plugin-commonjs'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    hmr: false
+  },
   build: {
     rollupOptions: {
       input: {
         main: path.resolve('index.html'),
         dice: path.resolve('dice-window/index.html')
-      }
+      },
+      external: ["better-sqlite3"],
     }
   },
   plugins: [
+    // commonjs({
+    //   dynamicRequireTargets: ['better-sqlite3.node']
+    // }),
     electron({
       main: {
         // Shortcut of `build.lib.entry`.

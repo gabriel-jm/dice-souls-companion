@@ -56,7 +56,7 @@ function createWindow() {
     win.loadFile(path.join(RENDERER_DIST, 'index.html'))
   }
 
-  startServer()
+  startServer().catch(console.log)
 }
 
 app.on('window-all-closed', () => {

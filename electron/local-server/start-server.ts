@@ -5,8 +5,8 @@ import { parseJSONBody } from './parse-json-body'
 import path from 'node:path'
 import { existsSync } from 'node:fs'
 import { mkdir } from 'node:fs/promises'
-import { RollResultStorage } from '../roll-result/roll-result-storage'
 import { IS_DEV } from '../main'
+import { connectDB } from '../database/connection'
 
 export type Req<T = null> = {
   url: URL
@@ -62,7 +62,7 @@ export async function startServer() {
     await mkdir(path.resolve('tmp'))
   }
 
-  await new RollResultStorage().init()
+  await connectDB()
 
   server.listen(3500, () => console.log('Server on!'))
 }

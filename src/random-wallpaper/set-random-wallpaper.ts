@@ -7,5 +7,10 @@ export function setRandomWallpaper() {
   ]
 
   const index = Math.floor(Math.random() * classes.length)
+  console.log(index, classes[index])
+
+  if(!classes[index]) return
+
+
   document.querySelector('.background')?.classList.add(classes[index])
 }
