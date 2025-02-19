@@ -16,6 +16,7 @@ import { addCloseEditDialogEvent } from './edit-result/edit-result-event'
 import { addRerollAllResultsEvent } from './roll-results/reroll-all-results-event'
 import { setRandomWallpaper } from './random-wallpaper/set-random-wallpaper'
 import { openDiceWindowEvent } from './dice-window/open-dice-window-event'
+import { addUpdateMessage } from './updates/add-update-message'
 
 setRandomWallpaper()
 addGreenBackgroundEvent()
@@ -23,10 +24,10 @@ addManualThrow()
 addCloseEditDialogEvent()
 addRerollAllResultsEvent()
 openDiceWindowEvent()
+addUpdateMessage()
 
 document.querySelector('.btn.clear-dice')?.addEventListener('click', () => {
   diceMaster.clear()
-  window.ipcRenderer.send('roll-dice', 'red', 2)
 })
 
 if (window.ipcRenderer) {

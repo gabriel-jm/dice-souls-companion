@@ -82,6 +82,10 @@ autoUpdater.on('update-available', () => {
   autoUpdater.downloadUpdate()
 })
 
+autoUpdater.on('update-downloaded', () => {
+  win?.webContents.send('update-ready')
+})
+
 ipcMain.on('roll-dice', (_, type, quantity) => {
   diceWindow?.webContents.send('roll-dice', type, quantity)
 })

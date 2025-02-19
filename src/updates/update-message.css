@@ -1,0 +1,33 @@
+.update-message {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background-color: #111;
+  box-shadow: 0 2px 10px #000;
+  padding: 14px 12px;
+  border-radius: 6px;
+  animation: grow-up 650ms ease forwards 350ms;
+  transform-origin: 50% 100%;
+
+  > p {
+    font-size: 0.86rem;
+
+    &.green {
+      color: #63ff63;
+    }
+  }
+}
+
+@keyframes grow-up {
+  0% {
+    scale: 0;
+  }
+
+  75% {
+    scale: 115%;
+  }
+
+  100% {
+    scale: 100%;
+  }
+}
