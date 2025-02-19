@@ -9,7 +9,11 @@
   },
   "files": [
     "dist",
-    "dist-electron"
+    "dist-electron",
+    {
+      "from": "./migrations",
+      "to": "./dist-electron/migrations"
+    }
   ],
   "mac": {
     "target": [

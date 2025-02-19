@@ -34,12 +34,19 @@ export class RollResultRepository {
     const currentData = await sql<CurrentResultEntry>`
       select * from currentResult;
     `
-
+    
     if (!currentData) {
-      return {
+      const data = {
         activeEffects: [],
         temporary: []
       }
+
+      await sql`
+        insert into currentResult
+        values (${JSON.stringify(data)}, ${new Date()})
+      `
+
+      return data
     }
 
     return JSON.parse(currentData.value) as RollResult

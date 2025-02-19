@@ -5,5 +5,11 @@ import { IS_DEV } from '../main'
 export function getAppDataPath() {
   return IS_DEV
     ? path.resolve('tmp')
-    : path.join(app.getPath('userData'), 'Local Storage')
+    : app.getPath('userData')
+}
+
+export function getMigrationsPath() {
+  return IS_DEV
+    ? path.resolve('migrations')
+    : path.join(import.meta.dirname, 'migrations')
 }

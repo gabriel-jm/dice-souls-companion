@@ -1,6 +1,6 @@
 import { Database as DB, open } from 'sqlite'
 import path from 'node:path'
-import { getAppDataPath } from '../app-path/app-path'
+import { getAppDataPath, getMigrationsPath } from '../app-path/app-path'
 import { createRequire } from 'node:module'
 
 const require = createRequire(import.meta.url)
@@ -18,9 +18,7 @@ export async function connectDB() {
 
   db.on('error', console.log)
 
-  await db.migrate({
-    migrationsPath: path.resolve('electron', 'database', 'migrations')
-  })
+  await db.migrate({ migrationsPath: getMigrationsPath() })
 }
 
 export async function sql<T = unknown>(
