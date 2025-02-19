@@ -1,7 +1,7 @@
 -- Up
 
 CREATE TABLE currentResult (
-  value TEXT NOT NULL,
+  value JSON NOT NULL,
   updatedAt DATE NOT NULL
 );
 

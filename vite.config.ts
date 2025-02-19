@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite'
 import path from 'node:path'
 import electron from 'vite-plugin-electron/simple'
-import commonjs from '@rollup/plugin-commonjs'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -18,13 +17,13 @@ export default defineConfig({
     }
   },
   plugins: [
-    // commonjs({
-    //   dynamicRequireTargets: ['better-sqlite3.node']
-    // }),
     electron({
       main: {
         // Shortcut of `build.lib.entry`.
         entry: 'electron/main.ts',
+        vite: {
+          server: { hmr: false }
+        }
       },
       preload: {
         // Shortcut of `build.rollupOptions.input`.
