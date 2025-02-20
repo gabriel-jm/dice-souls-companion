@@ -23,9 +23,34 @@ export async function connectDB() {
 
 export async function sql<T = unknown>(
   strs: TemplateStringsArray,
-  ...values: any[]
+  ...rawValues: any[]
 ) {
   const sqlText = strs.join('?').trim()
+  const values = rawValues.map(v => {
+    if (v && (typeof v === 'object' || Array.isArray(v))) {
+      if (v instanceof Date) {
+        return v
+      }
+      
+      return JSON.stringify(v)
+    }
 
-  return await db.get<T>(sqlText, ...values)
+    return v
+  })
+
+  const data = await db.all<T[]>(sqlText, ...values)
+
+  for (const row of data as Record<string, unknown>[]) {
+    for (const key in row) {
+      const value = row[key]
+
+      if (typeof value === 'string') {
+        if (value.startsWith('{') || value.startsWith('[')) {
+          row[key] = JSON.parse(value)
+        }
+      }
+    }
+  }
+  
+  return data
 }

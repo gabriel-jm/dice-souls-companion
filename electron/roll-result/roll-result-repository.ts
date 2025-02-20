@@ -22,16 +22,14 @@ export type CreateRollResultData = {
   temporary: DieEffect[]
 }
 
-type Json = string
-
 export type CurrentResultEntry = {
-  value: Json
+  value: RollResult
   updatedAt: Date
 }
 
 export class RollResultRepository {
   async getCurrent() {
-    const currentData = await sql<CurrentResultEntry>`
+    const [currentData] = await sql<CurrentResultEntry>`
       select * from currentResult;
     `
     
@@ -43,19 +41,19 @@ export class RollResultRepository {
 
       await sql`
         insert into currentResult
-        values (${JSON.stringify(data)}, ${new Date()})
+        values (${data}, ${new Date()});
       `
 
       return data
     }
 
-    return JSON.parse(currentData.value) as RollResult
+    return currentData.value
   }
 
   setCurrent(data: RollResult) {
     return sql`
       update currentResult
-      set value = ${JSON.stringify(data)}, updatedAt = ${new Date()};
+      set value = ${data}, updatedAt = ${new Date()};
     `
   }
 }
