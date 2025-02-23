@@ -17,6 +17,7 @@ import { addRerollAllResultsEvent } from './roll-results/reroll-all-results-even
 import { setRandomWallpaper } from './random-wallpaper/set-random-wallpaper'
 import { openDiceWindowEvent } from './dice-window/open-dice-window-event'
 import { addUpdateMessage } from './updates/add-update-message'
+import { addSettingsBtn } from './settings/add-settings-btn'
 
 setRandomWallpaper()
 addGreenBackgroundEvent()
@@ -25,6 +26,7 @@ addCloseEditDialogEvent()
 addRerollAllResultsEvent()
 openDiceWindowEvent()
 addUpdateMessage()
+addSettingsBtn()
 
 document.querySelector('.btn.clear-dice')?.addEventListener('click', () => {
   diceMaster.clear()

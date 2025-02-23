@@ -1,13 +1,14 @@
 .update-message {
   position: absolute;
   bottom: 12px;
-  left: 12px;
-  background-color: #111;
-  box-shadow: 0 2px 10px #000;
+  left: 68px;
+  background-color: #050505;
+  box-shadow: 0 2px 10px #0f0f0f;
   padding: 14px 12px;
   border-radius: 6px;
   animation: grow-up 650ms ease forwards 350ms;
   transform-origin: 50% 100%;
+  scale: 0;
 
   > p {
     font-size: 0.86rem;
@@ -23,8 +24,8 @@
     scale: 0;
   }
 
-  75% {
-    scale: 115%;
+  80% {
+    scale: 105%;
   }
 
   100% {
