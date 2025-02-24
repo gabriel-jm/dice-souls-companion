@@ -1,6 +1,6 @@
 import './edit-result-event.css'
 import { el, html } from 'lithen-fns'
-import { diceMaster, DieTypes } from '../dice-master/dice-master'
+import { diceMaster, DieTypes } from '../../dice-master/dice-master'
 
 export function openEditResultDialog(type: DieTypes, currentValue: number) {
   if (editDialog.open) {

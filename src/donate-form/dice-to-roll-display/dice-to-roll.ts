@@ -1,7 +1,7 @@
 import './dice-to-roll.css'
 import { DataSignal, html, signal } from 'lithen-fns'
-import { diceButton } from '../common/dice-button/dice-button'
-import { DieTypes } from '../dice-master/dice-master'
+import { diceButton } from '../../common/dice-button/dice-button'
+import { DieTypes } from '../../dice-master/dice-master'
 
 export type DiceToRollCardProps = {
   amount: string

@@ -2,7 +2,7 @@ import './roll-results.css'
 import { el, ref } from 'lithen-fns'
 import { editIcon, refreshIcon, xIcon } from '../common/icons'
 import { diceMaster, DieTypes } from '../dice-master/dice-master'
-import { openEditResultDialog } from '../edit-result/edit-result-event'
+import { openEditResultDialog } from './edit-result/edit-result-event'
 
 export type RollResultItemProps = {
   type: DieTypes
