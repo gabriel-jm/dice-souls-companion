@@ -12,12 +12,12 @@ export const isDiceWindowOpen = signal(false)
 import { addManualThrow } from './manual-throw/manual-throw'
 import { addGreenBackgroundEvent } from './green-background/green-background-btn'
 import { diceMaster } from './dice-master/dice-master'
-import { addCloseEditDialogEvent } from './edit-result/edit-result-event'
 import { addRerollAllResultsEvent } from './roll-results/reroll-all-results-event'
 import { setRandomWallpaper } from './random-wallpaper/set-random-wallpaper'
 import { openDiceWindowEvent } from './dice-window/open-dice-window-event'
 import { addUpdateMessage } from './updates/add-update-message'
 import { addSettingsBtn } from './settings/add-settings-btn'
+import { addCloseEditDialogEvent } from './roll-results/edit-result/edit-result-event'
 
 setRandomWallpaper()
 addGreenBackgroundEvent()

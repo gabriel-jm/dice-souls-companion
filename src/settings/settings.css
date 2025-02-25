@@ -6,13 +6,29 @@
 
 .settings-dialog {
   position: absolute;
-  width: 280px;
+  width: 340px;
   left: 18px;
   bottom: 68px;
   border: 1px solid #333;
   border-radius: 6px;
   box-shadow: 0 2px 3px #222b;
   transition: all 250ms ease;
+  transform-origin: 0% 100%;
+  padding: 0;
+  scale: 0;
+  opacity: 0;
+
+  &[open] {
+    animation: dialog-open 320ms ease-out forwards;
+  }
+
+  &.close {
+    animation: close 200ms ease-in forwards;
+  }
+
+  .content {
+    overflow-x: hidden;
+  }
 
   .title {
     font-family: Righteous, serif;
@@ -21,8 +37,9 @@
     top: -20px;
     left: -6px;
     z-index: 2;
+    translate: -200% 0;
     -webkit-text-stroke: 1px #1118;
-    animation: slide-right 550ms ease-out forwards;
+    animation: slide-right 600ms ease-out forwards 280ms;
 
     &::after {
       content: '';
@@ -39,6 +56,30 @@
   }
 }
 
+@keyframes dialog-open {
+  0% {
+    scale: 0;
+    opacity: 0;
+  }
+
+  100% {
+    scale: 1;
+    opacity: 1;
+  }
+}
+
+@keyframes close {
+  0% {
+    scale: 1;
+    opacity: 1;
+  }
+
+  100% {
+    scale: 0;
+    opacity: 0;
+  }
+}
+
 @keyframes slide-right {
   0% {
     translate: -100% 0;
@@ -46,6 +87,67 @@
 
   70% {
     translate: 8% 0;
+  }
+
+  100% {
+    translate: 0 0;
+  }
+}
+
+.main-menu {
+  padding: 0;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  list-style: none;
+  animation: left-slide 250ms ease-out forwards;
+
+  &.slide {
+    animation: right-slide 250ms ease-in forwards;
+  }
+
+  > li {
+    cursor: pointer;
+    padding: 8px 10px;
+    transition: all 250ms ease;
+  
+    &:hover {
+      background-color: #8882;
+    }
+  }
+}
+
+.green-bg-settings {
+  padding: 12px 0;
+  animation: left-slide 250ms ease-out forwards;
+
+  &.slide {
+    animation: right-slide 250ms ease-in forwards;
+  }
+}
+
+@keyframes right-slide {
+  0% {
+    translate: 0 0;
+  }
+
+  90% {
+    opacity: 0;
+  }
+
+  100% {
+    translate: -200% 0;
+    opacity: 0;
+  }
+}
+
+@keyframes left-slide {
+  0% {
+    translate: 200% 0;
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
   }
 
   100% {
