@@ -1,4 +1,5 @@
 import { DataSignal, el, ref, shell, signal } from 'lithen-fns'
+import { chevronLeftIcon } from '../common/icons'
 
 export function settingsDialog() {
   const dialogRef = ref<HTMLDialogElement>()
@@ -59,7 +60,7 @@ function settingsMainMenu(curSetting: DataSignal<string>) {
   const nav = () => menuRef.el.classList.add('slide')
 
   function onAnimationEnd(e: AnimationEvent) {
-    if (e.animationName === 'right-slide') {
+    if (e.animationName === 'slide-to-left') {
       menuRef.el.classList.remove('slide')
       curSetting.set('greenBg')
     }
@@ -90,7 +91,7 @@ function greenBgSettings(curSetting: DataSignal<string>) {
   const nav = () => containerRef.el.classList.add('slide')
   
   function onAnimationEnd(e: AnimationEvent) {
-    if (e.animationName === 'right-slide') {
+    if (e.animationName === 'slide-to-right') {
       containerRef.el.classList.remove('slide')
       curSetting.set('main')
     }
@@ -102,20 +103,22 @@ function greenBgSettings(curSetting: DataSignal<string>) {
       on-animationend=${onAnimationEnd}
       class="green-bg-settings"
     >
-      <h4>Fundo Verde</h4>
-      <span on-click=${nav}>
-        Voltar
-      </span>
+      <header class="settings-header">
+        <span class="void-btn" on-click=${nav}>
+          ${chevronLeftIcon()}
+        </span>
+        <h4 class="settings-title">Fundo Verde</h4>
+      </header>
 
-      <form>
+      <form class="green-bg-form">
         <label>
           <span>Altura</span>
-          <input type="number" />
+          <input type="text" />
         </label>
 
         <label>
           <span>Largura</span>
-          <input type="number" />
+          <input type="text" />
         </label>
       </form>
     </div>
