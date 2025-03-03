@@ -1,4 +1,4 @@
-import { DataSignal, el, ref, shell, signal } from 'lithen-fns'
+import { DataSignal, el, ref, shell, signal, signalRecord } from 'lithen-fns'
 import { chevronLeftIcon } from '../common/icons'
 
 export function settingsDialog() {
@@ -86,7 +86,29 @@ function settingsMainMenu(curSetting: DataSignal<string>) {
 }
 
 function greenBgSettings(curSetting: DataSignal<string>) {
+  const diceRollerEl = document.querySelector('#dice-roller')! as HTMLDivElement
+  const dimentions = signalRecord({
+    width: Math.floor(screen.width / 2),
+    height: Math.floor(screen.height / 2)
+  })
+
   const containerRef = ref()
+
+  dimentions.width.onChange(v => {
+    if (!containerRef.el.isConnected) {
+      return DataSignal.REMOVE
+    }
+    
+    diceRollerEl.style.setProperty('--width', `${v}px`)
+  })
+
+  dimentions.height.onChange(v => {
+    if (!containerRef.el.isConnected) {
+      return DataSignal.REMOVE
+    }
+
+    diceRollerEl.style.setProperty('--height', `${v}px`)
+  })
   
   const nav = () => containerRef.el.classList.add('slide')
   
@@ -95,6 +117,17 @@ function greenBgSettings(curSetting: DataSignal<string>) {
       containerRef.el.classList.remove('slide')
       curSetting.set('main')
     }
+  }
+
+  function onSubmit(e: SubmitEvent) {
+    e.preventDefault()
+    const form = e.target as HTMLFormElement
+
+    const width = Number((form.elements.namedItem('width')as HTMLInputElement).value)
+    const height = Number((form.elements.namedItem('height') as HTMLInputElement).value)
+
+    dimentions.width.set(width)
+    dimentions.height.set(height)
   }
 
   return el/*html*/`
@@ -110,16 +143,42 @@ function greenBgSettings(curSetting: DataSignal<string>) {
         <h4 class="settings-title">Fundo Verde</h4>
       </header>
 
-      <form class="green-bg-form">
+      <form class="green-bg-form" on-submit=${onSubmit}>
         <label>
-          <span>Altura</span>
-          <input type="text" />
+          <span>Largura</span>
+          <div>
+            <input
+              name="width"
+              class="void"
+              type="number"
+              .value=${dimentions.width}
+              max="${screen.width}"
+              min="0"
+            />
+            <span title="Pixels">px</span>
+          </div>
         </label>
 
         <label>
-          <span>Largura</span>
-          <input type="text" />
+          <span>Altura</span>
+          <div>
+            <input
+              name="height"
+              class="void"
+              type="number"
+              .value=${dimentions.height}
+              max="${screen.height}"
+              min="0"
+            />
+            <span title="Pixels">px</span>
+          </div>
         </label>
+
+        <div>
+          <button class="settings-btn">
+            Salvar
+          </button>
+        </div>
       </form>
     </div>
   `

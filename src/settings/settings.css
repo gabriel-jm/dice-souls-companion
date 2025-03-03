@@ -1,4 +1,4 @@
-.settings-btn {
+.open-settings-btn {
   position: absolute;
   bottom: 12px;
   left: 12px;
@@ -94,6 +94,23 @@
     translate: 0 0;
   }
 }
+ 
+.settings-btn {
+  display: block;
+  cursor: pointer;
+  border: 0;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 0.9rem;
+  color: #eee;
+  background-color: #353535;
+  transition: all 200ms ease-out;
+  margin-left: auto;
+
+  &:active {
+    background-color: #555;
+  }
+}
 
 .main-menu {
   padding: 0;
@@ -126,11 +143,32 @@
   }
 
   .green-bg-form {
+    display: block;
     padding: 12px;
+    padding-bottom: 0;
+
+    & label {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 8px;
+    }
     
-    & input {
+    & input.void {
       border: 0;
       background: none;
+      width: 100px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      border-bottom: 1px solid #555;
+      outline: none;
+      text-align: right;
+      transition: all 250ms ease;
+    
+      &:focus {
+        outline: none;
+        border-bottom: 1px solid #ddd;
+      }
     }
   }
 }

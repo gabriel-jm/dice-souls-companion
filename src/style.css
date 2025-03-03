@@ -50,16 +50,20 @@ ul {
 }
 
 #dice-roller {
-  height: 90%;
-  width: 90%;
+  --width: 90%;
+  --height: 90%;
+
+  width: var(--width);
+  height: var(--height);
   margin: auto;
   position: relative;
   border-radius: 2px;
   transition: all 200ms ease-in-out;
 
   &.green-bg {
-    height: 460px;
-    width: 680px;
+    --width: 50vw;
+    --height: 50vh;
+
     margin-right: 300px;
     margin-top: 72px;
     background-color: #00ff00;
@@ -70,7 +74,7 @@ ul {
       height: 100%;
     }
 
-    @media screen and (min-width: 1440px) {
+    /* @media screen and (min-width: 1440px) {
       & {
         height: 600px;
         width: 800px;
@@ -83,7 +87,7 @@ ul {
         height: 80vh;
         width: 70vw;
       }
-    }
+    } */
   }
 }
 
@@ -95,7 +99,7 @@ ul {
   background: url(/img/elden-ring.jpg);
   background-position: center;
   background-size: cover;
-  filter: brightness(85%);
+  filter: brightness(80%);
 
   &.erdtree {
     background-image: url(/img/erdtree.jpg);
@@ -278,9 +282,20 @@ input {
   border: 1px solid #444a;
   border-radius: 6px;
   background-color: #111a;
+  box-sizing: border-box;
 
   &:focus {
     outline: 2px solid #3a66a9;
+  }
+}
+
+input.void {
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid #aaa;
+
+  &:focus {
+    border-bottom: 2px solid #ddd;
   }
 }
 

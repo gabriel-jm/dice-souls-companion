@@ -59,9 +59,11 @@ class DiceMaster {
     })
   }
 
-  rollMany(quantity: Partial<Record<DieTypes, number>>) {
+  rollMany(quantity: Partial<Record<DieTypes, number>>, afterRoll?: () => void) {
     return this.#lockUntil(async () => {
       const results = await this.#rollMany(quantity)
+
+      afterRoll?.()
 
       for (const [t, result] of results) {
         if (!result) continue
@@ -95,30 +97,12 @@ class DiceMaster {
       black: this.currentResult.temporary.data().length
     }
 
-    const promise = this.rollMany(quantity)
-      .then(() => {
-        this.currentResult.activeEffects.set([])
-        this.currentResult.temporary.set([])
-      })
+    const promise = this.rollMany(quantity, () => {
+      this.currentResult.activeEffects.set([])
+      this.currentResult.temporary.set([])
+    })
 
     return promise
-
-    // return this.#lockUntil(async () => {
-    //   const results = await this.#rollMany(quantity)
-
-    //   this.currentResult.activeEffects.set([])
-    //   this.currentResult.temporary.set([])
-
-    //   for (const [t, result] of results) {
-    //     if (!result) continue
-
-    //     const type = t as DieTypes
-    //     this.rollParser.parseResults(type, result as DiceGroupRollResult[])
-    //   }
-
-    //   await this.#updateServiceCurrent()
-    //   this.#addClearTimer()
-    // })
   }
 
   changeResult(type: DieTypes, currentValue: number, newValue: number) {

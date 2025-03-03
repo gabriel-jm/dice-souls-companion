@@ -9,7 +9,7 @@ export function addSettingsBtn() {
   ui.append(html`
     <button
       title="Configurações"
-      class="void-btn settings-btn"
+      class="void-btn open-settings-btn"
       on-click=${open}
     >
       ${settingsIcon()}
