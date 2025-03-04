@@ -8,12 +8,11 @@
   position: absolute;
   width: 340px;
   left: 18px;
-  background: linear-gradient(145deg, #07090b, #16181d);
+  background: linear-gradient(145deg, #07090b, #22242d);
   bottom: 68px;
   border: 1px solid #444;
   border-radius: 6px;
   box-shadow: -4px 5px 0 #42464877;
-  transition: all 250ms ease;
   transform-origin: 0% 100%;
   padding: 0;
   scale: 0;
@@ -95,20 +94,46 @@
   }
 }
  
+.to-right-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 .settings-btn {
-  display: block;
   cursor: pointer;
   border: 0;
   border-radius: 4px;
   padding: 4px 10px;
   font-size: 0.9rem;
   color: #eee;
-  background-color: #353535;
+  background-color: #454545;
   transition: all 200ms ease-out;
-  margin-left: auto;
 
   &:active {
     background-color: #555;
+  }
+}
+
+.saved-message {
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 0.9rem;
+  color: #b6f5b6;
+  opacity: 0;
+
+  &.show {
+    animation: fade 1.2s linear forwards;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
   }
 }
 
@@ -117,10 +142,10 @@
   padding-top: 12px;
   padding-bottom: 12px;
   list-style: none;
-  animation: slide-from-left 225ms ease forwards;
+  animation: slide-from-left 250ms ease forwards;
 
   &.slide {
-    animation: slide-to-left 225ms ease forwards;
+    animation: slide-to-left 250ms ease forwards;
   }
 
   > li {
@@ -153,29 +178,30 @@
   }
 }
 
+.settings-title.green-bg-title::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 3px solid #226422;
+  background-color: #6cdb6c;
+  box-shadow: 3px 3px #a5faa5a1;
+  border-radius: 2px;
+}
+
 @keyframes slide-to-left {
   0% {
     translate: 0 0;
   }
 
-  95% {
-    opacity: 0;
-  }
-
   100% {
     translate: -200% 0;
-    opacity: 0;
   }
 }
 
 @keyframes slide-from-left {
   0% {
     translate: -200% 0;
-    opacity: 0;
-  }
-
-  5% {
-    opacity: 1;
   }
 
   100% {
@@ -188,24 +214,14 @@
     translate: 0 0;
   }
 
-  90% {
-    opacity: 0;
-  }
-
   100% {
     translate: 200% 0;
-    opacity: 0;
   }
 }
 
 @keyframes slide-from-right {
   0% {
     translate: 200% 0;
-    opacity: 0;
-  }
-
-  10% {
-    opacity: 1;
   }
 
   100% {

@@ -3,11 +3,17 @@ export type GreenBgSettingData = {
   height: number
 }
 
-export class UserSettingsService {
-  setGreenBgSettings(data: GreenBgSettingData) {
-    if (!window.ipcRenderer) return Promise.resolve()
+export type UserSettingsData = {
+  greenBg: Partial<GreenBgSettingData>
+}
 
-    return window.ipcRenderer.invoke('update-user-settings', {
+export class UserSettingsService {
+  getUserSettings(): Promise<UserSettingsData> {
+    return window.ipcRenderer?.invoke('get-user-settings')
+  }
+
+  setGreenBgSettings(data: GreenBgSettingData) {
+    return window.ipcRenderer?.invoke('update-user-settings', {
       greenBg: data
     })
   }

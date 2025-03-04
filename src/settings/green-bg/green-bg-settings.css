@@ -1,9 +1,9 @@
 .green-bg-settings {
   padding: 12px 0;
-  animation: slide-from-right 225ms ease forwards;
+  animation: slide-from-right 250ms ease forwards;
 
   &.slide {
-    animation: slide-to-right 225ms ease forwards;
+    animation: slide-to-right 250ms ease forwards;
   }
 
   .green-bg-form {

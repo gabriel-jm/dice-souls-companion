@@ -1,32 +1,19 @@
 import './green-bg-settings.css'
-import { DataSignal, el, ref, signalRecord } from 'lithen-fns'
+import { DataSignal, el, ref } from 'lithen-fns'
 import { chevronLeftIcon } from '../../common/icons'
-import { UserSettingsService } from '../services/user-settings-service'
+import { GreenBgDimentions } from './green-bg-dimentions'
 
 export function greenBgSettings(curSetting: DataSignal<string>) {
-  const diceRollerEl = document.querySelector('#dice-roller')! as HTMLDivElement
-  const dimentions = signalRecord({
-    width: Math.floor(screen.width / 2),
-    height: Math.floor(screen.height / 2)
-  })
-
   const containerRef = ref()
+  const formRef = ref<HTMLFormElement>()
+  const savedMessageRef = ref()
+  const dimentions = new GreenBgDimentions()
 
-  dimentions.width.onChange(v => {
-    if (!containerRef.el.isConnected) {
-      return DataSignal.REMOVE
-    }
-    
-    diceRollerEl.style.setProperty('--width', `${v}px`)
-  })
-
-  dimentions.height.onChange(v => {
-    if (!containerRef.el.isConnected) {
-      return DataSignal.REMOVE
-    }
-
-    diceRollerEl.style.setProperty('--height', `${v}px`)
-  })
+  dimentions.init()
+    .then(() => {
+      formRef.el.width.value = dimentions.width
+      formRef.el.height.value = dimentions.height
+    })
 
   const nav = () => containerRef.el.classList.add('slide')
   
@@ -37,21 +24,20 @@ export function greenBgSettings(curSetting: DataSignal<string>) {
     }
   }
 
-  function onSubmit(e: SubmitEvent) {
+  function onSavedMessageAnimationEnd(e: AnimationEvent) {
+    if (e.animationName === 'fade') {
+      savedMessageRef.el.classList.remove('show')
+    }
+  }
+
+  async function onSubmit(e: SubmitEvent) {
     e.preventDefault()
-    const form = e.target as HTMLFormElement
+    const width = Number(formRef.el.width.value)
+    const height = Number(formRef.el.height.value)
 
-    const width = Number((form.elements.namedItem('width')as HTMLInputElement).value)
-    const height = Number((form.elements.namedItem('height') as HTMLInputElement).value)
+    await dimentions.set(width, height)
 
-    dimentions.width.set(width)
-    dimentions.height.set(height)
-
-    const settingsService = new UserSettingsService()
-    settingsService.setGreenBgSettings({
-      width: dimentions.width.data(),
-      height: dimentions.height.data()
-    })
+    savedMessageRef.el.classList.add('show')
   }
 
   return el/*html*/`
@@ -64,10 +50,16 @@ export function greenBgSettings(curSetting: DataSignal<string>) {
         <span class="void-btn" on-click=${nav}>
           ${chevronLeftIcon()}
         </span>
-        <h4 class="settings-title">Fundo Verde</h4>
+        <h4 class="settings-title green-bg-title">
+          Fundo Verde
+        </h4>
       </header>
 
-      <form class="green-bg-form" on-submit=${onSubmit}>
+      <form
+        ref=${formRef}
+        class="green-bg-form"
+        on-submit=${onSubmit}
+      >
         <label>
           <span>Largura</span>
           <div>
@@ -75,7 +67,7 @@ export function greenBgSettings(curSetting: DataSignal<string>) {
               name="width"
               class="void"
               type="number"
-              .value=${dimentions.width}
+              value=${dimentions.width}
               max="${screen.width}"
               min="0"
             />
@@ -90,7 +82,7 @@ export function greenBgSettings(curSetting: DataSignal<string>) {
               name="height"
               class="void"
               type="number"
-              .value=${dimentions.height}
+              value=${dimentions.height}
               max="${screen.height}"
               min="0"
             />
@@ -98,7 +90,14 @@ export function greenBgSettings(curSetting: DataSignal<string>) {
           </div>
         </label>
 
-        <div>
+        <div class="to-right-container">
+          <span
+            ref=${savedMessageRef}
+            class="saved-message"
+            on-animationend=${onSavedMessageAnimationEnd}
+          >
+            Salvo!
+          </span>
           <button class="settings-btn">
             Salvar
           </button>

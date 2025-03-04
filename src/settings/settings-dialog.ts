@@ -72,13 +72,7 @@ function settingsMainMenu(curSetting: DataSignal<string>) {
       ref=${menuRef}
       on-animationend=${onAnimationEnd}
     >
-      <li on-click=${nav}>
-        Fundo Verde
-      </li>
-      <li on-click=${nav}>
-        Fundo Verde
-      </li>
-      <li on-click=${nav}>
+      <li class="settings-title green-bg-title" on-click=${nav}>
         Fundo Verde
       </li>
     </ul>

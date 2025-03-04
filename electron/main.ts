@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { startServer } from './local-server/start-server'
 import { autoUpdater } from 'electron-updater'
-import { updateUserSettings } from './user-settings/user-settings-controller'
+import { getUserSettings, updateUserSettings } from './user-settings/user-settings-controller'
 
 autoUpdater.autoDownload = false
 autoUpdater.autoInstallOnAppQuit = true
@@ -104,6 +104,7 @@ ipcMain.on('roll-many-result', (_, results) => {
 })
 
 ipcMain.handle('update-user-settings', (_, data) => updateUserSettings(data))
+ipcMain.handle('get-user-settings', getUserSettings)
 
 ipcMain.on('open-dice-window', () => {
   if (diceWindow) {
