@@ -134,45 +134,6 @@
   }
 }
 
-.green-bg-settings {
-  padding: 12px 0;
-  animation: slide-from-right 225ms ease forwards;
-
-  &.slide {
-    animation: slide-to-right 225ms ease forwards;
-  }
-
-  .green-bg-form {
-    display: block;
-    padding: 12px;
-    padding-bottom: 0;
-
-    & label {
-      display: flex;
-      justify-content: space-between;
-      padding-bottom: 8px;
-    }
-    
-    & input.void {
-      border: 0;
-      background: none;
-      width: 100px;
-      padding: 0;
-      border: 0;
-      border-radius: 0;
-      border-bottom: 1px solid #555;
-      outline: none;
-      text-align: right;
-      transition: all 250ms ease;
-    
-      &:focus {
-        outline: none;
-        border-bottom: 1px solid #ddd;
-      }
-    }
-  }
-}
-
 .settings-header {
   display: flex;
   align-items: center;
