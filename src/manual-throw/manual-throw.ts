@@ -11,7 +11,7 @@ export function manualThrow() {
     blue: 0
   })
 
-  function onClickDiceButton(type: DieTypes, quantity: DataSignal<number>) {
+  function increaseDieCount(type: DieTypes, quantity: DataSignal<number>) {
     let minValue = 20
 
     if (type === 'black') {
@@ -21,7 +21,7 @@ export function manualThrow() {
     quantity.set(value => Math.min(minValue, value + 1))
   }
 
-  function onRightClickDiceButton(_: unknown, quantity: DataSignal<number>) {
+  function decreaseDieCount(_: unknown, quantity: DataSignal<number>) {
     quantity.set(value => Math.max(0, value - 1))
   }
 
@@ -38,30 +38,34 @@ export function manualThrow() {
       })
   }
 
+  listenShortcuts({
+    increase: type => increaseDieCount(type, diceQuantities[type]),
+    decrease: type => decreaseDieCount(type, diceQuantities[type]),
+    throwDice
+  })
+
   return html`
-    <div class="glass-container manual-throw">
-      <!-- <h4>Dados Manuais</h4> -->
-      
+    <div class="glass-container manual-throw">      
       <div class="btn-group">
         <div class="dice-count">
           ${[
             diceButton({
               type: 'red',
               customQuantitySignal: diceQuantities.red,
-              onClick: onClickDiceButton,
-              onContextMenu: onRightClickDiceButton
+              onClick: increaseDieCount,
+              onContextMenu: decreaseDieCount
             }),
             diceButton({
               type: 'black',
               customQuantitySignal: diceQuantities.black,
-              onClick: onClickDiceButton,
-              onContextMenu: onRightClickDiceButton
+              onClick: increaseDieCount,
+              onContextMenu: decreaseDieCount
             }),
             diceButton({
               type: 'blue',
               customQuantitySignal: diceQuantities.blue,
-              onClick: onClickDiceButton,
-              onContextMenu: onRightClickDiceButton
+              onClick: increaseDieCount,
+              onContextMenu: decreaseDieCount
             })
           ]}
         </div>
@@ -80,4 +84,18 @@ export function manualThrow() {
 
 export function addManualThrow() {
   ui.append(manualThrow())
+}
+
+interface DiceEventsHandler {
+  increase(type: DieTypes): void
+  decrease(type: DieTypes): void
+  throwDice(): void
+}
+
+function listenShortcuts(handler: DiceEventsHandler) {
+  if (!window.ipcRenderer) return
+
+  window.ipcRenderer.on('add-red-dice', () => handler.increase('red'))
+  window.ipcRenderer.on('remove-red-dice', () => handler.decrease('red'))
+  window.ipcRenderer.on('throw-dice', handler.throwDice)
 }

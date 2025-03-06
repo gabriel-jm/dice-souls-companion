@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, globalShortcut, ipcMain } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { startServer } from './local-server/start-server'
@@ -76,7 +76,17 @@ app.on('activate', () => {
 app.whenReady().then(() => {
   createWindow()
 
-  autoUpdater.checkForUpdates()
+  autoUpdater.checkForUpdatesAndNotify()
+
+  globalShortcut.register('CommandOrControl+Shift+E', () => {
+    win?.webContents.send('add-red-dice')
+  })
+  globalShortcut.register('CommandOrControl+K+I', () => {
+    win?.webContents.send('remove-red-dice')
+  })
+  globalShortcut.register('F4', () => {
+    win?.webContents.send('throw-dice')
+  })
 })
 
 autoUpdater.on('update-available', () => {
