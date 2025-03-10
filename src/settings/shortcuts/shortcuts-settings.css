@@ -1,0 +1,8 @@
+.shortcuts-settings {
+  padding: 12px 0;
+  animation: slide-from-right 250ms ease forwards;
+
+  &.slide {
+    animation: slide-to-right 250ms ease forwards;
+  }
+}

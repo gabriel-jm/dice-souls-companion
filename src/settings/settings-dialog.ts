@@ -1,5 +1,6 @@
 import { DataSignal, el, ref, shell, signal } from 'lithen-fns'
 import { greenBgSettings } from './green-bg/green-bg-settings'
+import { shortcutsSettings } from './shortcuts/shortcuts-settings'
 
 export function settingsDialog() {
   const dialogRef = ref<HTMLDialogElement>()
@@ -8,6 +9,7 @@ export function settingsDialog() {
   const settings = new Map()
     .set('main', settingsMainMenu(currentSetting))
     .set('greenBg', greenBgSettings(currentSetting))
+    .set('shortcuts', shortcutsSettings(currentSetting))
 
   const open = () => {
     dialogRef.el.classList.remove('close')
@@ -55,14 +57,18 @@ export function settingsDialog() {
 }
 
 function settingsMainMenu(curSetting: DataSignal<string>) {
+  let nextMenu = 'greenBg'
   const menuRef = ref()
 
-  const nav = () => menuRef.el.classList.add('slide')
+  function nav(nextMenuName: string) {
+    nextMenu = nextMenuName
+    return () => menuRef.el.classList.add('slide')
+  }
 
   function onAnimationEnd(e: AnimationEvent) {
     if (e.animationName === 'slide-to-left') {
       menuRef.el.classList.remove('slide')
-      curSetting.set('greenBg')
+      curSetting.set(nextMenu)
     }
   }
 
@@ -72,8 +78,18 @@ function settingsMainMenu(curSetting: DataSignal<string>) {
       ref=${menuRef}
       on-animationend=${onAnimationEnd}
     >
-      <li class="settings-title green-bg-title" on-click=${nav}>
+      <li
+        class="settings-title green-bg-title"
+        on-click=${nav('greenBg')}
+      >
         Fundo Verde
+      </li>
+
+      <li
+        class="settings-title"
+        on-click=${nav('shortcuts')}
+      >
+        Atalhos
       </li>
     </ul>
   `
