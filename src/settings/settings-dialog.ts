@@ -2,14 +2,28 @@ import { DataSignal, el, ref, shell, signal } from 'lithen-fns'
 import { greenBgSettings } from './green-bg/green-bg-settings'
 import { shortcutsSettings } from './shortcuts/shortcuts-settings'
 
+export type SettingsDialogConfig = {
+  currentSetting: DataSignal<string>
+  set keepOpen(value: boolean)
+}
+
 export function settingsDialog() {
   const dialogRef = ref<HTMLDialogElement>()
   const currentSetting = signal('main')
+  let keepOpen = false
+
+  const remoteConfig: SettingsDialogConfig = {
+    currentSetting,
+    set keepOpen(value: boolean) {
+      console.log('keepOpne', value)
+      keepOpen = value
+    }
+  }
 
   const settings = new Map()
-    .set('main', settingsMainMenu(currentSetting))
-    .set('greenBg', greenBgSettings(currentSetting))
-    .set('shortcuts', shortcutsSettings(currentSetting))
+    .set('main', settingsMainMenu(remoteConfig))
+    .set('greenBg', greenBgSettings(remoteConfig))
+    .set('shortcuts', shortcutsSettings(remoteConfig))
 
   const open = () => {
     dialogRef.el.classList.remove('close')
@@ -17,6 +31,8 @@ export function settingsDialog() {
     dialogRef.el.focus()
   }
   const onFocusOut = (e: FocusEvent) => {
+    if (keepOpen) return
+
     const el = e.currentTarget as HTMLElement
     if (el.contains(e.relatedTarget as Node)) {
       return
@@ -56,19 +72,21 @@ export function settingsDialog() {
   return [dialog, open]
 }
 
-function settingsMainMenu(curSetting: DataSignal<string>) {
+function settingsMainMenu(config: SettingsDialogConfig) {
   let nextMenu = 'greenBg'
   const menuRef = ref()
 
   function nav(nextMenuName: string) {
-    nextMenu = nextMenuName
-    return () => menuRef.el.classList.add('slide')
+    return () => {
+      nextMenu = nextMenuName
+      menuRef.el.classList.add('slide')
+    }
   }
 
   function onAnimationEnd(e: AnimationEvent) {
     if (e.animationName === 'slide-to-left') {
       menuRef.el.classList.remove('slide')
-      curSetting.set(nextMenu)
+      config.currentSetting.set(nextMenu)
     }
   }
 

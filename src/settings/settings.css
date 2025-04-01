@@ -6,7 +6,8 @@
 
 .settings-dialog {
   position: absolute;
-  width: 340px;
+  min-width: 340px;
+  max-width: 400px;
   left: 18px;
   background: linear-gradient(145deg, #07090b, #22242d);
   bottom: 68px;

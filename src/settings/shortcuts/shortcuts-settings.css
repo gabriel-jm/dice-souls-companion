@@ -5,4 +5,53 @@
   &.slide {
     animation: slide-to-right 250ms ease forwards;
   }
+
+  .list {
+    padding: 4px 12px;
+
+    .shortcut-item {
+      cursor: pointer;
+      border-radius: 4px;
+      padding: 6px 8px;
+
+      &:hover {
+        background-color: #aaa2;
+      }
+    }
+  }
+
+  .shortcut-bubble {
+    background-color: #2b2e36;
+    position: absolute;
+    width: 95%;
+    height: 85%;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: -5px -5px 0 0 #709cd6;
+    transform-origin: center;
+    animation: bubble 250ms ease forwards;
+  }
+}
+
+@keyframes bubble {
+  0% {
+    border-radius: 50px;
+    width: 0;
+    height: 0;
+    color: transparent;
+  }
+
+  80% {
+    border-radius: 4px;
+    width: 95%;
+    height: 85%;
+    color: transparent;
+  }
+  
+  100% {
+    color: white;
+  }
 }

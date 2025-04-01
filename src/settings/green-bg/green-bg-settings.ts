@@ -1,9 +1,10 @@
 import './green-bg-settings.css'
-import { DataSignal, el, ref } from 'lithen-fns'
+import { el, ref } from 'lithen-fns'
 import { chevronLeftIcon } from '../../common/icons'
 import { GreenBgDimentions } from './green-bg-dimentions'
+import { SettingsDialogConfig } from '../settings-dialog'
 
-export function greenBgSettings(curSetting: DataSignal<string>) {
+export function greenBgSettings(config: SettingsDialogConfig) {
   const containerRef = ref()
   const formRef = ref<HTMLFormElement>()
   const savedMessageRef = ref()
@@ -20,7 +21,7 @@ export function greenBgSettings(curSetting: DataSignal<string>) {
   function onAnimationEnd(e: AnimationEvent) {
     if (e.animationName === 'slide-to-right') {
       containerRef.el.classList.remove('slide')
-      curSetting.set('main')
+      config.currentSetting.set('main')
     }
   }
 

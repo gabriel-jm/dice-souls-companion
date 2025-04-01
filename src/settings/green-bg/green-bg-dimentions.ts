@@ -11,9 +11,9 @@ export class GreenBgDimentions {
   }
 
   async init() {
-    const { greenBg } = await this.settingsService.getUserSettings()
+    const { greenBg } = await this.settingsService.getUserSettings() ?? {}
 
-    if (greenBg.width && greenBg.height) {
+    if (greenBg?.width && greenBg?.height) {
       this.width = greenBg.width
       this.height = greenBg.height
 
