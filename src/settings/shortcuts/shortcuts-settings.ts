@@ -10,6 +10,7 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
 
   const listeningKeyPress = signal(false)
   const keyPressed = signal<string[]>([])
+  let shortcutTargetTitle = ''
 
   function onAnimationEnd(e: AnimationEvent) {
     if (e.animationName === 'slide-to-right') {
@@ -18,24 +19,22 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
     }
   }
 
-  function enableShortcutDetect() {
+  function enableShortcutDetect(title: string) {
+    shortcutTargetTitle = title
     listeningKeyPress.set(true)
     config.keepOpen = true
 
     const handler = (e: KeyboardEvent) => {
       e.preventDefault()
 
-      let key = ''
+      if (e.key === 'Backspace') {
+        keyPressed.set(value => {
+          value.pop()
+          return value
+        })
 
-      if (e.ctrlKey) {
-        key += 'Ctrl+'
+        return
       }
-
-      if (e.shiftKey) {
-        key += 'Shift+'
-      }
-
-      key += e.key
 
       keyPressed.set(l => [...l, e.key])
     }
@@ -67,52 +66,73 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
       </header>
 
       <div class="list">
-        <div class="shortcut-item" on-click=${enableShortcutDetect}>
+        <div
+          class="shortcut-item"
+          on-click=${() => enableShortcutDetect('+1 Dado Vermelho')}
+        >
           <p>+1 Dado Vermelho</p>
           <div>
             Clique para adicionar um atalho
           </div>
         </div>
+      </div>
+
+      ${shell(() => {
+        if (!listeningKeyPress.get()) {
+          return
+        }
+
+        return shortcutDetector({
+          title: shortcutTargetTitle,
+          keyPressed,
+          onClose() {
+            listeningKeyPress.set(false)
+            config.keepOpen = false
+          },
+        })
+      })}
+    </div>
+  `
+}
+
+type ShortcutDetectorProps = {
+  title: string
+  keyPressed: DataSignal<string[]>
+  onClose(): void
+}
+
+function shortcutDetector(props: ShortcutDetectorProps) {
+  return html`
+    <div class="shortcut-bubble">
+      <h3>Atalho para ${props.title}</h3>
+      <br/>
+
+      <p>Precione uma tecla por vez</p>
+      <br/>
+      <p>Use [Backspace] para remover um comando</p>
+      <br/>
+
+      <p>
+        <span>Key: </span>
 
         ${shell(() => {
-          if (!listeningKeyPress.get()) {
-            return
+          const keys = props.keyPressed.get()
+          let keysText = ''
+
+          if (!keys.length) {
+            keysText = 'none'
+          } else {
+            keysText = keys.join('+')
           }
 
-          return html`
-            <div class="shortcut-bubble">
-              <p>Atalho para +1 Dado Vermelho</p>
-
-              <p>
-                <span>Key: </span>
-
-                ${shell(() => {
-                  const keys = keyPressed.get()
-                  let keysText = ''
-      
-                  if (!keys.length) {
-                    keysText = 'none'
-                  } else {
-                    keysText = keys.join('+')
-                  }
-
-                  return el/*html*/`
-                    <span>${keysText}</span>
-                  `
-                })}
-              </p>
-              <span
-                on-click=${() => {
-                  listeningKeyPress.set(false)
-                  config.keepOpen = false
-                }}
-              >
-                Fechar
-              </span>
-            </div>
+          return el/*html*/`
+            <span>${keysText}</span>
           `
         })}
-      </div>
+      </p>
+      <span on-click=${props.onClose}>
+        Fechar
+      </span>
     </div>
   `
 }
