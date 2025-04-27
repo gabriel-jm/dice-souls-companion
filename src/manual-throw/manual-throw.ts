@@ -95,7 +95,11 @@ interface DiceEventsHandler {
 function listenShortcuts(handler: DiceEventsHandler) {
   if (!window.ipcRenderer) return
 
-  window.ipcRenderer.on('add-red-dice', () => handler.increase('red'))
-  window.ipcRenderer.on('remove-red-dice', () => handler.decrease('red'))
-  window.ipcRenderer.on('throw-dice', handler.throwDice)
+  window.ipcRenderer.on('addRedDie', () => handler.increase('red'))
+  window.ipcRenderer.on('removeRedDie', () => handler.decrease('red'))
+  window.ipcRenderer.on('addBlackDie', () => handler.increase('black'))
+  window.ipcRenderer.on('removeBlackDie', () => handler.decrease('black'))
+  window.ipcRenderer.on('addBlueDie', () => handler.increase('blue'))
+  window.ipcRenderer.on('removeBlueDie', () => handler.decrease('blue'))
+  window.ipcRenderer.on('throwDice', handler.throwDice)
 }
