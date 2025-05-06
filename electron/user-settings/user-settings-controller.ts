@@ -7,10 +7,11 @@ export type UserSettingsIncomingData = {
   }
 }
 
-export function getUserSettings() {
+export async function getUserSettings() {
   const settingsRepo = new UserSettingsRepository()
+  const settings = await settingsRepo.getSettings()
 
-  return settingsRepo.getSettings()
+  return settings
 }
 
 export function updateUserSettings(data: UserSettingsIncomingData) {

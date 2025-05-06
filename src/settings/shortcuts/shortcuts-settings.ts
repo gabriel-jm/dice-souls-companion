@@ -3,7 +3,62 @@ import { DataSignal, el, html, ref, shell, signal } from 'lithen-fns'
 import { chevronLeftIcon } from '../../common/icons'
 import { SettingsDialogConfig } from '../settings-dialog'
 
+export type Shortcuts = {
+  addRedDie: string | null
+  removeRedDie: string | null
+  addBlackDie: string | null
+  removeBlackDie: string | null
+  addBlueDie: string | null
+  removeBlueDie: string | null
+  throwDice: string | null
+}
+
+async function getShortcuts(shortcutInfo: Map<string, { command: string | null }>) {
+  const response = await window.ipcRenderer.invoke('get-user-settings')
+  const shortcuts = response?.shortcuts as Shortcuts
+
+  for (const [key, value] of Object.entries(shortcuts ?? {})) {
+    const info = shortcutInfo.get(key)
+
+    if (info && value) {
+      info.command = value
+    }
+  }
+}
+
 export function shortcutsSettings(config: SettingsDialogConfig) {
+  const shortcutInfo = signal(
+    new Map()
+      .set('addRedDie', {
+        command: null,
+        title: '+1 Dado Vermelho'
+      })
+      .set('removeRedDie', {
+        command: null,
+        title: '-1 Dado Vermelho'
+      })
+      .set('addBlackDie', {
+        command: null,
+        title: '+1 Dado Preto'
+      })
+      .set('removeBlackDie', {
+        command: null,
+        title: '-1 Dado Preto'
+      })
+      .set('addBlueDie', {
+        command: null,
+        title: '+1 Dado Azul'
+      })
+      .set('removeBlueDie', {
+        command: null,
+        title: '-1 Dado Azul'
+      })
+      .set('throwDice', {
+        command: null,
+        title: 'Jogar Dados'
+      })
+  )
+  
   const containerRef = ref()
 
   const nav = () => containerRef.el.classList.add('slide')
@@ -50,6 +105,9 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
     })
   }
 
+  getShortcuts(shortcutInfo.data())
+    .then(() => shortcutInfo.update())
+
   return el/*html*/`
     <div
       ref=${containerRef}
@@ -66,15 +124,26 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
       </header>
 
       <div class="list">
-        <div
-          class="shortcut-item"
-          on-click=${() => enableShortcutDetect('+1 Dado Vermelho')}
-        >
-          <p>+1 Dado Vermelho</p>
-          <div>
-            Clique para adicionar um atalho
-          </div>
-        </div>
+        ${shell(() => {
+          return [...shortcutInfo.get().entries()].map(([key, info]) => {
+            return html`
+              <div
+                class="shortcut-item"
+                key=${key}
+                on-click=${() => enableShortcutDetect(info.title)}
+              >
+                <p>${info.title}</p>
+                <div>
+                  ${info.command || html`
+                    <p class="no-command-p">
+                      Clique para adicionar um atalho
+                    </p>  
+                  `}
+                </div>
+              </div>
+            `
+          })
+        })}
       </div>
 
       ${shell(() => {
@@ -91,6 +160,8 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
           },
         })
       })}
+
+      <button class="settings-btn">Salvar</button>
     </div>
   `
 }
