@@ -91,6 +91,17 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
         return
       }
 
+      if (e.key === 'Escape') {
+        return
+      }
+
+      if (
+        e.key === 'Control' &&
+        keyPressed.data().includes('Control')
+      ) {
+        return
+      }
+
       keyPressed.set(l => [...l, e.key])
     }
 
@@ -183,25 +194,29 @@ function shortcutDetector(props: ShortcutDetectorProps) {
       <p>Use [Backspace] para remover um comando</p>
       <br/>
 
-      <p>
-        <span>Key: </span>
-
+      <div class="keys-container">
         ${shell(() => {
           const keys = props.keyPressed.get()
-          let keysText = ''
 
           if (!keys.length) {
-            keysText = 'none'
-          } else {
-            keysText = keys.join('+')
+            return el/*html*/`
+              <span class="key">-</span>
+            `
           }
 
-          return el/*html*/`
-            <span>${keysText}</span>
-          `
+          return keys.map((key, index) => {
+            return html`
+              <span class="key">${key}</span>
+              ${
+                index + 1 !== keys.length
+                  && el/*html*/`<span class="plus">+</span>`
+              }
+            `
+          })
         })}
-      </p>
-      <span on-click=${props.onClose}>
+      </div>
+
+      <span class="settings-btn wide" on-click=${props.onClose}>
         Fechar
       </span>
     </div>

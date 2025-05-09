@@ -102,17 +102,23 @@
 }
 
 .settings-btn {
+  display: block;
   cursor: pointer;
   border: 0;
   border-radius: 4px;
-  padding: 4px 10px;
+  padding: 6px 10px;
   font-size: 0.9rem;
   color: #eee;
   background-color: #454545;
   transition: all 200ms ease-out;
+  text-align: center;
 
   &:active {
     background-color: #555;
+  }
+
+  &.wide {
+    width: 100%;
   }
 }
 

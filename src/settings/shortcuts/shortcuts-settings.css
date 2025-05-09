@@ -34,15 +34,36 @@
     background-color: #2b2e36;
     position: absolute;
     width: 95%;
-    height: 90%;
+    height: 95%;
     top: 15px;
     left: 10px;
     z-index: 3;
     border-radius: 4px;
     padding: 10px;
-    box-shadow: -5px -5px 0 0 #709cd6;
+    text-align: center;
+    box-shadow: -5px -5px 0 0 #709cd6,
+      5px 5px 0 0 #123361;
     transform-origin: center;
     animation: bubble 250ms ease forwards;
+
+    .keys-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+
+      .key {
+        display: inline-block;
+        border-radius: 4px;
+        padding: 6px 8px;
+        background-color: #141925;
+        box-shadow: 0 0 1px 2px #709cd6;
+      }
+    }
+
+    .settings-btn.wide {
+      margin-top: 20px;
+    }
   }
 }
 
