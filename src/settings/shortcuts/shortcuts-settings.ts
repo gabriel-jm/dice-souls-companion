@@ -3,25 +3,21 @@ import { DataSignal, el, html, ref, shell, signal } from 'lithen-fns'
 import { chevronLeftIcon } from '../../common/icons'
 import { SettingsDialogConfig } from '../settings-dialog'
 
-export type Shortcuts = {
-  addRedDie: string | null
-  removeRedDie: string | null
-  addBlackDie: string | null
-  removeBlackDie: string | null
-  addBlueDie: string | null
-  removeBlueDie: string | null
-  throwDice: string | null
+export type Shortcut = {
+  id: string
+  name: string
+  command: string | null
 }
 
 async function getShortcuts(shortcutInfo: Map<string, { command: string | null }>) {
-  const response = await window.ipcRenderer.invoke('get-user-settings')
-  const shortcuts = response?.shortcuts as Shortcuts
+  const response = await window.ipcRenderer.invoke('get-shortcuts')
+  const shortcuts = response as Shortcut[]
 
-  for (const [key, value] of Object.entries(shortcuts ?? {})) {
-    const info = shortcutInfo.get(key)
+  for (const { name, command } of shortcuts) {
+    const info = shortcutInfo.get(name)
 
-    if (info && value) {
-      info.command = value
+    if (info && command) {
+      info.command = command
     }
   }
 }
@@ -171,8 +167,6 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
           },
         })
       })}
-
-      <button class="settings-btn">Salvar</button>
     </div>
   `
 }

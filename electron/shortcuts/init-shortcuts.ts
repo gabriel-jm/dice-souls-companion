@@ -1,18 +1,32 @@
 import { BrowserWindow, globalShortcut, ipcMain } from 'electron'
-import { UserSettingsRepository } from '../user-settings/user-settings-repository'
+import { shorcutsRepository } from './shortcuts-repository'
 
 export async function initShortcuts(win: BrowserWindow) {
-  const userSettingsRepo = new UserSettingsRepository()
+  const availableShortcutNames = [
+    'addRedDie',
+    'removeRedDie',
+    'addBlackDie',
+    'removeBlackDie',
+    'addBlueDie',
+    'removeBlueDie',
+    'throwDice'
+  ]
 
-  ipcMain.handle('set-shortcuts', (_, data) => userSettingsRepo.updateShortcuts(data))
+  ipcMain.handle('add-shortcut', (_, data) => {
+    if (!availableShortcutNames.includes(data.name)) {
+      return;
+    }
+    
+    return shorcutsRepository.add(data)
+  })
 
-  const { shortcuts } = await userSettingsRepo.getSettings()
+  const shortcuts = await shorcutsRepository.getAll()
 
-  for (const [key, value] of Object.entries(shortcuts)) {
-    if (!value) continue
+  for (const { name, command } of shortcuts) {
+    if (!command) continue
 
-    globalShortcut.register(value, () => win.webContents.send(key))
+    globalShortcut.register(name, () => win.webContents.send(command))
   }
 
-  ipcMain.handle('get-shorcuts', () => shortcuts)
+  ipcMain.handle('get-shortcuts', () => shortcuts)
 }
