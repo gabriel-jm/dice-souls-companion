@@ -15,16 +15,23 @@ async function getAllShortcuts() {
 
 async function addShortcut(data: Omit<Shortcut, 'id'>) {
   const id = randomUUID()
-  const command = data.command ? `'${data.command}'` : null
 
   await sql`
-    Insert Into shortcut
-    Values ('${id}', '${data.name}', ${command})
-    On Conflict (name) Do Update Set command = ${command};
+    Insert Into shortcuts (id, name, command)
+    Values (${id}, ${data.name}, ${data.command})
+    On Conflict (name) Do Update Set command = ${data.command};
+  `
+}
+
+function removeShortcut(name: string) {
+  return sql`
+    Delete From shorcuts
+    Where name = ${name};
   `
 }
 
 export const shorcutsRepository = {
   getAll: getAllShortcuts,
-  add: addShortcut
+  add: addShortcut,
+  remove: removeShortcut
 }

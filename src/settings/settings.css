@@ -28,7 +28,9 @@
   }
 
   .content {
+    max-height: 80%;
     overflow-x: hidden;
+    overflow-y: auto;
   }
 
   .title {
@@ -120,6 +122,10 @@
   &.wide {
     width: 100%;
   }
+
+  &.blue {
+    background-color: #1766d6;
+  }
 }
 
 .saved-message {
@@ -171,6 +177,7 @@
   align-items: center;
   gap: 12px;
   padding: 0 12px;
+  margin-bottom: 8px;
 
   .settings-title {
     font-size: 1.1rem;
@@ -185,15 +192,22 @@
   }
 }
 
+.settings-title.with-icon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .settings-title.green-bg-title::before {
   content: '';
   display: inline-block;
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border: 3px solid #226422;
   background-color: #6cdb6c;
   box-shadow: 3px 3px #a5faa5a1;
   border-radius: 2px;
+  margin-right: 6px;
 }
 
 @keyframes slide-to-left {

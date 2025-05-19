@@ -46,6 +46,10 @@
     transform-origin: center;
     animation: bubble 250ms ease forwards;
 
+    &.close {
+      animation: bubble-close 250ms ease-out forwards;
+    }
+
     .keys-container {
       display: flex;
       justify-content: center;
@@ -82,5 +86,16 @@
   
   100% {
     color: white;
+  }
+}
+
+@keyframes bubble-close {
+  from {
+    scale: 1;
+  }
+
+  to {
+    scale: 0;
+    opacity: 0;
   }
 }

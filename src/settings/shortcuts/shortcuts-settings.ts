@@ -1,59 +1,17 @@
 import './shortcuts-settings.css'
 import { DataSignal, el, html, ref, shell, signal } from 'lithen-fns'
-import { chevronLeftIcon } from '../../common/icons'
+import { chevronLeftIcon, keyboardIcon } from '../../common/icons'
 import { SettingsDialogConfig } from '../settings-dialog'
+import { shortcutsService } from './shortcuts-service'
 
-export type Shortcut = {
-  id: string
+type TargetShortcut = {
   name: string
+  title: string
   command: string | null
 }
 
-async function getShortcuts(shortcutInfo: Map<string, { command: string | null }>) {
-  const response = await window.ipcRenderer.invoke('get-shortcuts')
-  const shortcuts = response as Shortcut[]
-
-  for (const { name, command } of shortcuts) {
-    const info = shortcutInfo.get(name)
-
-    if (info && command) {
-      info.command = command
-    }
-  }
-}
-
 export function shortcutsSettings(config: SettingsDialogConfig) {
-  const shortcutInfo = signal(
-    new Map()
-      .set('addRedDie', {
-        command: null,
-        title: '+1 Dado Vermelho'
-      })
-      .set('removeRedDie', {
-        command: null,
-        title: '-1 Dado Vermelho'
-      })
-      .set('addBlackDie', {
-        command: null,
-        title: '+1 Dado Preto'
-      })
-      .set('removeBlackDie', {
-        command: null,
-        title: '-1 Dado Preto'
-      })
-      .set('addBlueDie', {
-        command: null,
-        title: '+1 Dado Azul'
-      })
-      .set('removeBlueDie', {
-        command: null,
-        title: '-1 Dado Azul'
-      })
-      .set('throwDice', {
-        command: null,
-        title: 'Jogar Dados'
-      })
-  )
+  const shortcutInfo = signal(initShortcutMap())
   
   const containerRef = ref()
 
@@ -61,7 +19,7 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
 
   const listeningKeyPress = signal(false)
   const keyPressed = signal<string[]>([])
-  let shortcutTargetTitle = ''
+  let targetShortcut: TargetShortcut | null = null
 
   function onAnimationEnd(e: AnimationEvent) {
     if (e.animationName === 'slide-to-right') {
@@ -70,8 +28,12 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
     }
   }
 
-  function enableShortcutDetect(title: string) {
-    shortcutTargetTitle = title
+  function enableShortcutDetect(target: TargetShortcut) {
+    if (target.command) {
+      keyPressed.set(target.command.split('+'))
+    }
+
+    targetShortcut = target
     listeningKeyPress.set(true)
     config.keepOpen = true
 
@@ -91,10 +53,16 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
         return
       }
 
+      const keyPressedData = keyPressed.data()
+
       if (
         e.key === 'Control' &&
-        keyPressed.data().includes('Control')
+        keyPressedData.includes('Control')
       ) {
+        return
+      }
+
+      if (keyPressedData.includes(e.key)) {
         return
       }
 
@@ -112,7 +80,54 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
     })
   }
 
-  getShortcuts(shortcutInfo.data())
+  function onCloseShortcutDetector(shouldSave: boolean) {
+    listeningKeyPress.set(false)
+    config.keepOpen = false
+
+    if (shouldSave) {
+      const currentCommand = targetShortcut!.command
+      let command: string | null = keyPressed.data().join('+')
+
+      if (!command) {
+        command = null
+      }
+
+      if (currentCommand && !command) {
+        shortcutsService.removeShortcut({
+          name: targetShortcut!.name,
+          command: currentCommand
+        })
+          .then(() => {
+            shortcutInfo.set(map => {
+              const key = targetShortcut!.name
+              const info = Reflect.get(map, key)
+              Reflect.set(map, key, {...info, command })
+              return map
+            })
+            shortcutInfo.update()
+          })
+      } else {
+        shortcutsService.addShortcut({
+          name: targetShortcut!.name,
+          oldCommand: currentCommand,
+          command
+        })
+          .then(() => {
+            shortcutInfo.set(map => {
+              const key = targetShortcut!.name
+              const info = Reflect.get(map, key)
+              Reflect.set(map, key, {...info, command })
+              return map
+            })
+            shortcutInfo.update()
+          })
+      }
+    }
+
+    keyPressed.set([])
+  }
+
+  shortcutsService.getShortcuts(shortcutInfo.data())
     .then(() => shortcutInfo.update())
 
   return el/*html*/`
@@ -125,19 +140,25 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
         <span class="void-btn" on-click=${nav}>
           ${chevronLeftIcon()}
         </span>
-        <h4 class="settings-title">
+        <h4 class="settings-title with-icon">
+          ${keyboardIcon()}
           Atalhos
         </h4>
       </header>
 
       <div class="list">
         ${shell(() => {
-          return [...shortcutInfo.get().entries()].map(([key, info]) => {
+          const map = shortcutInfo.get()
+
+          return [...Object.entries(map)].map(([key, info]) => {
             return html`
               <div
                 class="shortcut-item"
                 key=${key}
-                on-click=${() => enableShortcutDetect(info.title)}
+                on-click=${() => enableShortcutDetect({
+                  name: key,
+                  ...info
+                })}
               >
                 <p>${info.title}</p>
                 <div>
@@ -159,27 +180,77 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
         }
 
         return shortcutDetector({
-          title: shortcutTargetTitle,
+          title: targetShortcut!.title,
           keyPressed,
-          onClose() {
-            listeningKeyPress.set(false)
-            config.keepOpen = false
-          },
+          onClose: onCloseShortcutDetector,
         })
       })}
     </div>
   `
 }
 
+function initShortcutMap() {
+  return {
+    addRedDie: {
+      command: null,
+      title: '+1 Dado Vermelho'
+    },
+    removeRedDie: {
+      command: null,
+      title: '-1 Dado Vermelho'
+    },
+    addBlackDie: {
+      command: null,
+      title: '+1 Dado Preto'
+    },
+    removeBlackDie: {
+      command: null,
+      title: '-1 Dado Preto'
+    },
+    addBlueDie: {
+      command: null,
+      title: '+1 Dado Azul'
+    },
+    removeBlueDie: {
+      command: null,
+      title: '-1 Dado Azul'
+    },
+    throwDice: {
+      command: null,
+      title: 'Jogar Dados'
+    }
+  }
+}
+
 type ShortcutDetectorProps = {
   title: string
   keyPressed: DataSignal<string[]>
-  onClose(): void
+  onClose(saved: boolean): void
 }
 
 function shortcutDetector(props: ShortcutDetectorProps) {
+  let shouldSave = false
+  const containerRef = ref()
+
+  function closeShortcut(saved: boolean) {
+    return () => {
+      shouldSave = saved
+      containerRef.el.classList.add('close')
+    }
+  }
+
+  function onCloseAnimation(e: AnimationEvent) {
+    if (e.animationName === 'bubble-close') {
+      props.onClose(shouldSave)
+    }
+  }
+
   return html`
-    <div class="shortcut-bubble">
+    <div
+      ref=${containerRef}
+      class="shortcut-bubble"
+      on-animationend=${onCloseAnimation}
+    >
       <h3>Atalho para ${props.title}</h3>
       <br/>
 
@@ -210,7 +281,16 @@ function shortcutDetector(props: ShortcutDetectorProps) {
         })}
       </div>
 
-      <span class="settings-btn wide" on-click=${props.onClose}>
+      <span
+        class="settings-btn blue wide"
+        on-click=${closeShortcut(true)}
+      >
+        Salvar
+      </span>
+      <span
+        class="settings-btn wide"
+        on-click=${closeShortcut(false)}
+      >
         Fechar
       </span>
     </div>

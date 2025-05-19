@@ -12,21 +12,33 @@ export async function initShortcuts(win: BrowserWindow) {
     'throwDice'
   ]
 
-  ipcMain.handle('add-shortcut', (_, data) => {
+  ipcMain.handle('add-shortcut', async (_, data) => {
     if (!availableShortcutNames.includes(data.name)) {
       return;
     }
     
-    return shorcutsRepository.add(data)
+    await shorcutsRepository.add(data)
+
+    if (data.oldCommand) {
+      globalShortcut.unregister(data.oldCommand)
+    }
+
+    globalShortcut.register(data.command, () => win.webContents.send(data.name))
+  })
+
+  ipcMain.handle('remove-shortcut', async (_, data) => {
+    await shorcutsRepository.remove(data.name)
+
+    globalShortcut.unregister(data.command)
   })
 
   const shortcuts = await shorcutsRepository.getAll()
 
+  ipcMain.handle('get-shortcuts', () => shortcuts)
+  
   for (const { name, command } of shortcuts) {
     if (!command) continue
 
-    globalShortcut.register(name, () => win.webContents.send(command))
+    globalShortcut.register(command, () => win.webContents.send(name))
   }
-
-  ipcMain.handle('get-shortcuts', () => shortcuts)
 }

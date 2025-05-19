@@ -1,6 +1,7 @@
 import { DataSignal, el, ref, shell, signal } from 'lithen-fns'
 import { greenBgSettings } from './green-bg/green-bg-settings'
 import { shortcutsSettings } from './shortcuts/shortcuts-settings'
+import { keyboardIcon } from '../common/icons'
 
 export type SettingsDialogConfig = {
   currentSetting: DataSignal<string>
@@ -15,15 +16,14 @@ export function settingsDialog() {
   const remoteConfig: SettingsDialogConfig = {
     currentSetting,
     set keepOpen(value: boolean) {
-      console.log('keepOpne', value)
       keepOpen = value
     }
   }
 
   const settings = new Map()
-    .set('main', settingsMainMenu(remoteConfig))
-    .set('greenBg', greenBgSettings(remoteConfig))
-    .set('shortcuts', shortcutsSettings(remoteConfig))
+    .set('main', settingsMainMenu)
+    .set('greenBg', greenBgSettings)
+    .set('shortcuts', shortcutsSettings)
 
   const open = () => {
     dialogRef.el.classList.remove('close')
@@ -61,9 +61,9 @@ export function settingsDialog() {
       <div class="content">
         ${shell(() => {
           const settingKey = currentSetting.get()
-          const settingsEl = settings.get(settingKey)
+          const settingsElFn = settings.get(settingKey)
 
-          return settingsEl
+          return settingsElFn(remoteConfig)
         })}
       </div>
     </dialog>
@@ -104,9 +104,10 @@ function settingsMainMenu(config: SettingsDialogConfig) {
       </li>
 
       <li
-        class="settings-title"
+        class="settings-title with-icon"
         on-click=${nav('shortcuts')}
       >
+        ${keyboardIcon()}
         Atalhos
       </li>
     </ul>
