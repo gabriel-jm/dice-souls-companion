@@ -3,6 +3,7 @@ import { diceButton } from '../common/dice-button/dice-button'
 import { DataSignal, html, signalRecord } from 'lithen-fns'
 import { isLocked } from '../main'
 import { diceMaster, DieTypes } from '../dice-master/dice-master'
+import { listenShortcuts } from './listen-shortcuts'
 
 export function manualThrow() {
   const diceQuantities = signalRecord({
@@ -84,22 +85,4 @@ export function manualThrow() {
 
 export function addManualThrow() {
   ui.append(manualThrow())
-}
-
-interface DiceEventsHandler {
-  increase(type: DieTypes): void
-  decrease(type: DieTypes): void
-  throwDice(): void
-}
-
-function listenShortcuts(handler: DiceEventsHandler) {
-  if (!window.ipcRenderer) return
-
-  window.ipcRenderer.on('addRedDie', () => handler.increase('red'))
-  window.ipcRenderer.on('removeRedDie', () => handler.decrease('red'))
-  window.ipcRenderer.on('addBlackDie', () => handler.increase('black'))
-  window.ipcRenderer.on('removeBlackDie', () => handler.decrease('black'))
-  window.ipcRenderer.on('addBlueDie', () => handler.increase('blue'))
-  window.ipcRenderer.on('removeBlueDie', () => handler.decrease('blue'))
-  window.ipcRenderer.on('throwDice', handler.throwDice)
 }

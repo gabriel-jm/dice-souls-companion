@@ -3,6 +3,7 @@ import { DataSignal, el, html, ref, shell, signal } from 'lithen-fns'
 import { chevronLeftIcon, keyboardIcon } from '../../common/icons'
 import { SettingsDialogConfig } from '../settings-dialog'
 import { shortcutsService } from './shortcuts-service'
+import { shortcutDetector } from './shortcut-detector'
 
 type TargetShortcut = {
   name: string
@@ -55,18 +56,17 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
 
       const keyPressedData = keyPressed.data()
 
-      if (
-        e.key === 'Control' &&
-        keyPressedData.includes('Control')
-      ) {
-        return
-      }
-
       if (keyPressedData.includes(e.key)) {
         return
       }
 
-      keyPressed.set(l => [...l, e.key])
+      keyPressed.set(l => [...l, e.key].sort((a, b) => {
+        if (a.length > b.length) {
+          return -1
+        }
+
+        return 1
+      }))
     }
 
     document.addEventListener('keydown', handler)
@@ -92,36 +92,30 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
         command = null
       }
 
+      let servicePromise: Promise<void>
+
       if (currentCommand && !command) {
-        shortcutsService.removeShortcut({
+        servicePromise = shortcutsService.removeShortcut({
           name: targetShortcut!.name,
           command: currentCommand
         })
-          .then(() => {
-            shortcutInfo.set(map => {
-              const key = targetShortcut!.name
-              const info = Reflect.get(map, key)
-              Reflect.set(map, key, {...info, command })
-              return map
-            })
-            shortcutInfo.update()
-          })
       } else {
-        shortcutsService.addShortcut({
+        servicePromise = shortcutsService.addShortcut({
           name: targetShortcut!.name,
           oldCommand: currentCommand,
           command
         })
-          .then(() => {
-            shortcutInfo.set(map => {
-              const key = targetShortcut!.name
-              const info = Reflect.get(map, key)
-              Reflect.set(map, key, {...info, command })
-              return map
-            })
-            shortcutInfo.update()
-          })
       }
+
+      servicePromise.then(() => {
+        shortcutInfo.set(map => {
+          const key = targetShortcut!.name
+          const info = Reflect.get(map, key)
+          Reflect.set(map, key, {...info, command })
+          return map
+        })
+        shortcutInfo.update()
+      })
     }
 
     keyPressed.set([])
@@ -151,6 +145,10 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
           const map = shortcutInfo.get()
 
           return [...Object.entries(map)].map(([key, info]) => {
+            const commandPClassName = info.command
+              ? 'command-p'
+              : 'no-command-p'
+
             return html`
               <div
                 class="shortcut-item"
@@ -162,11 +160,12 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
               >
                 <p>${info.title}</p>
                 <div>
-                  ${info.command || html`
-                    <p class="no-command-p">
-                      Clique para adicionar um atalho
-                    </p>  
-                  `}
+                  <p class="${commandPClassName}">
+                    ${info.command
+                      ? `> ${info.command}`
+                      : 'Clique para adicionar um atalho'
+                    }
+                  </p>
                 </div>
               </div>
             `
@@ -220,79 +219,4 @@ function initShortcutMap() {
       title: 'Jogar Dados'
     }
   }
-}
-
-type ShortcutDetectorProps = {
-  title: string
-  keyPressed: DataSignal<string[]>
-  onClose(saved: boolean): void
-}
-
-function shortcutDetector(props: ShortcutDetectorProps) {
-  let shouldSave = false
-  const containerRef = ref()
-
-  function closeShortcut(saved: boolean) {
-    return () => {
-      shouldSave = saved
-      containerRef.el.classList.add('close')
-    }
-  }
-
-  function onCloseAnimation(e: AnimationEvent) {
-    if (e.animationName === 'bubble-close') {
-      props.onClose(shouldSave)
-    }
-  }
-
-  return html`
-    <div
-      ref=${containerRef}
-      class="shortcut-bubble"
-      on-animationend=${onCloseAnimation}
-    >
-      <h3>Atalho para ${props.title}</h3>
-      <br/>
-
-      <p>Precione uma tecla por vez</p>
-      <br/>
-      <p>Use [Backspace] para remover um comando</p>
-      <br/>
-
-      <div class="keys-container">
-        ${shell(() => {
-          const keys = props.keyPressed.get()
-
-          if (!keys.length) {
-            return el/*html*/`
-              <span class="key">-</span>
-            `
-          }
-
-          return keys.map((key, index) => {
-            return html`
-              <span class="key">${key}</span>
-              ${
-                index + 1 !== keys.length
-                  && el/*html*/`<span class="plus">+</span>`
-              }
-            `
-          })
-        })}
-      </div>
-
-      <span
-        class="settings-btn blue wide"
-        on-click=${closeShortcut(true)}
-      >
-        Salvar
-      </span>
-      <span
-        class="settings-btn wide"
-        on-click=${closeShortcut(false)}
-      >
-        Fechar
-      </span>
-    </div>
-  `
 }
