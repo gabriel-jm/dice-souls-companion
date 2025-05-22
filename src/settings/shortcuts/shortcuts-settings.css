@@ -73,6 +73,17 @@
     .settings-btn.wide {
       margin-top: 20px;
     }
+
+    .feedback-container {
+      padding: 6px;
+      margin-top: 14px;
+
+      .msg {
+        color: #da5e6d;
+        text-shadow: 0 1px 2px #7a1823;
+        animation: feedback-fade 250ms ease forwards 1.5s;
+      }
+    }
   }
 }
 
@@ -101,6 +112,16 @@
 
   to {
     scale: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes feedback-fade {
+  from {
+    opacity: 1;
+  }
+
+  to {
     opacity: 0;
   }
 }

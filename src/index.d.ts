@@ -7,6 +7,9 @@ declare const greenBackgroundBtn: HTMLButtonElement
 declare const editDialog: HTMLDialogElement
 declare const logsDiv: HTMLDivElement
 
+// Audio / SFX
+declare const addDiceSfx: HTMLAudioElement
+
 declare type CreateRollResultProps = {
   activeEffects: DieEffect[]
   temporary: DieEffect[]

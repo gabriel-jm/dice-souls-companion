@@ -9,10 +9,7 @@ export interface DiceEventsHandler {
 export function listenShortcuts(handler: DiceEventsHandler) {
   if (!window.ipcRenderer) return
 
-  window.ipcRenderer.on('addRedDie', () => {
-    handler.increase('red')
-    new Audio('/sfx/long-pop.wav').play()
-  })
+  window.ipcRenderer.on('addRedDie', () => handler.increase('red'))
   window.ipcRenderer.on('removeRedDie', () => handler.decrease('red'))
   window.ipcRenderer.on('addBlackDie', () => handler.increase('black'))
   window.ipcRenderer.on('removeBlackDie', () => handler.decrease('black'))

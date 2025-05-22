@@ -13,6 +13,15 @@ async function getAllShortcuts() {
   return shortcuts;
 }
 
+async function getShortcutByCommand(command: string) {
+  const [shortcut] = await sql<Shortcut>`
+    Select * from shortcuts
+    Where command = ${command};
+  `
+
+  return shortcut
+}
+
 async function addShortcut(data: Omit<Shortcut, 'id'>) {
   const id = randomUUID()
 
@@ -25,13 +34,14 @@ async function addShortcut(data: Omit<Shortcut, 'id'>) {
 
 function removeShortcut(name: string) {
   return sql`
-    Delete From shorcuts
+    Delete From shortcuts
     Where name = ${name};
   `
 }
 
 export const shorcutsRepository = {
   getAll: getAllShortcuts,
+  getByCommand: getShortcutByCommand,
   add: addShortcut,
   remove: removeShortcut
 }

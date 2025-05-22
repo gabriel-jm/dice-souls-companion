@@ -16,6 +16,12 @@ export async function initShortcuts(win: BrowserWindow) {
     if (!availableShortcutNames.includes(data.name)) {
       return;
     }
+
+    const shortcutInUse = await shorcutsRepository.getByCommand(data.command)
+
+    if (shortcutInUse) {
+      return 'Atalho já está em uso.'
+    }
     
     await shorcutsRepository.add(data)
 

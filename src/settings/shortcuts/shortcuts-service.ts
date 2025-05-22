@@ -23,11 +23,11 @@ async function getShortcuts(shortcutInfo: Record<string, { command: string | nul
   }
 }
 
-function addShortcut(data: AddShortcut) {
+function addShortcut(data: AddShortcut): Promise<string | null> {
   return window.ipcRenderer.invoke('add-shortcut', data)
 }
 
-function removeShortcut(data: Omit<Shortcut, 'id'>) {
+function removeShortcut(data: Omit<Shortcut, 'id'>): Promise<string | null> {
   return window.ipcRenderer.invoke('remove-shortcut', data)
 }
 

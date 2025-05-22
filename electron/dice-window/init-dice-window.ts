@@ -46,6 +46,8 @@ export function initDiceWindow(win?: BrowserWindow) {
         preload: path.join(DIRNAME, 'preload.mjs'),
       },
     })
+
+    diceWin.removeMenu()
   
     diceWin.on('close', () => {
       diceWin = null

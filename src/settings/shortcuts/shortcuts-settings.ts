@@ -5,14 +5,14 @@ import { SettingsDialogConfig } from '../settings-dialog'
 import { shortcutsService } from './shortcuts-service'
 import { shortcutDetector } from './shortcut-detector'
 
-type TargetShortcut = {
+export type TargetShortcut = {
   name: string
   title: string
   command: string | null
 }
 
 export function shortcutsSettings(config: SettingsDialogConfig) {
-  const shortcutInfo = signal(initShortcutMap())
+  const shortcutInfo = signal<Record<string, { title: string, command: string | null }>>(initShortcutMap())
   
   const containerRef = ref()
 
@@ -40,6 +40,13 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
 
     const handler = (e: KeyboardEvent) => {
       e.preventDefault()
+      const keyPressedData = keyPressed.data()
+
+      if (keyPressedData.includes(e.key)) {
+        return
+      }
+
+      let key = e.key
 
       if (e.key === 'Backspace') {
         keyPressed.set(value => {
@@ -54,14 +61,16 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
         return
       }
 
-      const keyPressedData = keyPressed.data()
-
-      if (keyPressedData.includes(e.key)) {
-        return
+      if (e.key === ' ') {
+        key = 'Space'
       }
 
-      keyPressed.set(l => [...l, e.key].sort((a, b) => {
-        if (a.length > b.length) {
+      key = key.length === 1
+        ? key.toUpperCase()
+        : key
+
+      keyPressed.set(l => [...l, key].sort((a, b) => {
+        if (getKeyWeight(a) > getKeyWeight(b)) {
           return -1
         }
 
@@ -80,44 +89,9 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
     })
   }
 
-  function onCloseShortcutDetector(shouldSave: boolean) {
+  function onCloseShortcutDetector() {
     listeningKeyPress.set(false)
     config.keepOpen = false
-
-    if (shouldSave) {
-      const currentCommand = targetShortcut!.command
-      let command: string | null = keyPressed.data().join('+')
-
-      if (!command) {
-        command = null
-      }
-
-      let servicePromise: Promise<void>
-
-      if (currentCommand && !command) {
-        servicePromise = shortcutsService.removeShortcut({
-          name: targetShortcut!.name,
-          command: currentCommand
-        })
-      } else {
-        servicePromise = shortcutsService.addShortcut({
-          name: targetShortcut!.name,
-          oldCommand: currentCommand,
-          command
-        })
-      }
-
-      servicePromise.then(() => {
-        shortcutInfo.set(map => {
-          const key = targetShortcut!.name
-          const info = Reflect.get(map, key)
-          Reflect.set(map, key, {...info, command })
-          return map
-        })
-        shortcutInfo.update()
-      })
-    }
-
     keyPressed.set([])
   }
 
@@ -179,8 +153,9 @@ export function shortcutsSettings(config: SettingsDialogConfig) {
         }
 
         return shortcutDetector({
-          title: targetShortcut!.title,
+          targetShortcut: targetShortcut!,
           keyPressed,
+          shortcutInfo,
           onClose: onCloseShortcutDetector,
         })
       })}
@@ -219,4 +194,16 @@ function initShortcutMap() {
       title: 'Jogar Dados'
     }
   }
+}
+
+function getKeyWeight(key: string) {
+  if (
+    key === 'Control'
+    || key === 'Shift'
+    || key === 'Alt'
+  ) {
+    return key.length
+  }
+
+  return 1
 }

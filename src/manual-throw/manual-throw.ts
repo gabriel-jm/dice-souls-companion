@@ -20,10 +20,14 @@ export function manualThrow() {
     }
 
     quantity.set(value => Math.min(minValue, value + 1))
+
+    new Audio('/sfx/add-dice.wav').play()
   }
 
   function decreaseDieCount(_: unknown, quantity: DataSignal<number>) {
     quantity.set(value => Math.max(0, value - 1))
+
+    new Audio('/sfx/add-dice.wav').play()
   }
 
   function throwDice() {
@@ -37,6 +41,8 @@ export function manualThrow() {
         diceQuantities.black.set(0)
         diceQuantities.blue.set(0)
       })
+    
+    new Audio('/sfx/add-dice.wav').play()
   }
 
   listenShortcuts({

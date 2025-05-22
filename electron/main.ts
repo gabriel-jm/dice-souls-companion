@@ -37,6 +37,8 @@ function createWindow() {
     },
   })
 
+  win.removeMenu()
+
   win.on('ready-to-show', () => {
     win?.show()
   })

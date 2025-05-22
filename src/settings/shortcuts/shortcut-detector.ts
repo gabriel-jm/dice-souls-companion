@@ -1,25 +1,67 @@
-import { DataSignal, el, html, ref, shell } from 'lithen-fns'
+import { DataSignal, el, html, ref, shell, signal } from 'lithen-fns'
+import { TargetShortcut } from './shortcuts-settings'
+import { shortcutsService } from './shortcuts-service'
 
 type ShortcutDetectorProps = {
-  title: string
+  targetShortcut: TargetShortcut
   keyPressed: DataSignal<string[]>
-  onClose(saved: boolean): void
+  shortcutInfo: DataSignal<Record<string, { title: string, command: string | null }>>
+  onClose(): void
 }
 
 export function shortcutDetector(props: ShortcutDetectorProps) {
-  let shouldSave = false
+  const { targetShortcut, keyPressed, shortcutInfo } = props
   const containerRef = ref()
+  const feedbackMessage = signal<string| null>(null)
 
-  function closeShortcut(saved: boolean) {
-    return () => {
-      shouldSave = saved
-      containerRef.el.classList.add('close')
+  function closeShortcut() {
+    const currentCommand = targetShortcut!.command
+    let command: string | null = keyPressed.data().join('+')
+
+    if (!command) {
+      command = null
     }
+
+    let servicePromise: Promise<string | null>
+
+    if (currentCommand && !command) {
+      servicePromise = shortcutsService.removeShortcut({
+        name: targetShortcut!.name,
+        command: currentCommand
+      })
+    } else {
+      servicePromise = shortcutsService.addShortcut({
+        name: targetShortcut!.name,
+        oldCommand: currentCommand,
+        command
+      })
+    }
+
+    servicePromise.then((response) => {
+      if (response) {
+        feedbackMessage.set(response)
+        return
+      }
+
+      shortcutInfo.set(map => {
+        const key = targetShortcut!.name
+        const info = Reflect.get(map, key)
+        Reflect.set(map, key, {...info, command })
+        return map
+      })
+      shortcutInfo.update()
+
+      containerRef.el.classList.add('close')
+    })
+  }
+
+  function close() {
+    containerRef.el.classList.add('close')
   }
 
   function onCloseAnimation(e: AnimationEvent) {
     if (e.animationName === 'bubble-close') {
-      props.onClose(shouldSave)
+      props.onClose()
     }
   }
 
@@ -29,7 +71,7 @@ export function shortcutDetector(props: ShortcutDetectorProps) {
       class="shortcut-bubble"
       on-animationend=${onCloseAnimation}
     >
-      <h3>Atalho para ${props.title}</h3>
+      <h3>Atalho para ${targetShortcut.title}</h3>
       <br/>
 
       <p>Precione uma tecla por vez</p>
@@ -39,7 +81,7 @@ export function shortcutDetector(props: ShortcutDetectorProps) {
 
       <div class="keys-container">
         ${shell(() => {
-          const keys = props.keyPressed.get()
+          const keys = keyPressed.get()
 
           if (!keys.length) {
             return el/*html*/`
@@ -59,15 +101,31 @@ export function shortcutDetector(props: ShortcutDetectorProps) {
         })}
       </div>
 
+      <div class="feedback-container">
+        ${shell(() => {
+          const message = feedbackMessage.get()
+          if (!message) {
+            return
+          }
+
+          return html`
+            <p
+              class="msg"
+              on-animationend=${() => feedbackMessage.set(null)}
+            >${message}</p>
+          `
+        })}
+      </div>
+
       <span
         class="settings-btn blue wide"
-        on-click=${closeShortcut(true)}
+        on-click=${closeShortcut}
       >
         Salvar
       </span>
       <span
         class="settings-btn wide"
-        on-click=${closeShortcut(false)}
+        on-click=${close}
       >
         Fechar
       </span>
