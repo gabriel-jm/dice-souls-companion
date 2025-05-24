@@ -12,7 +12,9 @@ export type TargetShortcut = {
 }
 
 export function shortcutsSettings(config: SettingsDialogConfig) {
-  const shortcutInfo = signal<Record<string, { title: string, command: string | null }>>(initShortcutMap())
+  const shortcutInfo = signal<
+    Record<string, { title: string, command: string | null }>
+  >(initShortcutMap())
   
   const containerRef = ref()
 

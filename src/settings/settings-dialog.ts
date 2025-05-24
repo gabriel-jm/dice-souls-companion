@@ -1,4 +1,4 @@
-import { DataSignal, el, ref, shell, signal } from 'lithen-fns'
+import { DataSignal, el, html, ref, shell, signal } from 'lithen-fns'
 import { greenBgSettings } from './green-bg/green-bg-settings'
 import { shortcutsSettings } from './shortcuts/shortcuts-settings'
 import { keyboardIcon } from '../common/icons'
@@ -103,13 +103,15 @@ function settingsMainMenu(config: SettingsDialogConfig) {
         Fundo Verde
       </li>
 
-      <li
-        class="settings-title with-icon"
-        on-click=${nav('shortcuts')}
-      >
-        ${keyboardIcon()}
-        Atalhos
-      </li>
+      ${window.ipcRenderer && html`
+        <li
+          class="settings-title with-icon"
+          on-click=${nav('shortcuts')}
+        >
+          ${keyboardIcon()}
+          Atalhos
+        </li>  
+      `}
     </ul>
   `
 }
