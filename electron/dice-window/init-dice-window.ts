@@ -46,8 +46,6 @@ export function initDiceWindow(win?: BrowserWindow) {
         preload: path.join(DIRNAME, 'preload.mjs'),
       },
     })
-
-    diceWin.removeMenu()
   
     diceWin.on('close', () => {
       diceWin = null
@@ -57,6 +55,7 @@ export function initDiceWindow(win?: BrowserWindow) {
     if (VITE_DEV_SERVER_URL) {
       diceWin.loadURL(VITE_DEV_SERVER_URL + '/dice-window/index.html')
     } else {
+      diceWin.removeMenu()
       diceWin.loadFile(
         path.join(RENDERER_DIST, 'dice-window', 'index.html')
       )

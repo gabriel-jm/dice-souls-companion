@@ -31,7 +31,7 @@
   "dependencies": {
     "@3d-dice/dice-box": "^1.1.4",
     "electron-updater": "^6.3.9",
-    "lithen-fns": "^4.4.1",
+    "lithen-fns": "^4.5.2",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7"
   },

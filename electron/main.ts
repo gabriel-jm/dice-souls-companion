@@ -37,8 +37,6 @@ function createWindow() {
     },
   })
 
-  win.removeMenu()
-
   win.on('ready-to-show', () => {
     win?.show()
   })
@@ -50,6 +48,7 @@ function createWindow() {
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL)
   } else {
+    win.removeMenu()
     win.loadFile(path.join(RENDERER_DIST, 'index.html'))
   }
 }
