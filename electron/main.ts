@@ -6,6 +6,7 @@ import { autoUpdater } from 'electron-updater'
 import { initShortcuts } from './shortcuts/init-shortcuts'
 import { initUserSettings } from './user-settings/init-user-settings'
 import { initDiceWindow } from './dice-window/init-dice-window'
+import { initProfiles } from './profiles/init-profiles'
 
 autoUpdater.autoDownload = false
 autoUpdater.autoInstallOnAppQuit = true
@@ -77,6 +78,7 @@ app.whenReady().then(() => {
 
 function init() {
   initShortcuts(win!).catch(console.log)
+  initProfiles()
   initDiceWindow(win!)
 }
 

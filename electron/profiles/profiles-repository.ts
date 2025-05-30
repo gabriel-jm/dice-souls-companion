@@ -12,11 +12,13 @@ function getAll() {
   return sql<Profile>`Select * From profiles;`
 }
 
-function getActive() {
-  return sql<Profile>`
+async function getActive() {
+  const [profile] = await sql<Profile>`
     Select profiles.* From profiles
     Join userConfig on userConfig.profileId = profiles.id;
   `
+
+  return profile
 }
 
 export const profilesRepository = {
