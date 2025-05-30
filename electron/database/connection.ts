@@ -25,18 +25,24 @@ export async function sql<T = unknown>(
   strs: TemplateStringsArray,
   ...rawValues: any[]
 ) {
-  const sqlText = strs.join('?').trim()
-  const values = rawValues.map(v => {
-    if (v && (typeof v === 'object' || Array.isArray(v))) {
-      if (v instanceof Date) {
-        return v
+  const templStrs = [...strs]
+
+  const values = rawValues
+    .map((v, index) => {
+      if (v instanceof SQLUpdateCommand) {
+        const { text, values } = v.parse()
+
+        const previousText = templStrs[index]
+        templStrs[index] = `${previousText} ${text}`
+
+        return values
       }
       
-      return JSON.stringify(v)
-    }
+      return parseTemplateValue(v)
+    })
+    .flat()
 
-    return v
-  })
+  const sqlText = templStrs.join('?').trim()
 
   const data = await db.all<T[]>(sqlText, ...values)
 
@@ -54,3 +60,45 @@ export async function sql<T = unknown>(
   
   return data
 }
+
+function parseTemplateValue(v: unknown) {
+  if (v && (typeof v === 'object' || Array.isArray(v))) {
+    if (v instanceof Date) {
+      return v
+    }
+    
+    return JSON.stringify(v)
+  }
+
+  return v
+}
+
+class SQLUpdateCommand {
+  #value: Record<string, unknown>
+
+  constructor(value: Record<string, unknown>) {
+    this.#value = value
+  }
+
+  parse() {
+    const texts: string[] = []
+    const values: unknown[] = []
+    const entries = Object.entries(this.#value)
+
+    for (const i in entries) {
+      const index = Number(i)
+      const [key, value] = entries[index]
+      const isLast = index + 1 === entries.length
+
+      texts.push(`${key} = ${isLast ? '' : '?'}`)
+      values.push(parseTemplateValue(value))
+    }
+
+    return {
+      text: texts.join(','),
+      values
+    }
+  }
+}
+
+sql.update = (record: Record<string, unknown>) => new SQLUpdateCommand(record)

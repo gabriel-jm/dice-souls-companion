@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto'
 import { sql } from '../database/connection'
 
 type Profile = {
@@ -21,7 +22,38 @@ async function getActive() {
   return profile
 }
 
+function add(data: Omit<Profile, 'id'>) {
+  const id = randomUUID()
+  
+  return sql`
+    Insert Into profiles
+    Values (
+      ${id},
+      ${data.name},
+      ${data.redEffects},
+      ${data.blackEffects},
+      ${data.blueEffects}
+    );
+  `
+}
+
+function setActive(id: string) {
+  return sql`
+    Update userConfig Set profileId = ${id};
+  `
+}
+
+function update(data: Partial<Profile>) {
+  return sql`
+    Update profiles
+    Set name = ${data.name}
+    Where id = ${data.id};
+  `
+}
+
 export const profilesRepository = {
   getAll,
-  getActive
+  getActive,
+  add,
+  setActive
 }
