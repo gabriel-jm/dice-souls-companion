@@ -34,7 +34,7 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: true,
-      preload: path.join(DIRNAME, 'preload.mjs'),
+      preload: path.join(DIRNAME, 'preload.mjs')
     },
   })
 
@@ -47,9 +47,9 @@ function createWindow() {
   })
 
   if (VITE_DEV_SERVER_URL) {
+    win.webContents.openDevTools({ mode: 'detach' })
     win.loadURL(VITE_DEV_SERVER_URL)
   } else {
-    win.removeMenu()
     win.loadFile(path.join(RENDERER_DIST, 'index.html'))
   }
 }

@@ -21,7 +21,8 @@ export class DiceRoller {
       origin: originPath,
       scale: 5,
       spinForce: 7,
-      startingHeight: 10
+      startingHeight: 10,
+      throwForce: 6
     })
   }
 

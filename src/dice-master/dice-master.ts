@@ -1,5 +1,4 @@
 import { DiceGroupRollResult } from '@3d-dice/dice-box'
-import { blackDieEffects, redDieEffects } from './dice-effects'
 import { isDiceWindowOpen, isLocal, isLocked } from '../main'
 import { RollResultParser } from './roll-results/roll-result-parser'
 import { RollResultService } from './roll-results/roll-results-service'
@@ -8,6 +7,7 @@ import { rollResultItem } from '../roll-results/roll-result-item'
 import { diceLogger } from './logger/dice-logger'
 import { DiceRoller } from './roller/dice-roller'
 import { DiceEvents } from './events/dice-events'
+import { Profile, ProfileService } from '../profiles/profile-service'
 
 export type DieTypes = 'black' | 'blue' | 'red'
 
@@ -17,6 +17,7 @@ export type CurrentRollResult = {
 }
 
 class DiceMaster {
+  profile!: Profile
   diceRoller: DiceRoller
   rollParser: RollResultParser
   diceEvents = new DiceEvents()
@@ -27,17 +28,20 @@ class DiceMaster {
     temporary: signal<number[]>([])
   }
 
-  redDieEffects = redDieEffects
-  blackDieEffects = blackDieEffects
-
   constructor() {
+    this.profile = ProfileService.current
     this.diceRoller = new DiceRoller()
     this.rollParser = new RollResultParser(this.currentResult)
 
     this.#addEffectsList()
   }
 
-  init() {
+  async init() {
+    console.log({ currentProfile: ProfileService.current })
+    this.profile = ProfileService.current
+    // this.currentResult.activeEffects.update()
+    // this.currentResult.temporary.update()
+
     return this.diceRoller.init()
   }
 
@@ -164,12 +168,12 @@ class DiceMaster {
     return this.diceRoller.rollMany(diceRecord)
   }
 
-  #addEffectsList() {
+  async #addEffectsList() {
     redEffectsListEl.append(...shell(() => {
       const effectsArray = [...this.currentResult.activeEffects.get()]
       return effectsArray.map(effectNumber => rollResultItem({
         type: 'red',
-        effectsList: this.redDieEffects,
+        effectsList: this.profile.redEffects,
         value: effectNumber
       }))
     }))
@@ -178,7 +182,7 @@ class DiceMaster {
       const effectsArray = [...this.currentResult.temporary.get()]
       return effectsArray.map(effectNumber => rollResultItem({
         type: 'black',
-        effectsList: this.blackDieEffects,
+        effectsList: this.profile.blackEffects,
         value: effectNumber
       }))
     }))
@@ -205,8 +209,8 @@ class DiceMaster {
     const mapEffect = (key: 'activeEffects'|'temporary') => {
       return this.currentResult[key].data().map(value => {
         const effectList = key === 'activeEffects'
-          ? this.redDieEffects
-          : this.blackDieEffects
+          ? this.profile.redEffects
+          : this.profile.blackEffects
 
         return { number: value, text: effectList[value - 1] }
       })

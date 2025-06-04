@@ -6,4 +6,5 @@ export function initProfiles() {
   ipcMain.handle('get-active-profile', () => profilesRepository.getActive())
   ipcMain.handle('add-profile', (_, data) => profilesRepository.add(data))
   ipcMain.handle('set-active-profile', (_, data) => profilesRepository.setActive(data.id))
+  ipcMain.handle('update-profile', (_, data) => profilesRepository.update(data))
 }

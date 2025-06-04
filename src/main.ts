@@ -18,27 +18,30 @@ import { openDiceWindowEvent } from './dice-window/open-dice-window-event'
 import { addUpdateMessage } from './updates/add-update-message'
 import { addSettingsBtn } from './settings/add-settings-btn'
 import { addCloseEditDialogEvent } from './roll-results/edit-result/edit-result-event'
+import { setProfile } from './profiles/profile-service'
 
-setRandomWallpaper()
-addGreenBackgroundEvent()
-addManualThrow()
-addCloseEditDialogEvent()
-addRerollAllResultsEvent()
-openDiceWindowEvent()
-addUpdateMessage()
-addSettingsBtn()
+setProfile().then(() => {
+  setRandomWallpaper()
+  addGreenBackgroundEvent()
+  addManualThrow()
+  addCloseEditDialogEvent()
+  addRerollAllResultsEvent()
+  openDiceWindowEvent()
+  addUpdateMessage()
+  addSettingsBtn()
 
-document.querySelector('.btn.clear-dice')?.addEventListener('click', () => {
-  diceMaster.clear()
-})
-
-if (window.ipcRenderer) {
-  window.ipcRenderer.on('app-version', (_, version) => {
-    document.querySelector('.version-tag')
-      ?.append(`v${version}`)
+  document.querySelector('.btn.clear-dice')?.addEventListener('click', () => {
+    diceMaster.clear()
   })
-    
-  window.ipcRenderer.on('dice-window-closed', () => isDiceWindowOpen.set(false))
-}
 
-diceMaster.init().catch(console.log)
+  if (window.ipcRenderer) {
+    window.ipcRenderer.on('app-version', (_, version) => {
+      document.querySelector('.version-tag')
+        ?.append(`v${version}`)
+    })
+      
+    window.ipcRenderer.on('dice-window-closed', () => isDiceWindowOpen.set(false))
+  }
+
+  diceMaster.init().catch(console.log)
+})

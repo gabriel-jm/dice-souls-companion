@@ -46,7 +46,7 @@ function setActive(id: string) {
 function update(data: Partial<Profile>) {
   return sql`
     Update profiles
-    Set name = ${data.name}
+    Set ${sql.update(data)}
     Where id = ${data.id};
   `
 }
@@ -55,5 +55,6 @@ export const profilesRepository = {
   getAll,
   getActive,
   add,
-  setActive
+  setActive,
+  update
 }

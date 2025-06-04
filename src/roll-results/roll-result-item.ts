@@ -15,7 +15,9 @@ export function rollResultItem(props: RollResultItemProps) {
   const effect = effectsList[value - 1]
   const itemRef = ref()
 
-  const removeItem = () => diceMaster.remove(type, value)
+  function removeItem() {
+    diceMaster.remove(type, value)
+  }
 
   function reRoll() {
     diceMaster.reroll(type, value)
