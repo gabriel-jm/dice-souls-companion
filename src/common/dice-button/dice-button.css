@@ -19,6 +19,10 @@
     background-color: var(--border-color);
   }
 
+  &:disabled {
+    color: #aaa;
+  }
+
   &.red {
     --bg-color: #e93535;
     --border-color: #ca0d0d;

@@ -4,7 +4,6 @@ import { DataSignal, html, signalRecord } from 'lithen-fns'
 import { isLocked } from '../main'
 import { diceMaster, DieTypes } from '../dice-master/dice-master'
 import { listenShortcuts } from './listen-shortcuts'
-import { diceSfx } from '../sfx/dice-sfx'
 
 export function manualThrow() {
   const diceQuantities = signalRecord({
@@ -21,14 +20,10 @@ export function manualThrow() {
     }
 
     quantity.set(value => Math.min(minValue, value + 1))
-
-    diceSfx.addDie()
   }
 
   function decreaseDieCount(_: unknown, quantity: DataSignal<number>) {
     quantity.set(value => Math.max(0, value - 1))
-
-    diceSfx.removeDie()
   }
 
   function throwDice() {
@@ -38,14 +33,12 @@ export function manualThrow() {
 
     diceMaster.rollMany({ red, black, blue })
       .then(() => {
-        diceQuantities.red.set(0)
-        diceQuantities.black.set(0)
-        diceQuantities.blue.set(0)
+        diceQuantities.set({
+          red: 0,
+          black: 0,
+          blue: 0
+        })
       })
-
-    if (red || black || blue) {
-      diceSfx.throwDice()
-    }
   }
 
   listenShortcuts({

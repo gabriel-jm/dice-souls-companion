@@ -30,7 +30,8 @@
         ]
       }
     ],
-    "artifactName": "${productName}-Windows-${version}-Setup.${ext}"
+    "artifactName": "${productName}-Windows-${version}-Setup.${ext}",
+    "icon": "./public/img/d20.png"
   },
   "nsis": {
     "oneClick": false,
@@ -42,6 +43,7 @@
     "target": [
       "AppImage"
     ],
-    "artifactName": "${productName}-Linux-${version}.${ext}"
+    "artifactName": "${productName}-Linux-${version}.${ext}",
+    "icon": "./public/img/d20.png"
   }
 }

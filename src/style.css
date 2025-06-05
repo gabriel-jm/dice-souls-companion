@@ -1,6 +1,4 @@
 :root {
-  font-family: monospace, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-
   color-scheme: light dark;
   color: #ffffff;
 
@@ -11,6 +9,8 @@
 }
 
 * {
+  font-family: 'Ubuntu Sans Mono', monospace, sans-serif;
+  color: #ffffff;
   box-sizing: border-box;
   margin: 0;
 
@@ -28,6 +28,12 @@
 
   &:hover::-webkit-scrollbar-thumb {
     background-color: #aaa7;
+  }
+}
+
+button {
+  &:disabled {
+    color: #aaa;
   }
 }
 
@@ -174,6 +180,10 @@ ul {
     background-color: #043478;
     box-shadow: none;
     translate: 0 4px;
+  }
+
+  &:disabled {
+    color: #aaa;
   }
 
   &.wide {
