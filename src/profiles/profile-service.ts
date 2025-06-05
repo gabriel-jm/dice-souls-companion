@@ -12,6 +12,8 @@ export class ProfileService {
   static current: Profile = defaultProfile
 
   async getActive() {
+    if (!window.ipcRenderer) return
+
     let profile: Profile = await window.ipcRenderer?.invoke('get-active-profile')
 
     ProfileService.current = profile
