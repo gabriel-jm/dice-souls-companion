@@ -1,17 +1,20 @@
 .profiles-dialog {
   margin: auto;
-  border: 0;
+  border: 1px solid #2f2f2f;
   border-radius: 8px;
+  background: transparent;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   padding: 0;
   box-shadow: 0px 5px 20px 3px #111d;
-  animation: close-profile-dialog 150ms ease-in forwards;
+  animation: close-profile-dialog 200ms ease-out forwards;
   transition: 
-    display 200ms allow-discrete,
-    overlay 200ms allow-discrete
+    display 250ms allow-discrete,
+    overlay 250ms allow-discrete
   ;
 
   &[open] {
-    animation: open-profile-dialog 300ms forwards;
+    animation: open-profile-dialog 300ms ease-out forwards;
   }
 
   &::backdrop {
@@ -20,15 +23,102 @@
 }
 
 .profiles-container {
+  background-color: #1f1f1f;
+  padding: 8px 20px;
 
+  .profiles-title {
+    position: relative;
+    font-size: 2.6rem;
+    font-family: Righteous, serif;
+    -webkit-text-stroke: 2px #222;
+    text-shadow: 0 0 2px #555;
+    text-align: center;
+    z-index: 0;
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 180px;
+      height: 45%;
+      background-color: #333d;
+      border-radius: 50px;
+      bottom: 4px;
+      left: 50%;
+      z-index: -1;
+      transform: translateX(-50%);
+    }
+  }
+
+  .die-effects-list-container {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .die-effect-container {
+    position: relative;
+    background: #333;
+    padding: 8px 12px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    width: 280px;
+    height: 500px;
+
+    &.red {
+      background: linear-gradient(
+        180deg,
+        #ec2a2a,
+        #c54848cc,
+        transparent
+      );
+    }
+
+    &.black {
+      background: linear-gradient(
+        180deg,
+        #111113,
+        #383838cc,
+        transparent
+      );
+    }
+
+    &.blue {
+      background: linear-gradient(
+        180deg,
+        #2756f1,
+        #4870c5cc,
+        transparent
+      );
+    }
+
+    .die-header {
+      margin-top: 12px;
+      margin-bottom: 16px;
+    }
+
+    .die-icon .icon {
+      position: absolute;
+      width: 80px;
+      stroke: #fff4;
+      fill: #fff4;
+      top: 6px;
+      right: 6px;
+    }
+
+    .die-type {
+      font-size: 1.8rem;
+      text-align: center;
+      font-family: Righteous, monospace;
+    }
+  }
 }
 
 @keyframes open-profile-dialog {
-  from { opacity: 0; scale: 0.2; }
+  from { opacity: 0; scale: 0.5; }
   to   { opacity: 1; scale: 1; }
 }
 
 @keyframes close-profile-dialog {
   from { opacity: 1; scale: 1; }
-  to   { opacity: 0; scale: 0.2; }
+  to   { opacity: 0; scale: 0.5; }
 }

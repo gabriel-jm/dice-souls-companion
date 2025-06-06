@@ -1,7 +1,11 @@
+import { d20Icon } from '../../common/icons'
+import { diceMaster, DieTypes } from '../../dice-master/dice-master'
 import './profiles-dialog.css'
-import { html } from 'lithen-fns'
+import { el, html } from 'lithen-fns'
 
 export function profilesDialog() {
+  const { redEffects, blackEffects, blueEffects } = diceMaster.profile
+
   function closeDialog() {
     profileDialogEl.close()
   }
@@ -9,9 +13,7 @@ export function profilesDialog() {
   return html`
     <dialog class="profiles-dialog" id="profileDialogEl">
       <div class="profiles-container">
-        <header>
-          <h1>Perfis</h1>
-        </header>
+        <h3 class="profiles-title">Perfis</h3>
 
         <button on-click=${closeDialog}>close</button>
 
@@ -19,8 +21,12 @@ export function profilesDialog() {
           <div>
             Padrão
           </div>
-          <div>
-            ${dieEffectsList()}
+          <div class="die-effects-list-container">
+            ${[
+              dieEffectsList({ type: 'red', effectsList: redEffects }),
+              dieEffectsList({ type: 'black', effectsList: blackEffects }),
+              dieEffectsList({ type: 'blue', effectsList: blueEffects })
+            ]}
           </div>
         </section>
       </div>
@@ -28,33 +34,34 @@ export function profilesDialog() {
   `
 }
 
-function dieEffectsList() {
+export type DieEffectsListProps = {
+  type: DieTypes
+  effectsList: string[]
+}
+
+function dieEffectsList(props: DieEffectsListProps) {
+  const typeName = {
+    red: 'Vermelho',
+    black: 'Preto',
+    blue: 'Azul'
+  }[props.type]
+
   return html`
-    <div>
-      <div>
-        <h4>Dado Vermelho</h4>
+    <div class="die-effect-container ${props.type}">
+      <div class="die-header">
+        <span class="die-icon">
+          ${d20Icon()}
+        </span>
+        <h4 class="die-type">
+          Dado ${typeName}
+        </h4>
       </div>
       <ol>
-        <li>Armas Nv.1</li>
-        <li>Só Escudo</li>
-        <li>Proibido Curar</li>
-        <li>Sem Elixir Magnífico</li>
-        <li>Sem Summon</li>
-        <li>Sem Cinza da Guerra</li>
-        <li>Region Lock</li>
-        <li>Run Genocida</li>
-        <li>Sem Armadura</li>
-        <li>Não upar STR/DEX</li>
-        <li>Não upar INT/FTH/ARC</li>
-        <li>Não upar HP</li>
-        <li>Sem Mesa Redonda</li>
-        <li>Use O Que Ver</li>
-        <li>Sem Torrent</li>
-        <li>Sem Mapa</li>
-        <li>100% Drop Rate</li>
-        <li>5x Runas</li>
-        <li>Adiciona 50k de Souls</li>
-        <li>Inimigos Paralisados</li>
+        ${props.effectsList.map(effect => {
+          return el/*html*/`
+            <li>${effect}</li>
+          `
+        })}
       </ol>
     </div>
   `
