@@ -6,9 +6,7 @@ declare const rollResultActions: HTMLDivElement
 declare const greenBackgroundBtn: HTMLButtonElement
 declare const editDialog: HTMLDialogElement
 declare const logsDiv: HTMLDivElement
-
-// Audio / SFX
-declare const addDiceSfx: HTMLAudioElement
+declare const profileDialogEl: HTMLDialogElement
 
 declare type CreateRollResultProps = {
   activeEffects: DieEffect[]

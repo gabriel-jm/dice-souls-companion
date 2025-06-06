@@ -111,6 +111,30 @@ ul {
   &.warrior-slash {
     background-image: url(/img/warrior-slash.jpg);
   }
+
+  &.ds1-bonfire {
+    background-image: url(/img/ds1-bonfire.jpg);
+  }
+
+  &.artorias {
+    background-image: url(/img/artorias.jpg);
+  }
+
+  &.ds3-dragon {
+    background-image: url(/img/ds3-dragon.jpg);
+  }
+
+  &.abyss-watchers {
+    background-image: url(/img/abyss-watchers.jpg);
+  }
+
+  &.soul-of-cinder {
+    background-image: url(/img/soul-of-cinder.jpg);
+  }
+
+  &.wilder {
+    background-image: url(/img/wilder.jpg);
+  }
 }
 
 .ui {
@@ -266,7 +290,7 @@ input.void {
   box-shadow: 0 3px 5px #333a;
 
   & summary {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
   }

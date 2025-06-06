@@ -90,6 +90,10 @@ function settingsMainMenu(config: SettingsDialogConfig) {
     }
   }
 
+  function openProfilesDialog() {
+    profileDialogEl.showModal()
+  }
+
   return el/*html*/`
     <ul
       class="main-menu"
@@ -110,7 +114,14 @@ function settingsMainMenu(config: SettingsDialogConfig) {
         >
           ${keyboardIcon()}
           Atalhos
-        </li>  
+        </li>
+
+        <li
+          class="settings-title"
+          on-click=${openProfilesDialog}
+        >
+          Perfis
+        </li>
       `}
     </ul>
   `

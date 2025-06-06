@@ -2,6 +2,7 @@ import './settings.css'
 import { html } from 'lithen-fns'
 import { settingsIcon } from '../common/icons'
 import { settingsDialog } from './settings-dialog'
+import { profilesDialog } from '../profiles/dialog/profiles-dialog'
 
 export function addSettingsBtn() {
   const [dialog, open] = settingsDialog()
@@ -16,5 +17,6 @@ export function addSettingsBtn() {
     </button>
 
     ${dialog}
+    ${profilesDialog()}
   `)
 }
