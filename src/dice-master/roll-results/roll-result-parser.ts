@@ -94,11 +94,23 @@ export class RollResultParser {
   
   #parseBlackDice(results: DiceGroupRollResult[]) {
     const listSignal = this.current.temporary
-    let newList = listSignal.data()
+    let currentList = listSignal.data()
 
-    if (newList.length === 2) {
+    if (currentList.length >= 2) {
+      if (currentList.length > 2) {
+        currentList = currentList.filter((value, index) => {
+          const isLastTwo = index >= currentList.length - 2
+
+          if (!isLastTwo) {
+            diceLogger.dieRemoved('black', value)
+          }
+
+          return isLastTwo
+        })
+      }
+
       for (let i = 0; i<results.length; i++) {
-        newList = newList.filter((value, index) => {
+        currentList = currentList.filter((value, index) => {
           const isNotFirst = index !== 0
 
           if (!isNotFirst) {
@@ -110,14 +122,14 @@ export class RollResultParser {
       }
     }
   
-    newList = [
-      ...newList,
+    currentList = [
+      ...currentList,
       ...results.map(result => {
         diceLogger.dieAdded('black', result.value)
         return result.value
       })
     ]
-    listSignal.set(newList)
+    listSignal.set(currentList)
   }
   
   #parseBlueDice(results: DiceGroupRollResult[]) {
