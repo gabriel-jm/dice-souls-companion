@@ -1,4 +1,4 @@
-import { d20Icon } from '../../common/icons'
+import { d20Icon, editIcon, xIcon } from '../../common/icons'
 import { diceMaster, DieTypes } from '../../dice-master/dice-master'
 import './profiles-dialog.css'
 import { el, html } from 'lithen-fns'
@@ -15,12 +15,26 @@ export function profilesDialog() {
       <div class="profiles-container">
         <h3 class="profiles-title">Perfis</h3>
 
-        <button on-click=${closeDialog}>close</button>
+        <button class="void-btn close-btn" on-click=${closeDialog}>
+          ${xIcon()}
+        </button>
+
+        <div class="profiles-list">
+          <ul>
+            <li class="profiles-list-item active">Padrão</li>
+            <li class="profiles-list-item">Perfil Grande</li>
+            <li class="profiles-list-item">Perfil bem longo</li>
+          </ul>
+        </div>
 
         <section>
-          <div>
-            Padrão
-          </div>
+          <header class="profile-header">
+            <h4 class="profile-name">Padrão</h4>
+            <div>
+              ${editIcon()}
+              ${xIcon()}
+            </div>
+          </header>
           <div class="die-effects-list-container">
             ${[
               dieEffectsList({ type: 'red', effectsList: redEffects }),
