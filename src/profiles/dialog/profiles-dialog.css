@@ -14,13 +14,16 @@
     overlay 250ms allow-discrete
   ;
   overflow: visible;
+  outline: none;
 
   &[open] {
     animation: open-profile-dialog 300ms ease-out forwards;
   }
 
   &::backdrop {
-    background-color: #2225;
+    background-color: #2227;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
   }
 
   .close-btn {
@@ -36,7 +39,8 @@
 
 .profiles-container {
   position: relative;
-  background-color: #1f1f1f;
+  max-width: 1000px;
+  background-color: #1f1f20;
   padding: 8px 20px;
 
   .profiles-title {
@@ -66,23 +70,29 @@
   }
 
   .profiles-list {
-    margin-top: 25px;
+    margin-top: 20px;
     background-color: #333;
     padding: 0 16px;
     border-radius: 50px;
 
     & ul {
+      width: 900px;
       display: flex;
       list-style: none;
       align-items: center;
+      overflow-x: auto;
       gap: 8px;
 
+      &::-webkit-scrollbar {
+        height: 3px;
+      }
+
       .profiles-list-item {
-        width: 100px;
+        max-width: 170px;
         font-size: 1.1rem;
         font-weight: bold;
         text-align: center;
-        padding: 6px 2px;
+        padding: 6px 8px;
         border-radius: 2px;
         border-bottom: 4px solid transparent;
         cursor: pointer;
@@ -117,6 +127,7 @@
   .die-effects-list-container {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 18px;
   }
 
@@ -126,7 +137,7 @@
     padding: 8px 12px;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
-    width: 280px;
+    width: 300px;
     height: 500px;
 
     &.red {
@@ -141,7 +152,7 @@
     &.black {
       background: linear-gradient(
         180deg,
-        #111113,
+        #111,
         #383838cc,
         transparent
       );

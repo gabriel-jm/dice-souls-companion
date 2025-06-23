@@ -22,8 +22,10 @@ export function profilesDialog() {
         <div class="profiles-list">
           <ul>
             <li class="profiles-list-item active">Padrão</li>
-            <li class="profiles-list-item">Perfil Grande</li>
-            <li class="profiles-list-item">Perfil bem longo</li>
+            <li
+              class="profiles-list-item"
+              title="Adicionar novo"
+            >+</li>
           </ul>
         </div>
 
