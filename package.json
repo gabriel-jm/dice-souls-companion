@@ -20,12 +20,12 @@
     "check": "ncu"
   },
   "devDependencies": {
-    "electron": "^36.4.0",
+    "electron": "^37.2.1",
     "electron-builder": "^26.0.12",
-    "node-abi": "^4.9.0",
+    "node-abi": "^4.12.0",
     "npm-check-updates": "^18.0.1",
     "typescript": "~5.8.3",
-    "vite": "^6.3.5",
+    "vite": "^7.0.4",
     "vite-plugin-electron": "^0.29.0",
     "vite-plugin-electron-renderer": "^0.14.6"
   },

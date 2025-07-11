@@ -186,6 +186,21 @@
       text-align: center;
       font-family: Righteous, monospace;
     }
+
+    .effects-list {
+      max-height: 85%;
+      overflow-y: scroll;
+
+      .effect-item {
+        margin: 3px 0;
+        padding: 2px 8px;
+        border-radius: 4px;
+
+        &:hover {
+          background-color: #ddd3;
+        }
+      }
+    }
   }
 }
 

@@ -32,15 +32,12 @@ class DiceMaster {
     this.profile = ProfileService.current
     this.diceRoller = new DiceRoller()
     this.rollParser = new RollResultParser(this.currentResult)
-
-    this.#addEffectsList()
   }
 
   async init() {
-    console.log({ currentProfile: ProfileService.current })
     this.profile = ProfileService.current
-    // this.currentResult.activeEffects.update()
-    // this.currentResult.temporary.update()
+
+    this.#addEffectsList()
 
     return this.diceRoller.init()
   }

@@ -12,9 +12,29 @@ export class ProfileService {
   static current: Profile = defaultProfile
 
   async getActive() {
-    let profile: Profile = await window.ipcRenderer?.invoke('get-active-profile')
+    if (window.ipcRenderer) {
+      const profile: Profile = await window.ipcRenderer.invoke('get-active-profile')
 
-    ProfileService.current = profile
+      if (profile) {
+        ProfileService.current = profile
+      }
+    }
+  }
+
+  async getAll(): Promise<Profile[]> {
+    if (window.ipcRenderer) {
+      return await window.ipcRenderer.invoke('get-profiles')
+    }
+
+    const profilesJson = localStorage.getItem('dsc::profiles')
+
+    if (!profilesJson) {
+      return [defaultProfile]
+    }
+
+    const profiles = JSON.parse(profilesJson)
+
+    return [defaultProfile, ...profiles]
   }
 }
 

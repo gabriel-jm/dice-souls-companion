@@ -115,14 +115,14 @@ function settingsMainMenu(config: SettingsDialogConfig) {
           ${keyboardIcon()}
           Atalhos
         </li>
-
-        <li
-          class="settings-title"
-          on-click=${openProfilesDialog}
-        >
-          Perfis
-        </li>
       `}
+
+      <li
+        class="settings-title"
+        on-click=${openProfilesDialog}
+      >
+        Perfis
+      </li>
     </ul>
   `
 }
