@@ -36,6 +36,29 @@ export class ProfileService {
 
     return [defaultProfile, ...profiles]
   }
+
+  async addBlank() {
+    const data: Profile = {
+      id: crypto.randomUUID(),
+      name: 'Novo',
+      redEffects: Array.from({ length: 20 }).fill('Vazio') as string[],
+      blackEffects: Array.from({ length: 20 }).fill('Vazio') as string[],
+      blueEffects: [...defaultProfile.blueEffects]
+    }
+
+    if (window.ipcRenderer) {
+      await window.ipcRenderer.invoke('add-profile', data)
+    } else {
+      const profiles = await this.getAll()
+
+      localStorage.setItem(
+        'dsc::profiles',
+        JSON.stringify([...profiles, data])
+      )
+    }
+
+    return data
+  }
 }
 
 export async function setProfile() {

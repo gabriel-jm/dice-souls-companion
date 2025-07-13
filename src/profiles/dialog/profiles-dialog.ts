@@ -13,6 +13,15 @@ export function profilesDialog() {
     profileDialogEl.close()
   }
 
+  async function addBlankProfile() {
+    const profilesService = new ProfileService()
+    const newProfile = await profilesService.addBlank()
+
+    profiles.data().push(newProfile)
+    profiles.update()
+    currentProfile.set(newProfile)
+  }
+
   function refresh() {
     loading.set(true)
     const profileService = new ProfileService()
@@ -68,6 +77,7 @@ export function profilesDialog() {
                 <li
                   class="profiles-list-item"
                   title="Adicionar novo"
+                  on-click=${addBlankProfile}
                 >+</li>
               </ul>
             </div>
@@ -82,9 +92,9 @@ export function profilesDialog() {
               </header>
               <div class="die-effects-list-container">
                 ${[
-                  dieEffectsList({ type: 'red', effectsList: currentProf!.redEffects }),
-                  dieEffectsList({ type: 'black', effectsList: currentProf!.blackEffects }),
-                  dieEffectsList({ type: 'blue', effectsList: currentProf!.blueEffects })
+                  dieEffectsList('red', currentProf!.redEffects),
+                  dieEffectsList('black', currentProf!.blackEffects),
+                  dieEffectsList('blue', currentProf!.blueEffects)
                 ]}
               </div>
             </section>
@@ -95,20 +105,15 @@ export function profilesDialog() {
   `
 }
 
-export type DieEffectsListProps = {
-  type: DieTypes
-  effectsList: string[]
-}
-
-function dieEffectsList(props: DieEffectsListProps) {
+function dieEffectsList(type: DieTypes, effectsList: string[]) {
   const typeName = {
     red: 'Vermelho',
     black: 'Preto',
     blue: 'Azul'
-  }[props.type]
+  }[type]
 
   return html`
-    <div class="die-effect-container ${props.type}">
+    <div class="die-effect-container ${type}">
       <div class="die-header">
         <span class="die-icon">
           ${d20Icon()}
@@ -118,7 +123,7 @@ function dieEffectsList(props: DieEffectsListProps) {
         </h4>
       </div>
       <ol class="effects-list">
-        ${props.effectsList.map(effect => {
+        ${effectsList.map(effect => {
           function onInput(e: InputEvent) {
             if (e.inputType === 'insertLineBreak') {
               const target = e.target as HTMLElement
