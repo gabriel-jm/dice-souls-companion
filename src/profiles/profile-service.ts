@@ -46,6 +46,22 @@ export class ProfileService {
       blueEffects: [...defaultProfile.blueEffects]
     }
 
+    return this.#add(data)
+  }
+
+  async copy(source: Profile) {
+    const data = {
+      id: crypto.randomUUID(),
+      name: `${source.name} Cópia`,
+      redEffects: source.redEffects,
+      blackEffects: source.blackEffects,
+      blueEffects: source.blueEffects
+    }
+
+    return this.#add(data)
+  }
+
+  async #add(data: Profile) {
     if (window.ipcRenderer) {
       await window.ipcRenderer.invoke('add-profile', data)
     } else {

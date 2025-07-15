@@ -1,4 +1,4 @@
-import { d20Icon, editIcon, xIcon } from '../../common/icons'
+import { copyIcon, d20Icon, editIcon, xIcon } from '../../common/icons'
 import { DieTypes } from '../../dice-master/dice-master'
 import { Profile, ProfileService } from '../profile-service'
 import './profiles-dialog.css'
@@ -20,6 +20,15 @@ export function profilesDialog() {
     profiles.data().push(newProfile)
     profiles.update()
     currentProfile.set(newProfile)
+  }
+
+  async function copyProfile() {
+    const profilesService = new ProfileService()
+    const copy = await profilesService.copy(currentProfile.data()!)
+
+    profiles.data().push(copy)
+    profiles.update()
+    currentProfile.set(copy)
   }
 
   function refresh() {
@@ -87,6 +96,9 @@ export function profilesDialog() {
                 <h4 class="profile-name">${currentProf?.name}</h4>
                 <div>
                   ${editIcon()}
+                  <span on-click=${copyProfile}>
+                    ${copyIcon()}
+                  </span>
                   ${xIcon()}
                 </div>
               </header>
