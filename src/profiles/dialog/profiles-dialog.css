@@ -126,7 +126,7 @@
 
   .die-effects-list-container {
     display: flex;
-    align-items: center;
+    align-items: start;
     justify-content: center;
     gap: 18px;
   }
@@ -188,7 +188,7 @@
     }
 
     .effects-list {
-      max-height: 85%;
+      max-height: 80%;
       overflow-y: scroll;
 
       .effect-item {
@@ -199,6 +199,18 @@
         &:hover {
           background-color: #ddd3;
         }
+      }
+    }
+
+    @media (max-height: 700px) {
+      & {
+        height: 400px;
+      }
+    }
+
+    @media (max-height: 600px) {
+      & {
+        height: 300px;
       }
     }
   }

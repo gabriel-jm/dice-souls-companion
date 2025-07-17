@@ -91,7 +91,7 @@ export function profilesDialog() {
               </ul>
             </div>
 
-            <section>
+            <section class="profile-section">
               <header class="profile-header">
                 <h4 class="profile-name">${currentProf?.name}</h4>
                 <div>
