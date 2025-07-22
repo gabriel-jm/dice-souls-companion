@@ -1,13 +1,14 @@
-import { copyIcon, d20Icon, editIcon, xIcon } from '../../common/icons'
+import './profiles-dialog.css'
+import { copyIcon, d20Icon, trashIcon, xIcon } from '../../common/icons'
 import { DieTypes } from '../../dice-master/dice-master'
 import { Profile, ProfileService } from '../profile-service'
-import './profiles-dialog.css'
-import { el, html, shell, signal } from 'lithen-fns'
+import { el, html, shell, signal, ref } from 'lithen-fns'
 
 export function profilesDialog() {
   const loading = signal(true)
   const profiles = signal<Profile[]>([])
   const currentProfile = signal<Profile | null>(null)
+  const deleteProfileDialog = ref<HTMLDialogElement>()
 
   function closeDialog() {
     profileDialogEl.close()
@@ -29,6 +30,28 @@ export function profilesDialog() {
     profiles.data().push(copy)
     profiles.update()
     currentProfile.set(copy)
+  }
+
+  function deleteProfile() {
+    deleteProfileDialog.el.show()
+  }
+
+  function closeDeleteDialog() {
+    deleteProfileDialog.el.close()
+  }
+
+  async function confirmProfileDelete() {
+    const current = currentProfile.data()!
+
+    if (current.id === 'none') {
+      return closeDeleteDialog()
+    }
+
+    const profilesService = new ProfileService()
+    await profilesService.delete(current)
+
+    profiles.set(list => list.filter(p => p.id !== current.id))
+    currentProfile.set(profiles.data()[0])
   }
 
   function refresh() {
@@ -93,14 +116,39 @@ export function profilesDialog() {
 
             <section class="profile-section">
               <header class="profile-header">
-                <h4 class="profile-name">${currentProf?.name}</h4>
-                <div>
-                  ${editIcon()}
-                  <span on-click=${copyProfile}>
+                <h4 class="profile-name" contenteditable>${currentProf?.name}</h4>
+                <div class="profile-name-actions">
+                  <span title="Copiar" on-click=${copyProfile}>
                     ${copyIcon()}
                   </span>
-                  ${xIcon()}
+                  <span title="Excluir" on-click=${deleteProfile}>
+                    ${trashIcon()}
+                  </span>
                 </div>
+                <dialog class="delete-profile-dialog" ref=${deleteProfileDialog}>
+                  ${shell(() => {
+                    const current = currentProfile.get()
+
+                    if (current?.id === 'none') {
+                      return html`
+                        <p>Este perfil "Padrão" não pode ser excluído</p>
+                        <button on-click=${closeDeleteDialog}>Ok</button>
+                      `
+                    }
+
+                    return html`
+                      <p>Deseja excluir este perfil?</p>
+                      <div>
+                        <button on-click=${confirmProfileDelete}>
+                          Sim
+                        </button>
+                        <button on-click=${closeDeleteDialog}>
+                          Não
+                        </button>
+                      </div>
+                    `
+                  })}
+                </dialog>
               </header>
               <div class="die-effects-list-container">
                 ${[

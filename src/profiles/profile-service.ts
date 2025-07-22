@@ -61,6 +61,20 @@ export class ProfileService {
     return this.#add(data)
   }
 
+  async delete(data: Profile) {
+    if (window.ipcRenderer) {
+      return await window.ipcRenderer.invoke('delete-profile', data)
+    }
+
+    const profiles = await this.getAll()
+    const newList = profiles.filter(p => p.id !== data.id)
+
+    localStorage.setItem(
+      'dsc::profiles',
+      JSON.stringify(newList)
+    )
+  }
+
   async #add(data: Profile) {
     if (window.ipcRenderer) {
       await window.ipcRenderer.invoke('add-profile', data)

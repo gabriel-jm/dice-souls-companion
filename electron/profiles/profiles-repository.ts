@@ -51,10 +51,17 @@ function update(data: Partial<Profile>) {
   `
 }
 
+function del(id: string) {
+  if (id === 'none') return Promise.resolve()
+
+  return sql`Delete From profiles Where id = ${id};`
+}
+
 export const profilesRepository = {
   getAll,
   getActive,
   add,
   setActive,
-  update
+  update,
+  delete: del
 }
