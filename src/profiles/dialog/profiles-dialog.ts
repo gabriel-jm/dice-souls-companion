@@ -1,6 +1,6 @@
 import './profiles-dialog.css'
-import { copyIcon, d20Icon, trashIcon, xIcon } from '../../common/icons'
-import { DieTypes } from '../../dice-master/dice-master'
+import { checkCircleIcon, copyIcon, d20Icon, trashIcon, xIcon } from '../../common/icons'
+import { diceMaster, DieTypes } from '../../dice-master/dice-master'
 import { Profile, ProfileService } from '../profile-service'
 import { el, html, shell, signal, ref } from 'lithen-fns'
 
@@ -8,7 +8,8 @@ export function profilesDialog() {
   const loading = signal(true)
   const profiles = signal<Profile[]>([])
   const currentProfile = signal<Profile | null>(null)
-  const deleteProfileDialog = ref<HTMLDialogElement>()
+  const actionName = signal('delete')
+  const actionDialog = ref<HTMLDialogElement>()
 
   function closeDialog() {
     profileDialogEl.close()
@@ -33,18 +34,24 @@ export function profilesDialog() {
   }
 
   function deleteProfile() {
-    deleteProfileDialog.el.show()
+    actionName.set('delete')
+    actionDialog.el.showModal()
   }
 
-  function closeDeleteDialog() {
-    deleteProfileDialog.el.close()
+  function activateProfile() {
+    actionName.set('activate')
+    actionDialog.el.showModal()
+  }
+
+  function closeActionDialog() {
+    actionDialog.el.close()
   }
 
   async function confirmProfileDelete() {
     const current = currentProfile.data()!
 
     if (current.id === 'none') {
-      return closeDeleteDialog()
+      return closeActionDialog()
     }
 
     const profilesService = new ProfileService()
@@ -118,6 +125,9 @@ export function profilesDialog() {
               <header class="profile-header">
                 <h4 class="profile-name" contenteditable>${currentProf?.name}</h4>
                 <div class="profile-name-actions">
+                  <span title="Usar Perfil" on-click=${activateProfile}>
+                    ${checkCircleIcon()}
+                  </span>
                   <span title="Copiar" on-click=${copyProfile}>
                     ${copyIcon()}
                   </span>
@@ -125,28 +135,46 @@ export function profilesDialog() {
                     ${trashIcon()}
                   </span>
                 </div>
-                <dialog class="delete-profile-dialog" ref=${deleteProfileDialog}>
+                <dialog class="profile-action-dialog" ref=${actionDialog}>
                   ${shell(() => {
                     const current = currentProfile.get()
+                    const action = actionName.get()
 
-                    if (current?.id === 'none') {
+                    if (action === 'activate') {
+                      if (diceMaster.profile.id === current?.id) {
+                        return html`
+                          <p>Este perfil já está em uso!</p>
+                          <button on-click=${closeActionDialog}>Ok</button>
+                        `
+                      }
+
                       return html`
-                        <p>Este perfil "Padrão" não pode ser excluído</p>
-                        <button on-click=${closeDeleteDialog}>Ok</button>
+                        <p>Deseja usar o perfil "${current?.name}?"</p>
+                        <button on-click=${closeActionDialog}>Sim</button>
+                        <button on-click=${closeActionDialog}>Não</button>
                       `
                     }
 
-                    return html`
-                      <p>Deseja excluir este perfil?</p>
-                      <div>
-                        <button on-click=${confirmProfileDelete}>
-                          Sim
-                        </button>
-                        <button on-click=${closeDeleteDialog}>
-                          Não
-                        </button>
-                      </div>
-                    `
+                    if (action === 'delete') {
+                      if (current?.id === 'none') {
+                        return html`
+                          <p>Este perfil "Padrão" não pode ser excluído</p>
+                          <button on-click=${closeActionDialog}>Ok</button>
+                        `
+                      }
+
+                      return html`
+                        <p>Deseja excluir este perfil?</p>
+                        <div>
+                          <button on-click=${confirmProfileDelete}>
+                            Sim
+                          </button>
+                          <button on-click=${closeActionDialog}>
+                            Não
+                          </button>
+                        </div>
+                      `
+                    }
                   })}
                 </dialog>
               </header>

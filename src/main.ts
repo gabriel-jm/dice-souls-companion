@@ -31,7 +31,7 @@ setProfile().then(() => {
   addSettingsBtn()
 
   document.querySelector('.btn.clear-dice')?.addEventListener('click', () => {
-    diceMaster.clear()
+    diceMaster.clearBoard()
   })
 
   if (window.ipcRenderer) {

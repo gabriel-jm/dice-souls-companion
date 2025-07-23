@@ -42,10 +42,20 @@ class DiceMaster {
     return this.diceRoller.init()
   }
 
-  clear() {
+  clearBoard() {
     if (isLocked.data()) return this
 
     this.diceRoller.clear()
+    return this
+  }
+
+  clearResults() {
+    if (isLocked.data()) return this
+
+    this.clearBoard()
+    this.currentResult.activeEffects.set([])
+    this.currentResult.temporary.set([])
+
     return this
   }
 
