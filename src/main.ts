@@ -19,9 +19,11 @@ import { addUpdateMessage } from './updates/add-update-message'
 import { addSettingsBtn } from './settings/add-settings-btn'
 import { addCloseEditDialogEvent } from './roll-results/edit-result/edit-result-event'
 import { setProfile } from './profiles/profile-service'
+import { addEffectsDescription } from './effects-description/add-effects-description'
 
 setProfile().then(() => {
   setRandomWallpaper()
+  addEffectsDescription()
   addGreenBackgroundEvent()
   addManualThrow()
   addCloseEditDialogEvent()

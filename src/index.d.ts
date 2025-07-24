@@ -1,4 +1,5 @@
 declare const ui: HTMLDivElement
+declare const effectsDescriptionSlot: HTMLDivElement
 declare const redEffectsListEl: HTMLUListElement
 declare const blackEffectsListEl: HTMLUListElement
 declare const rollResult: HTMLDivElement
