@@ -37,7 +37,7 @@ export class ProfileService {
 
   async setActive(data: Profile) {
     diceMaster.clearResults()
-    diceMaster.profile = data
+    diceMaster.profile.set(data)
 
     if (window.ipcRenderer) {
       return await window.ipcRenderer.invoke('set-active-profile', data)   

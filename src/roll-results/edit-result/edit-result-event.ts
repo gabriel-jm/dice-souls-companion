@@ -8,9 +8,11 @@ export function openEditResultDialog(type: DieTypes, currentValue: number) {
     return
   }
 
+  const profile = diceMaster.profile.data()
+
   const effectsList = type === 'red'
-    ? diceMaster.profile.redEffects
-    : diceMaster.profile.blackEffects
+    ? profile.redEffects
+    : profile.blackEffects
 
   function editEffect(newValue: number) {
     return () => {

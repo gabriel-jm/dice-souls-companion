@@ -8,10 +8,12 @@ export type SingleDieLogProps = {
 }
 
 export function singleDieLog({ type, value, action }: SingleDieLogProps) {
+  const profile = diceMaster.profile.data()
+
   const val = String(value).padStart(2, '0')
   const effectList = type === 'red'
-    ? diceMaster.profile.redEffects
-    : diceMaster.profile.blackEffects
+    ? profile.redEffects
+    : profile.blackEffects
 
   logsDiv.append(html`
     <p>
@@ -29,6 +31,8 @@ type DiceLogData = string | {
 }
 
 export function diceLog(...entries: DiceLogData[]) {
+  const profile = diceMaster.profile.data()
+
   logsDiv.append(html`
     <p>
       ${entries.map(entry => {
@@ -48,8 +52,8 @@ export function diceLog(...entries: DiceLogData[]) {
         }
 
         const effectList = type === 'red'
-          ? diceMaster.profile.redEffects
-          : diceMaster.profile.blackEffects
+          ? profile.redEffects
+          : profile.blackEffects
         const effect = effectList[value - 1]
 
         return el/*html*/`

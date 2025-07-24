@@ -17,7 +17,7 @@ export type CurrentRollResult = {
 }
 
 class DiceMaster {
-  profile!: Profile
+  profile!: DataSignal<Profile>
   diceRoller: DiceRoller
   rollParser: RollResultParser
   diceEvents = new DiceEvents()
@@ -29,13 +29,13 @@ class DiceMaster {
   }
 
   constructor() {
-    this.profile = ProfileService.current
+    this.profile = signal(ProfileService.current)
     this.diceRoller = new DiceRoller()
     this.rollParser = new RollResultParser(this.currentResult)
   }
 
   async init() {
-    this.profile = ProfileService.current
+    this.profile.set(ProfileService.current)
 
     this.#addEffectsList()
 
@@ -176,11 +176,13 @@ class DiceMaster {
   }
 
   async #addEffectsList() {
+    const profile = this.profile.data()
+
     redEffectsListEl.append(...shell(() => {
       const effectsArray = [...this.currentResult.activeEffects.get()]
       return effectsArray.map(effectNumber => rollResultItem({
         type: 'red',
-        effectsList: this.profile.redEffects,
+        effectsList: profile.redEffects,
         value: effectNumber
       }))
     }))
@@ -189,7 +191,7 @@ class DiceMaster {
       const effectsArray = [...this.currentResult.temporary.get()]
       return effectsArray.map(effectNumber => rollResultItem({
         type: 'black',
-        effectsList: this.profile.blackEffects,
+        effectsList: profile.blackEffects,
         value: effectNumber
       }))
     }))
@@ -213,11 +215,13 @@ class DiceMaster {
   #updateServiceCurrent() {
     if (!isLocal) return
 
+    const profile = this.profile.data()
+
     const mapEffect = (key: 'activeEffects'|'temporary') => {
       return this.currentResult[key].data().map(value => {
         const effectList = key === 'activeEffects'
-          ? this.profile.redEffects
-          : this.profile.blackEffects
+          ? profile.redEffects
+          : profile.blackEffects
 
         return { number: value, text: effectList[value - 1] }
       })
