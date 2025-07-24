@@ -8,6 +8,7 @@ export function profilesDialog() {
   const loading = signal(true)
   const profiles = signal<Profile[]>([])
   const currentProfile = signal<Profile | null>(null)
+  const activeProfileId = signal(diceMaster.profile.id)
   const actionName = signal('delete')
   const actionDialog = ref<HTMLDialogElement>()
 
@@ -45,6 +46,16 @@ export function profilesDialog() {
 
   function closeActionDialog() {
     actionDialog.el.close()
+  }
+
+  async function changeProfile() {
+    const profile = currentProfile.data()!
+    activeProfileId.set(profile.id)
+
+    const profilesService = new ProfileService()
+    await profilesService.setActive(profile)
+
+    closeActionDialog()
   }
 
   async function confirmProfileDelete() {
@@ -139,9 +150,10 @@ export function profilesDialog() {
                   ${shell(() => {
                     const current = currentProfile.get()
                     const action = actionName.get()
+                    const activeProfId = activeProfileId.get()
 
                     if (action === 'activate') {
-                      if (diceMaster.profile.id === current?.id) {
+                      if (activeProfId === current?.id) {
                         return html`
                           <p>Este perfil já está em uso!</p>
                           <button on-click=${closeActionDialog}>Ok</button>
@@ -150,7 +162,8 @@ export function profilesDialog() {
 
                       return html`
                         <p>Deseja usar o perfil "${current?.name}?"</p>
-                        <button on-click=${closeActionDialog}>Sim</button>
+                        <p>Trocar de perfil irá limpar a lista de resultados!</p>
+                        <button on-click=${changeProfile}>Sim</button>
                         <button on-click=${closeActionDialog}>Não</button>
                       `
                     }

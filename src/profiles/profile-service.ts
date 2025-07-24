@@ -1,3 +1,4 @@
+import { diceMaster } from '../dice-master/dice-master'
 import { defaultProfile } from './default-profile'
 
 export type Profile = {
@@ -12,13 +13,37 @@ export class ProfileService {
   static current: Profile = defaultProfile
 
   async getActive() {
+    let target: Profile | undefined;
+
     if (window.ipcRenderer) {
       const profile: Profile = await window.ipcRenderer.invoke('get-active-profile')
 
-      if (profile) {
-        ProfileService.current = profile
-      }
+      target = profile
     }
+
+    const activeProfileId = localStorage.getItem('dsc::active-profile')
+
+    if (activeProfileId) {
+      const profiles = await this.getAll()
+      const profile = profiles.find(p => p.id === activeProfileId)
+
+      target = profile
+    }
+
+    if (target) {
+      ProfileService.current = target
+    }
+  }
+
+  async setActive(data: Profile) {
+    diceMaster.clearResults()
+    diceMaster.profile = data
+
+    if (window.ipcRenderer) {
+      return await window.ipcRenderer.invoke('set-active-profile', data)   
+    }
+
+    localStorage.setItem('dsc::active-profile', data.id)
   }
 
   async getAll(): Promise<Profile[]> {
