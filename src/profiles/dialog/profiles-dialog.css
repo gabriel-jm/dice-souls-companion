@@ -88,6 +88,7 @@
       }
 
       .profiles-list-item {
+        position: relative;
         max-width: 170px;
         font-size: 1.1rem;
         font-weight: bold;
@@ -97,17 +98,29 @@
         border-bottom: 4px solid transparent;
         cursor: pointer;
         transition: all 250ms ease-in-out;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        overflow: visible;
+
+        &.open {
+          border-bottom: 4px solid #fff;
+        }
 
         &.active {
-          border-bottom: 4px solid #8da7ff;
           color: #8da7ff;
+        }
+
+        &.open.active {
+          border-bottom: 4px solid #8da7ff;
         }
 
         &:hover {
           background-color: #5f5f5faa;
+        }
+
+        & span {
+          color: currentColor;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }
@@ -135,6 +148,29 @@
       
       &:hover {
         background-color: #bbb5;
+      }
+
+      &.active {
+        position: relative;
+        
+        & svg {
+          stroke: #416eff;
+        }
+
+        &::after {
+          content: 'Em Uso';
+          color: white;
+          position: absolute;
+          font-size: 0.68rem;
+          font-weight: bold;
+          width: 50px;
+          border-radius: 50px;
+          text-align: center;
+          bottom: -4px;
+          left: -1px;
+          z-index: 12;
+          background-color: #416eff;
+        }
       }
     }
 

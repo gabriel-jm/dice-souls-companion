@@ -93,24 +93,28 @@ export function profilesDialog() {
 
           const profilesList = profiles.get()
           const currentProf = currentProfile.get()
+          const activeProfile = diceMaster.profile.get()
           const profilesLinks = profilesList.map(prof => {
-            const isActive = prof.id === currentProf?.id
+            const isOpen = prof.id === currentProf?.id
+            const isActive = prof.id === activeProfile.id
 
             function onClick() {
-              if (isActive) return
+              if (isOpen) return
               
               currentProfile.set(prof)
             }
 
             return html`
               <li
-                class="profiles-list-item ${isActive && 'active'}"
+                class="profiles-list-item ${isOpen && 'open'} ${isActive && 'active'}"
                 on-click=${onClick}
               >
-                ${prof.name}
+                <span>${prof.name}</span>
               </li>
             `
           })
+
+          const isActive = currentProf?.id === activeProfile.id
 
           return html`
             <h3 class="profiles-title">Perfis</h3>
@@ -134,7 +138,11 @@ export function profilesDialog() {
               <header class="profile-header">
                 <h4 class="profile-name" contenteditable>${currentProf?.name}</h4>
                 <div class="profile-name-actions">
-                  <span title="Usar Perfil" on-click=${activateProfile}>
+                  <span
+                    class="${isActive && 'active'}"
+                    title="Usar Perfil"
+                    on-click=${activateProfile}
+                  >
                     ${checkCircleIcon()}
                   </span>
                   <span title="Copiar" on-click=${copyProfile}>

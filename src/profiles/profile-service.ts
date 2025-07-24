@@ -59,7 +59,7 @@ export class ProfileService {
 
     const profiles = JSON.parse(profilesJson)
 
-    return [defaultProfile, ...profiles]
+    return profiles
   }
 
   async addBlank() {
