@@ -1,7 +1,7 @@
 import { DataSignal, el, html, ref, shell, signal } from 'lithen-fns'
 import { greenBgSettings } from './green-bg/green-bg-settings'
 import { shortcutsSettings } from './shortcuts/shortcuts-settings'
-import { keyboardIcon } from '../common/icons'
+import { keyboardIcon, profileIcon } from '../common/icons'
 
 export type SettingsDialogConfig = {
   currentSetting: DataSignal<string>
@@ -101,6 +101,14 @@ function settingsMainMenu(config: SettingsDialogConfig) {
       on-animationend=${onAnimationEnd}
     >
       <li
+        class="settings-title with-icon"
+        on-click=${openProfilesDialog}
+      >
+        ${profileIcon()}
+        Perfis
+      </li>
+      
+      <li
         class="settings-title green-bg-title"
         on-click=${nav('greenBg')}
       >
@@ -116,13 +124,6 @@ function settingsMainMenu(config: SettingsDialogConfig) {
           Atalhos
         </li>
       `}
-
-      <li
-        class="settings-title"
-        on-click=${openProfilesDialog}
-      >
-        Perfis
-      </li>
     </ul>
   `
 }
