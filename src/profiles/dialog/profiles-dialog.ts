@@ -70,6 +70,35 @@ export function profilesDialog() {
     currentProfile.set(profiles.data()[0])
   }
 
+  function onInputProfileName(e: InputEvent) {
+    if (e.inputType === 'insertLineBreak') {
+      const target = e.target as HTMLElement
+      target.innerText = target.innerText.trim().replace('\n', '')
+      target.blur()
+    }
+  }
+
+  async function onBlurProfileName(e: Event) {
+    const current = currentProfile.data()
+
+    const target = e.target as HTMLElement
+    target.innerText = target.innerText.trim()
+    const newText = target.innerText
+
+    if (newText !== current?.name) {
+      const profileService = new ProfileService()
+      await profileService.update({
+        id: current?.id,
+        name: newText
+      })
+      const profile = profiles
+        .data()
+        .find(p => p.id === current?.id)
+      profile!.name = newText
+      profiles.update()
+    }
+  }
+
   function refresh() {
     loading.set(true)
     const profileService = new ProfileService()
@@ -136,7 +165,12 @@ export function profilesDialog() {
 
             <section class="profile-section">
               <header class="profile-header">
-                <h4 class="profile-name" contenteditable>${currentProf?.name}</h4>
+                <h4
+                  class="profile-name"
+                  contenteditable="plaintext-only"
+                  on-input=${onInputProfileName}
+                  on-blur=${onBlurProfileName}
+                >${currentProf?.name}</h4>
                 <div class="profile-name-actions">
                   <span
                     class="${isActive && 'active'}"

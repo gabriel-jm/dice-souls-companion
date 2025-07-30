@@ -86,6 +86,23 @@ export class ProfileService {
     return this.#add(data)
   }
 
+  async update(data: Partial<Profile>) {
+    if (window.ipcRenderer) {
+      return await window.ipcRenderer.invoke('update-profile', data)
+    }
+
+    const profiles = await this.getAll()
+    const profile = profiles.find(p => p.id === data.id)
+
+    if (!profile) {
+      return console.error(`Profile (${data.id}) not found`)
+    }
+
+    Object.assign(profile, data)
+
+    localStorage.setItem('dsc::profiles', JSON.stringify(profiles))
+  }
+
   async delete(data: Profile) {
     if (window.ipcRenderer) {
       return await window.ipcRenderer.invoke('delete-profile', data)
