@@ -176,9 +176,8 @@ class DiceMaster {
   }
 
   async #addEffectsList() {
-    const profile = this.profile.data()
-
     redEffectsListEl.append(...shell(() => {
+      const profile = this.profile.get()
       const effectsArray = [...this.currentResult.activeEffects.get()]
       return effectsArray.map(effectNumber => rollResultItem({
         type: 'red',
@@ -188,6 +187,7 @@ class DiceMaster {
     }))
 
     blackEffectsListEl.append(...shell(() => {
+      const profile = this.profile.get()
       const effectsArray = [...this.currentResult.temporary.get()]
       return effectsArray.map(effectNumber => rollResultItem({
         type: 'black',

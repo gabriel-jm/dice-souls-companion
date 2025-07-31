@@ -87,6 +87,15 @@ export class ProfileService {
   }
 
   async update(data: Partial<Profile>) {
+    const current = diceMaster.profile.data()
+
+    if (data.id === current.id) {
+      diceMaster.profile.set({
+        ...current,
+        ...data
+      })
+    }
+    
     if (window.ipcRenderer) {
       return await window.ipcRenderer.invoke('update-profile', data)
     }

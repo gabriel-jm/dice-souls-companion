@@ -99,6 +99,25 @@ export function profilesDialog() {
     }
   }
 
+  async function onBlurEffect(type: string, effect: string, index: number) {
+    const current = currentProfile.data()
+    const listName = `${type}Effects`
+    const effectsList = Reflect.get(current!, listName) as string[]
+    const currentItem = effectsList[index]
+
+    console.log({ listName, currentItem, effect })
+
+    if (currentItem !== effect) {
+      effectsList[index] = effect
+      const profileService = new ProfileService()
+      await profileService.update({
+        id: current?.id,
+        [listName]: [...effectsList]
+      })
+      profiles.update()
+    }
+  }
+
   function refresh() {
     loading.set(true)
     const profileService = new ProfileService()
@@ -233,9 +252,9 @@ export function profilesDialog() {
               </header>
               <div class="die-effects-list-container">
                 ${[
-                  dieEffectsList('red', currentProf!.redEffects),
-                  dieEffectsList('black', currentProf!.blackEffects),
-                  dieEffectsList('blue', currentProf!.blueEffects)
+                  dieEffectsList('red', currentProf!.redEffects, onBlurEffect),
+                  dieEffectsList('black', currentProf!.blackEffects, onBlurEffect),
+                  dieEffectsList('blue', currentProf!.blueEffects, onBlurEffect)
                 ]}
               </div>
             </section>
@@ -246,7 +265,11 @@ export function profilesDialog() {
   `
 }
 
-function dieEffectsList(type: DieTypes, effectsList: string[]) {
+function dieEffectsList(
+  type: DieTypes,
+  effectsList: string[],
+  onBlurEffect: (type: string, effect: string, index: number) => Promise<void>
+) {
   const typeName = {
     red: 'Vermelho',
     black: 'Preto',
@@ -264,7 +287,7 @@ function dieEffectsList(type: DieTypes, effectsList: string[]) {
         </h4>
       </div>
       <ol class="effects-list">
-        ${effectsList.map(effect => {
+        ${effectsList.map((effect, index) => {
           function onInput(e: InputEvent) {
             if (e.inputType === 'insertLineBreak') {
               const target = e.target as HTMLElement
@@ -276,7 +299,8 @@ function dieEffectsList(type: DieTypes, effectsList: string[]) {
           function onBlur(e: Event) {
             const target = e.target as HTMLElement
             target.innerText = target.innerText.trim()
-            console.log('blur', target.innerText, target.innerText === effect)
+            
+            onBlurEffect(type, target.innerText, index)
           }
           
           return el/*html*/`
