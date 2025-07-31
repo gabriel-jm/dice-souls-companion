@@ -94,7 +94,6 @@
         font-weight: bold;
         text-align: center;
         padding: 6px 8px;
-        border-radius: 2px;
         border-bottom: 4px solid transparent;
         cursor: pointer;
         transition: all 250ms ease-in-out;
@@ -177,7 +176,7 @@
     .profile-action-dialog {
       margin: auto;
       border-radius: 6px;
-      padding: 12px 16px;
+      padding: 22px 18px;
       border: 1px solid #777;
       box-shadow: 0 7px 18px 5px #111a;
       animation: close-profile-dialog 150ms ease-in forwards;
@@ -194,6 +193,12 @@
         background-color: #2227;
         backdrop-filter: blur(2px);
         -webkit-backdrop-filter: blur(2px);
+      }
+
+      & p {
+        font-size: 1.2rem;
+        margin-top: 2px;
+        margin-bottom: 20px;
       }
     }
   }
@@ -272,6 +277,10 @@
 
         &:hover {
           background-color: #ddd3;
+        }
+
+        &.blocked {
+          cursor: not-allowed;
         }
       }
     }

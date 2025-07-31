@@ -189,6 +189,10 @@ ul {
   }
 }
 
+.small-detail {
+  color: #888;
+}
+
 .btn {
   padding: 8px 12px;
   font-size: 0.95rem;
@@ -213,6 +217,23 @@ ul {
   &.wide {
     width: 100%;
   }
+
+  &.secondary {
+    background-color: #777;
+    box-shadow: 0 4px 0 0 #444;
+
+    &:not(:disabled):active {
+      background-color: #333;
+      box-shadow: none;
+      translate: 0 4px;
+    }
+  }
+}
+
+.btn-group {
+  display: flex;
+  width: 100%;
+  gap: 12px;
 }
 
 .void-btn {

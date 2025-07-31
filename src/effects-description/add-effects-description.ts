@@ -7,7 +7,12 @@ export function addEffectsDescription() {
 
     return html`
       <div class="glass-container">
-        <h3>Efeitos (Perfil: ${profile.name})</h3>
+        <h3>
+          <span>Efeitos</span>
+          <small class="small-detail">
+            (${profile.name})
+          </small>
+        </h3>
         <details>
           <summary>D20 Vermelho</summary>
           <ol>

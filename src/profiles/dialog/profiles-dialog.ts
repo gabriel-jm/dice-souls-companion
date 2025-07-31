@@ -105,8 +105,6 @@ export function profilesDialog() {
     const effectsList = Reflect.get(current!, listName) as string[]
     const currentItem = effectsList[index]
 
-    console.log({ listName, currentItem, effect })
-
     if (currentItem !== effect) {
       effectsList[index] = effect
       const profileService = new ProfileService()
@@ -215,33 +213,61 @@ export function profilesDialog() {
                       if (activeProfile.id === current?.id) {
                         return html`
                           <p>Este perfil já está em uso!</p>
-                          <button on-click=${closeActionDialog}>Ok</button>
+                          <button
+                            class="btn wide"
+                            on-click=${closeActionDialog}
+                          >
+                            Ok
+                          </button>
                         `
                       }
 
                       return html`
                         <p>Deseja usar o perfil "${current?.name}?"</p>
                         <p>Trocar de perfil irá limpar a lista de resultados!</p>
-                        <button on-click=${changeProfile}>Sim</button>
-                        <button on-click=${closeActionDialog}>Não</button>
+                        <div class="btn-group">
+                          <button
+                            class="btn wide"
+                            on-click=${changeProfile}
+                          >
+                            Sim
+                          </button>
+                          <button
+                            class="btn wide secondary"
+                            on-click=${closeActionDialog}
+                          >
+                            Não
+                          </button>
+                        </div>
                       `
                     }
 
                     if (action === 'delete') {
                       if (current?.id === 'none') {
                         return html`
-                          <p>Este perfil "Padrão" não pode ser excluído</p>
-                          <button on-click=${closeActionDialog}>Ok</button>
+                          <p>Este perfil "${current?.name}" não pode ser excluído</p>
+                          <button
+                            class="btn wide"
+                            on-click=${closeActionDialog}
+                          >
+                            Ok
+                          </button>
                         `
                       }
 
                       return html`
                         <p>Deseja excluir este perfil?</p>
-                        <div>
-                          <button on-click=${confirmProfileDelete}>
+                        <div class="btn-group">
+                          <button
+                            class="btn wide"  
+                            on-click=${confirmProfileDelete}
+                          >
                             Sim
                           </button>
-                          <button on-click=${closeActionDialog}>
+                          <button
+                            class="btn wide secondary"
+                            on-click=${closeActionDialog}
+                          >
                             Não
                           </button>
                         </div>
@@ -288,6 +314,14 @@ function dieEffectsList(
       </div>
       <ol class="effects-list">
         ${effectsList.map((effect, index) => {
+          if (type === 'blue') {
+            return el/*html*/`
+              <li class="effect-item blocked">
+                ${effect}
+              </li>
+            `
+          }
+
           function onInput(e: InputEvent) {
             if (e.inputType === 'insertLineBreak') {
               const target = e.target as HTMLElement
