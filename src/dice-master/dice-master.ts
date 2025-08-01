@@ -38,6 +38,9 @@ class DiceMaster {
     this.profile.set(ProfileService.current)
 
     this.#addEffectsList()
+    this.profile.onChange(() => {
+      this.#updateServiceCurrent()
+    })
 
     return this.diceRoller.init()
   }
