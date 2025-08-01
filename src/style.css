@@ -120,10 +120,6 @@ ul {
     background-image: url(/img/artorias.jpg);
   }
 
-  &.ds3-dragon {
-    background-image: url(/img/ds3-dragon.jpg);
-  }
-
   &.abyss-watchers {
     background-image: url(/img/abyss-watchers.jpg);
   }
@@ -134,6 +130,18 @@ ul {
 
   &.wilder {
     background-image: url(/img/wilder.jpg);
+  }
+
+  &.gascoigne {
+    background-image: url(/img/gascoigne.jpg);
+  }
+
+  &.bloodborne {
+    background-image: url(/img/bloodborne.jpg);
+  }
+
+  &.crimson-moon {
+    background-image: url(/img/crimson-moon.jpg);
   }
 }
 
