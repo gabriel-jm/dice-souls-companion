@@ -5,11 +5,16 @@ import { Profile, ProfileService } from '../profile-service'
 import { el, html, shell, signal, ref } from 'lithen-fns'
 
 export function profilesDialog() {
+  let activeProfileId = diceMaster.profile.data().id
   const loading = signal(true)
   const profiles = signal<Profile[]>([])
   const currentProfile = signal<Profile | null>(null)
   const actionName = signal('delete')
   const actionDialog = ref<HTMLDialogElement>()
+
+  diceMaster.profile.onChange(value => {
+    activeProfileId = value.id
+  })
 
   function closeDialog() {
     profileDialogEl.close()
@@ -52,6 +57,7 @@ export function profilesDialog() {
 
     const profilesService = new ProfileService()
     await profilesService.setActive(profile)
+    currentProfile.update()
 
     closeActionDialog()
   }
@@ -137,12 +143,11 @@ export function profilesDialog() {
             return 'Carregando...'
           }
 
-          const profilesList = profiles.get()
+          const profilesList = profiles.data()
           const currentProf = currentProfile.get()
-          const activeProfile = diceMaster.profile.get()
           const profilesLinks = profilesList.map(prof => {
             const isOpen = prof.id === currentProf?.id
-            const isActive = prof.id === activeProfile.id
+            const isActive = prof.id === activeProfileId
 
             function onClick() {
               if (isOpen) return
@@ -160,7 +165,7 @@ export function profilesDialog() {
             `
           })
 
-          const isActive = currentProf?.id === activeProfile.id
+          const isActive = currentProf?.id === activeProfileId
 
           return html`
             <h3 class="profiles-title">Perfis</h3>
@@ -207,10 +212,9 @@ export function profilesDialog() {
                   ${shell(() => {
                     const current = currentProfile.get()
                     const action = actionName.get()
-                    const activeProfile = diceMaster.profile.get()
 
                     if (action === 'activate') {
-                      if (activeProfile.id === current?.id) {
+                      if (activeProfileId === current?.id) {
                         return html`
                           <p>Este perfil já está em uso!</p>
                           <button
@@ -276,11 +280,26 @@ export function profilesDialog() {
                   })}
                 </dialog>
               </header>
-              <div class="die-effects-list-container">
+              <div key="${currentProf!.id}" class="die-effects-list-container">
                 ${[
-                  dieEffectsList('red', currentProf!.redEffects, onBlurEffect),
-                  dieEffectsList('black', currentProf!.blackEffects, onBlurEffect),
-                  dieEffectsList('blue', currentProf!.blueEffects, onBlurEffect)
+                  dieEffectsList(
+                    currentProf!.id,
+                    'red',
+                    currentProf!.redEffects,
+                    onBlurEffect
+                  ),
+                  dieEffectsList(
+                    currentProf!.id,
+                    'black',
+                    currentProf!.blackEffects,
+                    onBlurEffect
+                  ),
+                  dieEffectsList(
+                    currentProf!.id,
+                    'blue',
+                    currentProf!.blueEffects,
+                    onBlurEffect
+                  )
                 ]}
               </div>
             </section>
@@ -292,6 +311,7 @@ export function profilesDialog() {
 }
 
 function dieEffectsList(
+  id: string,
   type: DieTypes,
   effectsList: string[],
   onBlurEffect: (type: string, effect: string, index: number) => Promise<void>
@@ -339,6 +359,7 @@ function dieEffectsList(
           
           return el/*html*/`
             <li
+              key="${id}-${index}"
               class="effect-item"
               contenteditable="plaintext-only"
               on-input=${onInput}
