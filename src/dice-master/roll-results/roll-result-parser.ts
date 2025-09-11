@@ -96,32 +96,6 @@ export class RollResultParser {
     const listSignal = this.current.temporary
     let currentList = listSignal.data()
 
-    if (currentList.length >= 2) {
-      if (currentList.length > 2) {
-        currentList = currentList.filter((value, index) => {
-          const isLastTwo = index >= currentList.length - 2
-
-          if (!isLastTwo) {
-            diceLogger.dieRemoved('black', value)
-          }
-
-          return isLastTwo
-        })
-      }
-
-      for (let i = 0; i<results.length; i++) {
-        currentList = currentList.filter((value, index) => {
-          const isNotFirst = index !== 0
-
-          if (!isNotFirst) {
-            diceLogger.dieRemoved('black', value)
-          }
-
-          return isNotFirst
-        })
-      }
-    }
-  
     currentList = [
       ...currentList,
       ...results.map(result => {
@@ -129,6 +103,19 @@ export class RollResultParser {
         return result.value
       })
     ]
+
+    if (currentList.length >= 2) {
+      currentList = currentList.filter((value, index) => {
+        const isLastTwo = index >= currentList.length - 2
+
+        if (!isLastTwo) {
+          diceLogger.dieRemoved('black', value)
+        }
+
+        return isLastTwo
+      })
+    }
+  
     listSignal.set(currentList)
   }
   
