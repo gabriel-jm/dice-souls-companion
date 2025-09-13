@@ -20,5 +20,8 @@ export function setRandomWallpaper() {
 
   if(!classes[index]) return
 
-  document.querySelector('.background')?.classList.add(classes[index])
+  document.querySelector('.background')!.className = `background ${classes[index]}`
 }
+
+const fiveMinutesInMS = 300_000
+setInterval(setRandomWallpaper, fiveMinutesInMS)

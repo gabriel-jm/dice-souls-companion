@@ -91,6 +91,7 @@ ul {
   background-position: center;
   background-size: cover;
   filter: brightness(80%);
+  transition: background 400ms ease-out;
 
   &.erdtree {
     background-image: url(/img/erdtree.jpg);
