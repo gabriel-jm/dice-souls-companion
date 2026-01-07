@@ -4,9 +4,14 @@ import { defaultProfile } from './default-profile'
 export type Profile = {
   id: string
   name: string
-  redEffects: string[]
-  blackEffects: string[]
-  blueEffects: string[]
+  redEffects: DieEffects
+  blackEffects: DieEffects
+  blueEffects: DieEffects
+}
+
+export type DieEffects = {
+  type: `d${number}`
+  effects: string[]
 }
 
 export class ProfileService {
@@ -66,9 +71,18 @@ export class ProfileService {
     const data: Profile = {
       id: crypto.randomUUID(),
       name: 'Novo',
-      redEffects: Array.from({ length: 20 }).fill('Vazio') as string[],
-      blackEffects: Array.from({ length: 20 }).fill('Vazio') as string[],
-      blueEffects: [...defaultProfile.blueEffects]
+      redEffects: {
+        type: 'd20',
+        effects: Array.from({ length: 20 }).fill('Vazio') as string[]
+      },
+      blackEffects: {
+        type: 'd20',
+        effects: Array.from({ length: 20 }).fill('Vazio') as string[]
+      },
+      blueEffects: {
+        type: 'd20',
+        effects: [...defaultProfile.blueEffects.effects]
+      }
     }
 
     return this.#add(data)

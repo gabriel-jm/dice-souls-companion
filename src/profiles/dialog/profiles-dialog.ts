@@ -285,19 +285,19 @@ export function profilesDialog() {
                   dieEffectsList(
                     currentProf!.id,
                     'red',
-                    currentProf!.redEffects,
+                    currentProf!.redEffects.effects,
                     onBlurEffect
                   ),
                   dieEffectsList(
                     currentProf!.id,
                     'black',
-                    currentProf!.blackEffects,
+                    currentProf!.blackEffects.effects,
                     onBlurEffect
                   ),
                   dieEffectsList(
                     currentProf!.id,
                     'blue',
-                    currentProf!.blueEffects,
+                    currentProf!.blueEffects.effects,
                     onBlurEffect
                   )
                 ]}

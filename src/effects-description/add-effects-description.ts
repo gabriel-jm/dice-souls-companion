@@ -16,7 +16,7 @@ export function addEffectsDescription() {
         <details>
           <summary>D20 Vermelho</summary>
           <ol>
-            ${profile.redEffects.map(
+            ${profile.redEffects.effects.map(
               (effect) => el/*html*/`<li>${effect}</li>`
             )}
           </ol>
@@ -25,7 +25,7 @@ export function addEffectsDescription() {
         <details>
           <summary>D20 Preto</summary>
           <ol>
-            ${profile.blackEffects.map(
+            ${profile.blackEffects.effects.map(
               (effect) => el/*html*/`<li>${effect}</li>`
             )}
           </ol>
@@ -34,7 +34,7 @@ export function addEffectsDescription() {
         <details>
           <summary>D20 Azul</summary>
           <ul>
-            ${profile.blueEffects.map(
+            ${profile.blueEffects.effects.map(
               (effect) => el/*html*/`<li>${effect}</li>`
             )}
           </ul>

@@ -12,8 +12,8 @@ export function singleDieLog({ type, value, action }: SingleDieLogProps) {
 
   const val = String(value).padStart(2, '0')
   const effectList = type === 'red'
-    ? profile.redEffects
-    : profile.blackEffects
+    ? profile.redEffects.effects
+    : profile.blackEffects.effects
 
   logsDiv.append(html`
     <p>
@@ -52,8 +52,8 @@ export function diceLog(...entries: DiceLogData[]) {
         }
 
         const effectList = type === 'red'
-          ? profile.redEffects
-          : profile.blackEffects
+          ? profile.redEffects.effects
+          : profile.blackEffects.effects
         const effect = effectList[value - 1]
 
         return el/*html*/`

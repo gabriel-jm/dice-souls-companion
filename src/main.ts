@@ -37,6 +37,12 @@ setProfile().then(() => {
   })
 
   if (window.ipcRenderer) {
+    window.onunhandledrejection = (ev) => {
+      window.ipcRenderer.send('error', ev.reason)
+    }
+    window.onerror = (ev) => {
+      window.ipcRenderer.send('error', String(ev))
+    }
     window.ipcRenderer.on('app-version', (_, version) => {
       document.querySelector('.version-tag')
         ?.append(`v${version}`)

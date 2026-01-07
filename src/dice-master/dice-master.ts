@@ -184,7 +184,7 @@ class DiceMaster {
       const effectsArray = [...this.currentResult.activeEffects.get()]
       return effectsArray.map(effectNumber => rollResultItem({
         type: 'red',
-        effectsList: profile.redEffects,
+        effectsList: profile.redEffects.effects,
         value: effectNumber
       }))
     }))
@@ -194,7 +194,7 @@ class DiceMaster {
       const effectsArray = [...this.currentResult.temporary.get()]
       return effectsArray.map(effectNumber => rollResultItem({
         type: 'black',
-        effectsList: profile.blackEffects,
+        effectsList: profile.blackEffects.effects,
         value: effectNumber
       }))
     }))
@@ -223,8 +223,8 @@ class DiceMaster {
     const mapEffect = (key: 'activeEffects'|'temporary') => {
       return this.currentResult[key].data().map(value => {
         const effectList = key === 'activeEffects'
-          ? profile.redEffects
-          : profile.blackEffects
+          ? profile.redEffects.effects
+          : profile.blackEffects.effects
 
         return { number: value, text: effectList[value - 1] }
       })

@@ -40,7 +40,7 @@ export class DiceRoller {
     if (diceCount <= 0) {
       return Promise.resolve()
     }
-      
+    
     const results = this.diceBox.add(
       `${diceCount}d20`,
       { themeColor: this.diceColors[type] }

@@ -4,9 +4,14 @@ import { sql } from '../database/connection'
 type Profile = {
   id: string
   name: string
-  redEffects: string[]
-  blackEffects: string[]
-  blueEffects: string[]
+  redEffects: DieEffects
+  blackEffects: DieEffects
+  blueEffects: DieEffects
+}
+
+type DieEffects = {
+  type: string
+  effects: string[]
 }
 
 function getAll() {

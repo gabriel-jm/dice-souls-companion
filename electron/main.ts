@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { startServer } from './local-server/start-server'
@@ -47,7 +47,7 @@ function createWindow() {
   })
 
   if (VITE_DEV_SERVER_URL) {
-    win.webContents.openDevTools({ mode: 'detach' })
+    win.webContents.openDevTools()
     win.loadURL(VITE_DEV_SERVER_URL)
   } else {
     win.loadFile(path.join(RENDERER_DIST, 'index.html'))
@@ -89,3 +89,5 @@ autoUpdater.on('update-available', () => {
 autoUpdater.on('update-downloaded', () => {
   win?.webContents.send('update-ready')
 })
+
+ipcMain.on('error', (_, err) => console.log('Front error:', err))
