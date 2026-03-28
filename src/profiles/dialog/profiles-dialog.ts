@@ -285,19 +285,19 @@ export function profilesDialog() {
                   dieEffectsList(
                     currentProf!.id,
                     'red',
-                    currentProf!.redEffects.effects,
+                    currentProf!.redEffects,
                     onBlurEffect
                   ),
                   dieEffectsList(
                     currentProf!.id,
                     'black',
-                    currentProf!.blackEffects.effects,
+                    currentProf!.blackEffects,
                     onBlurEffect
                   ),
                   dieEffectsList(
                     currentProf!.id,
                     'blue',
-                    currentProf!.blueEffects.effects,
+                    currentProf!.blueEffects,
                     onBlurEffect
                   )
                 ]}
@@ -310,10 +310,17 @@ export function profilesDialog() {
   `
 }
 
+type DieEffects = {
+  type: string
+  effects: string[]
+}
+
+const dieSides = [2, 4, 6, 8, 10, 12, 20]
+
 function dieEffectsList(
   id: string,
   type: DieTypes,
-  effectsList: string[],
+  effectsList: DieEffects,
   onBlurEffect: (type: string, effect: string, index: number) => Promise<void>
 ) {
   const typeName = {
@@ -328,12 +335,27 @@ function dieEffectsList(
         <span class="die-icon">
           ${d20Icon()}
         </span>
-        <h4 class="die-type">
+        <h4 class="die-color">
           Dado ${typeName}
         </h4>
+        <p class="die-type-select">
+          Tipo do Dado:
+          <select on-change=${() => {
+            // const value = (e.target as HTMLSelectElement).value
+          }}>
+            ${dieSides.map((side) => {
+              const isSelected = effectsList.type === 'd20' && 'selected'
+              return el/*html*/`
+                <option ${isSelected} value="d${side}">
+                  D${side}
+                </option>
+              `
+            })}
+          </select>
+        </p>
       </div>
       <ol class="effects-list">
-        ${effectsList.map((effect, index) => {
+        ${effectsList.effects.map((effect, index) => {
           if (type === 'blue') {
             return el/*html*/`
               <li class="effect-item blocked">

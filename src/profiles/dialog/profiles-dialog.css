@@ -217,7 +217,7 @@
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     width: 300px;
-    height: 500px;
+    height: 560px;
 
     &.red {
       background: linear-gradient(
@@ -260,10 +260,25 @@
       right: 6px;
     }
 
-    .die-type {
+    .die-color {
       font-size: 1.8rem;
       text-align: center;
       font-family: Righteous, monospace;
+    }
+
+    .die-type-select {
+      margin-top: 12px;
+
+      & select {
+        padding: 4px;
+        border-radius: 4px;
+        background-color: #3333;
+        cursor: pointer;
+
+        & option {
+          background-color: #3337;
+        }
+      }
     }
 
     .effects-list {
