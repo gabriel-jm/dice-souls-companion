@@ -34,7 +34,7 @@
     "electron-updater": "^6.6.2",
     "lithen-fns": "^4.5.2",
     "sqlite": "^5.1.1",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^6.0.1"
   },
   "publish": {
     "provider": "github",
