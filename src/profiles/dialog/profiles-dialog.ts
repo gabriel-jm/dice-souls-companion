@@ -108,18 +108,47 @@ export function profilesDialog() {
   async function onBlurEffect(type: string, effect: string, index: number) {
     const current = currentProfile.data()
     const listName = `${type}Effects`
-    const effectsList = Reflect.get(current!, listName) as string[]
-    const currentItem = effectsList[index]
+    const effectsList = Reflect.get(current!, listName) as DieEffects
+    const currentItem = effectsList.effects[index]
 
     if (currentItem !== effect) {
-      effectsList[index] = effect
+      effectsList.effects[index] = effect
       const profileService = new ProfileService()
       await profileService.update({
         id: current?.id,
-        [listName]: [...effectsList]
+        [listName]: {...effectsList}
       })
       profiles.update()
     }
+  }
+
+  async function updateDiceSize(type: string, size: number) {
+    const current = currentProfile.data()
+    const listName = `${type}Effects`
+    const effectsList = Reflect.get(current!, listName) as DieEffects
+    effectsList.effects.length = size
+
+    if (current?.id === activeProfileId) {
+      diceMaster.clearResults()
+    }
+
+    for (let i=0; i<size; i++) {
+      const e = effectsList.effects[i]
+      if (!e) {
+        effectsList.effects[i] = 'Vazio'
+      }
+    }
+
+    const profileService = new ProfileService()
+    await profileService.update({
+      id: current?.id,
+      [listName]: {
+        type: `d${size}`,
+        effects: effectsList.effects
+      }
+    })
+    profiles.update()
+    currentProfile.update()
   }
 
   function refresh() {
@@ -286,19 +315,22 @@ export function profilesDialog() {
                     currentProf!.id,
                     'red',
                     currentProf!.redEffects,
-                    onBlurEffect
+                    onBlurEffect,
+                    updateDiceSize
                   ),
                   dieEffectsList(
                     currentProf!.id,
                     'black',
                     currentProf!.blackEffects,
-                    onBlurEffect
+                    onBlurEffect,
+                    updateDiceSize
                   ),
                   dieEffectsList(
                     currentProf!.id,
                     'blue',
                     currentProf!.blueEffects,
-                    onBlurEffect
+                    onBlurEffect,
+                    updateDiceSize
                   )
                 ]}
               </div>
@@ -315,13 +347,14 @@ type DieEffects = {
   effects: string[]
 }
 
-const dieSides = [2, 4, 6, 8, 10, 12, 20]
+const dieSizes = [2, 4, 6, 8, 10, 12, 20]
 
 function dieEffectsList(
   id: string,
   type: DieTypes,
   effectsList: DieEffects,
-  onBlurEffect: (type: string, effect: string, index: number) => Promise<void>
+  onBlurEffect: (type: string, effect: string, index: number) => Promise<void>,
+  updateDiceSize: (type: string, size: number) => Promise<void>
 ) {
   const typeName = {
     red: 'Vermelho',
@@ -340,14 +373,15 @@ function dieEffectsList(
         </h4>
         <p class="die-type-select">
           Tipo do Dado:
-          <select on-change=${() => {
-            // const value = (e.target as HTMLSelectElement).value
+          <select ${type === 'blue' && 'disabled'} on-change=${(e: Event) => {
+            const value = (e.target as HTMLSelectElement).value
+            updateDiceSize(type, Number(value))
           }}>
-            ${dieSides.map((side) => {
-              const isSelected = effectsList.type === 'd20' && 'selected'
+            ${dieSizes.map((size) => {
+              const isSelected = effectsList.type === `d${size}` && 'selected'
               return el/*html*/`
-                <option ${isSelected} value="d${side}">
-                  D${side}
+                <option ${isSelected} value="${size}">
+                  D${size}
                 </option>
               `
             })}
