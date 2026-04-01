@@ -126,17 +126,20 @@ export function profilesDialog() {
     const current = currentProfile.data()
     const listName = `${type}Effects`
     const effectsList = Reflect.get(current!, listName) as DieEffects
-    effectsList.effects.length = size
+    
+    if (type !== 'blue') {
+      effectsList.effects.length = size
+
+      for (let i=0; i<size; i++) {
+        const e = effectsList.effects[i]
+        if (!e) {
+          effectsList.effects[i] = 'Vazio'
+        }
+      }
+    }
 
     if (current?.id === activeProfileId) {
       diceMaster.clearResults()
-    }
-
-    for (let i=0; i<size; i++) {
-      const e = effectsList.effects[i]
-      if (!e) {
-        effectsList.effects[i] = 'Vazio'
-      }
     }
 
     const profileService = new ProfileService()
@@ -312,23 +315,20 @@ export function profilesDialog() {
               <div key="${currentProf!.id}" class="die-effects-list-container">
                 ${[
                   dieEffectsList(
-                    currentProf!.id,
                     'red',
-                    currentProf!.redEffects,
+                    currentProf!,
                     onBlurEffect,
                     updateDiceSize
                   ),
                   dieEffectsList(
-                    currentProf!.id,
                     'black',
-                    currentProf!.blackEffects,
+                    currentProf!,
                     onBlurEffect,
                     updateDiceSize
                   ),
                   dieEffectsList(
-                    currentProf!.id,
                     'blue',
-                    currentProf!.blueEffects,
+                    currentProf!,
                     onBlurEffect,
                     updateDiceSize
                   )
@@ -347,12 +347,11 @@ type DieEffects = {
   effects: string[]
 }
 
-const dieSizes = [2, 4, 6, 8, 10, 12, 20]
+const dieSizes = [4, 6, 8, 10, 12, 20]
 
 function dieEffectsList(
-  id: string,
   type: DieTypes,
-  effectsList: DieEffects,
+  profile: Profile,
   onBlurEffect: (type: string, effect: string, index: number) => Promise<void>,
   updateDiceSize: (type: string, size: number) => Promise<void>
 ) {
@@ -361,6 +360,7 @@ function dieEffectsList(
     black: 'Preto',
     blue: 'Azul'
   }[type]
+  const effectsList = profile[`${type}Effects`]
 
   return html`
     <div class="die-effect-container ${type}">
@@ -371,22 +371,35 @@ function dieEffectsList(
         <h4 class="die-color">
           Dado ${typeName}
         </h4>
-        <p class="die-type-select">
-          Tipo do Dado:
-          <select ${type === 'blue' && 'disabled'} on-change=${(e: Event) => {
-            const value = (e.target as HTMLSelectElement).value
-            updateDiceSize(type, Number(value))
-          }}>
-            ${dieSizes.map((size) => {
-              const isSelected = effectsList.type === `d${size}` && 'selected'
-              return el/*html*/`
-                <option ${isSelected} value="${size}">
-                  D${size}
-                </option>
-              `
-            })}
-          </select>
-        </p>
+        ${shell(() => { 
+          if (type === 'blue') {
+            return
+          }
+
+          return html`
+            <p class="die-type-select">
+              Tipo do Dado:
+              <select on-change=${(e: Event) => {
+                const value = (e.target as HTMLSelectElement).value
+                updateDiceSize(type, Number(value))
+                  .then(() => {
+                    if (type === 'red') {
+                      updateDiceSize('blue', Number(value))
+                    }
+                  })
+              }}>
+                ${dieSizes.map((size) => {
+                  const isSelected = effectsList.effects.length === size && 'selected'
+                  return el/*html*/`
+                    <option ${isSelected} value="${size}">
+                      D${size}
+                    </option>
+                  `
+                })}
+              </select>
+            </p>
+          `
+        })}
       </div>
       <ol class="effects-list">
         ${effectsList.effects.map((effect, index) => {
@@ -415,7 +428,7 @@ function dieEffectsList(
           
           return el/*html*/`
             <li
-              key="${id}-${index}"
+              key="${profile.id}-${index}"
               class="effect-item"
               contenteditable="plaintext-only"
               on-input=${onInput}
