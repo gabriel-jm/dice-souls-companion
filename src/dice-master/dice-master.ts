@@ -5,9 +5,9 @@ import { RollResultService } from './roll-results/roll-results-service'
 import { DataSignal, shell, signal } from 'lithen-fns'
 import { rollResultItem } from '../roll-results/roll-result-item'
 import { diceLogger } from './logger/dice-logger'
-import { DiceRoller } from './roller/dice-roller'
+import { DiceRoller, RollManyRecord } from './roller/dice-roller'
 import { DiceEvents } from './events/dice-events'
-import { Profile, ProfileService } from '../profiles/profile-service'
+import { DieEffects, Profile, ProfileService } from '../profiles/profile-service'
 
 export type DieTypes = 'black' | 'blue' | 'red'
 
@@ -167,7 +167,10 @@ class DiceMaster {
       return this.diceEvents.emitRollDice(type, quantity)
     }
 
-    return this.diceRoller.rollDice(type, quantity)
+    const profile = this.profile.data()
+    const effects = profile[`${type}Effects`]
+
+    return this.diceRoller.rollDice(type, effects.type, quantity)
   }
 
   #rollMany(diceRecord: Partial<Record<DieTypes, number>>) {
@@ -175,7 +178,20 @@ class DiceMaster {
       return this.diceEvents.emitRollMany(diceRecord)
     }
 
-    return this.diceRoller.rollMany(diceRecord)
+    const profile = this.profile.data()
+    const rollRecord: RollManyRecord = {}
+
+    Object.entries(diceRecord).forEach(([key, value]) => {
+      const dieEffects = Reflect.get(profile, `${key}Effects`) as DieEffects
+      const rollData = {
+        size: dieEffects.type,
+        quantity: value
+      }
+
+      Reflect.set(rollRecord, key, rollData)
+    })
+
+    return this.diceRoller.rollMany(rollRecord)
   }
 
   async #addEffectsList() {

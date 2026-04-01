@@ -5,6 +5,12 @@ const originPath = import.meta.env.PROD
   ? 'https://unpkg.com/@3d-dice/dice-box@1.1.3/dist'
   : location.origin
 
+export type RollManyRecord = {
+  red?: { size: string, quantity: number },
+  black?: { size: string, quantity: number },
+  blue?: { size: string, quantity: number }
+}
+
 export class DiceRoller {
   diceBox: DiceBox
   diceColors: Record<DieTypes, string> = {
@@ -34,7 +40,7 @@ export class DiceRoller {
     return this.diceBox.clear()
   }
 
-  rollDice(type: DieTypes, quantity: number) {
+  rollDice(type: DieTypes, diceSize: string, quantity: number) {
     const diceCount = Math.floor(quantity)
     
     if (diceCount <= 0) {
@@ -42,7 +48,7 @@ export class DiceRoller {
     }
     
     const results = this.diceBox.add(
-      `${diceCount}d20`,
+      `${diceCount}${diceSize}`,
       { themeColor: this.diceColors[type] }
     )
 
@@ -51,13 +57,16 @@ export class DiceRoller {
     return results
   }
 
-  async rollMany(quantity: Partial<Record<DieTypes, number>>) {
+  async rollMany(quantity: RollManyRecord) {
     const results = await Promise.all(
       Object.entries(quantity)
         .map(async ([key, value]) => {
           const type = key as DieTypes
 
-          return [type, await this.rollDice(type, value)] as const
+          return [
+            type,
+            await this.rollDice(type, value.size, value.quantity)
+          ] as const
         })
     )
 
