@@ -12,8 +12,8 @@ export function initDiceWindow(win?: BrowserWindow) {
     diceWin = null
   })
 
-  ipcMain.on('roll-dice', (_, type, quantity) => {
-    diceWin?.webContents.send('roll-dice', type, quantity)
+  ipcMain.on('roll-dice', (_, type, size, quantity) => {
+    diceWin?.webContents.send('roll-dice', type, size, quantity)
   })
   
   ipcMain.on('roll-dice-result', (_, results) => {

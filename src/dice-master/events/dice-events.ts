@@ -1,5 +1,6 @@
 import { DiceGroupRollResult } from '@3d-dice/dice-box'
 import { DieTypes } from '../dice-master'
+import { RollManyRecord } from '../roller/dice-roller'
 
 type ElectronEventListener = (
   event: Electron.IpcRendererEvent,
@@ -7,9 +8,9 @@ type ElectronEventListener = (
 ) => void
 
 export class DiceEvents {
-  emitRollDice(type: DieTypes, quantity: number) {
+  emitRollDice(type: DieTypes, size: string, quantity: number) {
     return new Promise<DiceGroupRollResult[]>((resolve) => {
-      this.#send('roll-dice', type, quantity)
+      this.#send('roll-dice', type, size, quantity)
 
       this.#once('roll-dice-result', (_, results: DiceGroupRollResult[]) => {
         resolve(results)
@@ -17,7 +18,7 @@ export class DiceEvents {
     })
   }
 
-  emitRollMany(diceQuantity: Partial<Record<DieTypes, number>>) {
+  emitRollMany(diceQuantity: RollManyRecord) {
     return new Promise<[DieTypes, DiceGroupRollResult[]]>((resolve) => {
       this.#send('roll-many', diceQuantity)
 

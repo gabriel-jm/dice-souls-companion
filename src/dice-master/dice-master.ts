@@ -163,21 +163,17 @@ class DiceMaster {
   }
 
   #rollDice(type: DieTypes, quantity: number) {
-    if (isDiceWindowOpen.data()) {
-      return this.diceEvents.emitRollDice(type, quantity)
-    }
-
     const profile = this.profile.data()
     const effects = profile[`${type}Effects`]
+    
+    if (isDiceWindowOpen.data()) {
+      return this.diceEvents.emitRollDice(type, effects.type, quantity)
+    }
 
     return this.diceRoller.rollDice(type, effects.type, quantity)
   }
 
   #rollMany(diceRecord: Partial<Record<DieTypes, number>>) {
-    if (isDiceWindowOpen.data()) {
-      return this.diceEvents.emitRollMany(diceRecord)
-    }
-
     const profile = this.profile.data()
     const rollRecord: RollManyRecord = {}
 
@@ -190,6 +186,10 @@ class DiceMaster {
 
       Reflect.set(rollRecord, key, rollData)
     })
+    
+    if (isDiceWindowOpen.data()) {
+      return this.diceEvents.emitRollMany(rollRecord)
+    }
 
     return this.diceRoller.rollMany(rollRecord)
   }
